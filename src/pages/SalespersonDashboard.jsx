@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
-import { GetRequest } from "../config/http"
+import { GetRequest, PostRequest } from "../config/http"
 import {
   FileText,
   Printer,
@@ -98,10 +98,14 @@ export default function SalespersonDashboard() {
     window.print()
   }
 
-  const handleCreateCustomBill = (e) => {
+  const [submittingBill, setSubmittingBill] = useState(false)
+  const [billError, setBillError] = useState("")
+
+  const handleCreateCustomBill = async (e) => {
     e.preventDefault()
-    const timestamp = Date.now().toString().slice(-4)
-    const random = Math.floor(1000 + Math.random() * 9000)
+    setSubmittingBill(true)
+    setBillError("")
+
     const subtotal = Number(customBill.unitPrice) * Number(customBill.quantity)
     const discountPercent = Math.max(0, Math.min(100, Number(customBill.discountPercentage) || 0))
     const discountAmount = (subtotal * discountPercent) / 100
@@ -110,44 +114,71 @@ export default function SalespersonDashboard() {
     const selectedProd = products.find((p) => String(p._id) === String(customBill.productId))
     const itemImage = selectedProd?.image || (selectedProd?.images && selectedProd.images[0]) || ""
 
-    const newBill = {
-      _id: `custom_${Date.now()}`,
-      orderNumber: `BILL-${new Date().getFullYear()}-${timestamp}${random}`,
-      invoiceNumber: `INV-${new Date().getFullYear()}-${timestamp}${random}`,
+    const payload = {
       soldBy: customBill.soldBy || salespersonName,
-      trackingNumber: "",
-      createdAt: new Date().toISOString(),
-      customer: {
-        name: customBill.customerName,
-        email: customBill.customerEmail,
-        address: "In-Store Purchase",
-        city: "Atelier Boutique",
-        country: "In-Store",
-      },
-      items: [
-        {
-          productId: customBill.productId || null,
-          title: customBill.itemTitle || (selectedProd ? selectedProd.title : "Custom Item"),
-          price: Number(customBill.unitPrice),
-          quantity: Number(customBill.quantity),
-          size: "Standard",
-          color: "Classic",
-          image: itemImage,
-        },
-      ],
-      subtotal,
-      discountAmount,
+      customerName: customBill.customerName,
+      customerEmail: customBill.customerEmail,
+      productId: customBill.productId || null,
+      itemTitle: customBill.itemTitle || (selectedProd ? selectedProd.title : "Custom Item"),
+      unitPrice: Number(customBill.unitPrice),
+      quantity: Number(customBill.quantity),
       discountPercentage: discountPercent,
-      shippingFee: 0,
+      discountAmount,
       totalAmount,
       paymentMethod: customBill.paymentMethod,
-      paymentStatus: "Paid",
-      orderStatus: "Delivered",
+      image: itemImage,
     }
 
-    setOrders((prev) => [newBill, ...prev])
-    setSelectedInvoiceOrder(newBill)
-    setIsCustomBillModalOpen(false)
+    try {
+      const res = await PostRequest("orders/in-store-bill", payload)
+      const savedBill = res.data
+      setOrders((prev) => [savedBill, ...prev])
+      setSelectedInvoiceOrder(savedBill)
+      setIsCustomBillModalOpen(false)
+    } catch (err) {
+      console.error("Failed to save bill in database, saving locally:", err)
+      const timestamp = Date.now().toString().slice(-4)
+      const random = Math.floor(1000 + Math.random() * 9000)
+      const localBill = {
+        _id: `custom_${Date.now()}`,
+        orderNumber: `BILL-${new Date().getFullYear()}-${timestamp}${random}`,
+        invoiceNumber: `INV-${new Date().getFullYear()}-${timestamp}${random}`,
+        soldBy: customBill.soldBy || salespersonName,
+        trackingNumber: "",
+        createdAt: new Date().toISOString(),
+        customer: {
+          name: customBill.customerName,
+          email: customBill.customerEmail,
+          address: "In-Store Purchase",
+          city: "Atelier Boutique",
+          country: "In-Store",
+        },
+        items: [
+          {
+            productId: customBill.productId || null,
+            title: customBill.itemTitle || (selectedProd ? selectedProd.title : "Custom Item"),
+            price: Number(customBill.unitPrice),
+            quantity: Number(customBill.quantity),
+            size: "Standard",
+            color: "Classic",
+            image: itemImage,
+          },
+        ],
+        subtotal,
+        discountAmount,
+        discountPercentage: discountPercent,
+        shippingFee: 0,
+        totalAmount,
+        paymentMethod: customBill.paymentMethod,
+        paymentStatus: "Paid",
+        orderStatus: "Delivered",
+      }
+      setOrders((prev) => [localBill, ...prev])
+      setSelectedInvoiceOrder(localBill)
+      setIsCustomBillModalOpen(false)
+    } finally {
+      setSubmittingBill(false)
+    }
   }
 
   const filteredOrders = orders.filter((o) => {
