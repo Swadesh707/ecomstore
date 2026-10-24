@@ -1,16 +1,34 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
-import { ArrowRight, CheckCircle2 } from "lucide-react"
+import { ArrowRight, CheckCircle2, Loader2 } from "lucide-react"
+import { PostRequest } from "../config/http"
 
 export default function Footer() {
   const [email, setEmail] = useState("")
+  const [loading, setLoading] = useState(false)
   const [subscribed, setSubscribed] = useState(false)
+  const [feedbackMessage, setFeedbackMessage] = useState("")
+  const [errorMessage, setErrorMessage] = useState("")
 
-  const handleSubscribe = (e) => {
+  const handleSubscribe = async (e) => {
     e.preventDefault()
-    if (!email.trim()) return
-    setSubscribed(true)
-    setEmail("")
+    const cleanMail = email.trim().toLowerCase()
+    if (!cleanMail) return
+
+    try {
+      setLoading(true)
+      setErrorMessage("")
+      const res = await PostRequest("collected-mails", { email: cleanMail })
+      setSubscribed(true)
+      setFeedbackMessage(res?.data?.message || "Thank you! You’re on the list.")
+      setEmail("")
+    } catch (err) {
+      setErrorMessage(
+        err?.response?.data?.message || "Could not save email. Please try again."
+      )
+    } finally {
+      setLoading(false)
+    }
   }
 
   const scrollToTop = () => {
@@ -136,25 +154,38 @@ export default function Footer() {
             {subscribed ? (
               <div className="flex items-center gap-2 p-3 bg-[#C5A059]/10 border border-[#C5A059]/30 text-xs text-[#C5A059] rounded">
                 <CheckCircle2 size={16} />
-                <span>Thank you! You’re on the list.</span>
+                <span>{feedbackMessage || "Thank you! You’re on the list."}</span>
               </div>
             ) : (
-              <form onSubmit={handleSubscribe} className="flex gap-2">
-                <input
-                  type="email"
-                  required
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="flex-1 bg-[#1F1D1B] border border-[#33302C] focus:border-[#C5A059] focus:outline-none px-3.5 py-2.5 text-xs text-white placeholder:text-[#6A645D] rounded"
-                />
-                <button
-                  type="submit"
-                  className="bg-[#C5A059] hover:bg-[#d8b368] text-[#141312] px-4 py-2.5 text-xs font-bold uppercase tracking-wider transition-colors rounded cursor-pointer shrink-0 inline-flex items-center gap-1.5"
-                >
-                  <span>Join</span>
-                  <ArrowRight size={13} />
-                </button>
+              <form onSubmit={handleSubscribe} className="space-y-2">
+                <div className="flex gap-2">
+                  <input
+                    type="email"
+                    required
+                    disabled={loading}
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="flex-1 bg-[#1F1D1B] border border-[#33302C] focus:border-[#C5A059] focus:outline-none px-3.5 py-2.5 text-xs text-white placeholder:text-[#6A645D] rounded disabled:opacity-50"
+                  />
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="bg-[#C5A059] hover:bg-[#d8b368] text-[#141312] px-4 py-2.5 text-xs font-bold uppercase tracking-wider transition-colors rounded cursor-pointer shrink-0 inline-flex items-center gap-1.5 disabled:opacity-50"
+                  >
+                    {loading ? (
+                      <Loader2 size={13} className="animate-spin" />
+                    ) : (
+                      <>
+                        <span>Join</span>
+                        <ArrowRight size={13} />
+                      </>
+                    )}
+                  </button>
+                </div>
+                {errorMessage && (
+                  <p className="text-[11px] text-red-400 m-0">{errorMessage}</p>
+                )}
               </form>
             )}
           </div>

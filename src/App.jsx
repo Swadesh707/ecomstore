@@ -19,6 +19,7 @@ import ManageProducts from "./components/Dashboard/ManageProducts"
 import ManageCategories from "./components/Dashboard/ManageCategories"
 import ManageCoupons from "./components/Dashboard/ManageCoupons"
 import ManageStaff from "./components/Dashboard/ManageStaff"
+import ManageCollectedMails from "./components/Dashboard/ManageCollectedMails"
 import SalespersonDashboard from "./pages/SalespersonDashboard"
 import LogisticsDashboard from "./pages/LogisticsDashboard"
 import UserAccount from "./pages/UserAccount"
@@ -69,6 +70,8 @@ export default function App() {
           <Route path="categories" element={<ManageCategories />} />
           <Route path="coupons" element={<ManageCoupons />} />
           <Route path="team" element={<ManageStaff />} />
+          <Route path="collected-mails" element={<ManageCollectedMails />} />
+          <Route path="subscribers" element={<ManageCollectedMails />} />
         </Route>
 
         {/* Dedicated Salesperson Invoicing & Billing Portal */}

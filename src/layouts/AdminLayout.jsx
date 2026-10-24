@@ -7,6 +7,7 @@ import {
   Tag,
   Users,
   Store,
+  Mail,
 } from "lucide-react"
 
 export default function AdminLayout() {
@@ -153,6 +154,21 @@ export default function AdminLayout() {
           >
             <Users size={16} />
             <span className="font-bold">Team</span>
+          </NavLink>
+
+          {/* 7. Collected Emails */}
+          <NavLink
+            to="/admin/collected-mails"
+            className={({ isActive }) =>
+              `w-full text-left px-3.5 py-2.5 transition-colors flex items-center gap-3 no-underline ${
+                isActive
+                  ? "bg-[#C5A059] text-[#1A1816] font-bold"
+                  : "text-[#FAF8F5]/80 hover:bg-[#FAF8F5]/10 hover:text-[#FAF8F5]"
+              }`
+            }
+          >
+            <Mail size={16} />
+            <span className="font-bold">Collected Emails</span>
           </NavLink>
         </nav>
       </aside>
