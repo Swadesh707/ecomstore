@@ -8,7 +8,6 @@ import {
   Heart,
   PieChart as PieIcon,
   BarChart3,
-  ArrowUpRight,
   ShieldAlert,
   Percent,
 } from "lucide-react"
@@ -124,10 +123,7 @@ export default function AdminAnalytics() {
           <p className="font-serif text-3xl font-bold text-[#1A1816]">
             ${data.totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}
           </p>
-          <div className="mt-2 flex items-center text-[10px] font-semibold text-[#1C352D] uppercase tracking-wider gap-1">
-            <ArrowUpRight size={13} />
-            <span>From {data.totalOrders} orders</span>
-          </div>
+
         </div>
 
         {/* Card 2: Net Profit & Margin */}
@@ -141,9 +137,7 @@ export default function AdminAnalytics() {
           <p className="font-serif text-3xl font-bold text-[#1A1816]">
             ${data.netProfit.toLocaleString(undefined, { minimumFractionDigits: 2 })}
           </p>
-          <div className="mt-2 text-[10px] font-semibold uppercase tracking-wider text-[#8E877E]">
-            Profit Margin: <strong className="text-[#1A1816]">{data.profitMargin}%</strong>
-          </div>
+
         </div>
 
         {/* Card 3: Logistics & Courier Costs */}
@@ -157,9 +151,7 @@ export default function AdminAnalytics() {
           <p className="font-serif text-3xl font-bold text-[#1A1816]">
             ${data.totalLogisticsCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}
           </p>
-          <div className="mt-2 text-[10px] font-semibold uppercase tracking-wider text-[#8E877E]">
-            Collected: ${data.totalShippingCollected.toFixed(2)} — Shipping
-          </div>
+
         </div>
 
         {/* Card 4: Product Manufacturing (COGS) */}
@@ -173,9 +165,7 @@ export default function AdminAnalytics() {
           <p className="font-serif text-3xl font-bold text-[#1A1816]">
             ${data.totalProductCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}
           </p>
-          <div className="mt-2 text-[10px] font-semibold uppercase tracking-wider text-[#8E877E]">
-            Cost of goods sold
-          </div>
+
         </div>
       </div>
 
@@ -188,9 +178,6 @@ export default function AdminAnalytics() {
               <h3 className="font-serif text-lg font-bold uppercase tracking-wider text-[#1A1816]">
                 Revenue & Sales Trajectory
               </h3>
-              <p className="text-[10px] uppercase tracking-wider text-[#8E877E]">
-                Daily & periodic revenue
-              </p>
             </div>
             <BarChart3 size={18} className="text-[#C5A059]" />
           </div>
@@ -234,10 +221,7 @@ export default function AdminAnalytics() {
             })}
           </div>
 
-          <div className="flex items-center justify-between text-[10px] text-[#8E877E] uppercase tracking-wider mt-3">
-            <span>Range: Recent orders</span>
-            <span className="font-semibold text-[#1A1816]">Peak: ${maxRevenueInTrend.toFixed(2)}</span>
-          </div>
+
         </div>
 
         {/* Right: Category Sales Distribution (Donut / Pie Chart) */}
@@ -247,9 +231,6 @@ export default function AdminAnalytics() {
               <h3 className="font-serif text-lg font-bold uppercase tracking-wider text-[#1A1816]">
                 Trending Categories
               </h3>
-              <p className="text-[10px] uppercase tracking-wider text-[#8E877E]">
-                Revenue share by category
-              </p>
             </div>
             <PieIcon size={18} className="text-[#C5A059]" />
           </div>
@@ -314,9 +295,6 @@ export default function AdminAnalytics() {
               <h3 className="font-serif text-base font-bold uppercase tracking-wider text-[#1A1816] flex items-center gap-2">
                 <TrendingUp size={16} className="text-[#C5A059]" /> Trending in Orders
               </h3>
-              <p className="text-[10px] uppercase tracking-wider text-[#8E877E]">
-                Most purchased products
-              </p>
             </div>
           </div>
 
@@ -360,9 +338,6 @@ export default function AdminAnalytics() {
               <h3 className="font-serif text-base font-bold uppercase tracking-wider text-[#1A1816] flex items-center gap-2">
                 <Heart size={16} className="text-[#78281F]" /> Trending in Wishlists
               </h3>
-              <p className="text-[10px] uppercase tracking-wider text-[#8E877E]">
-                Most wishlisted products
-              </p>
             </div>
           </div>
 
