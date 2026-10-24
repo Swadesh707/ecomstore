@@ -293,18 +293,13 @@ export default function Navbar() {
                 <CircleUserRound size={26} strokeWidth={1.6} className="text-[#C5A059]" />
               )}
             </div>
-            <div className="flex-1 overflow-hidden">
-              <Text fw={700} size="sm" className="font-serif text-[#1A1816] truncate">
+            <div className="flex-1 min-w-0 flex flex-col justify-center">
+              <h3 className="font-serif font-extrabold text-base sm:text-lg text-[#1A1816] tracking-tight leading-snug truncate m-0">
                 {getDisplayName()}
-              </Text>
-              <Text size="xs" c="dimmed" className="truncate">
+              </h3>
+              <p className="text-xs text-[#6A645D] truncate m-0 mt-0.5">
                 {userEmail || (token ? "Signed in" : "Guest")}
-              </Text>
-              {token && userRole && (
-                <span className="inline-block mt-1 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider bg-[#C5A059]/20 text-[#8B6E33] border border-[#C5A059]/40">
-                  {getDisplayRole()}
-                </span>
-              )}
+              </p>
             </div>
           </div>
 
