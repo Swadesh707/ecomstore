@@ -5,21 +5,21 @@ export default function About() {
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-[#1A1816] font-sans">
       {/* Hero Section */}
-      <section className="py-20 sm:py-28 border-b border-[#E5DFD5] bg-[#FAF8F5]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section className="py-20 sm:py-24 border-b border-[#E5DFD5] bg-[#FAF8F5]">
+        <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 text-center">
           <span className="text-xs font-bold uppercase tracking-wider text-[#C5A059] block mb-3">
             About Ecomstore
           </span>
-          <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#1A1816] mb-6 leading-tight">
+          <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#1A1816] mb-6 leading-tight max-w-4xl mx-auto">
             Quality clothing made for everyday life.
           </h1>
-          <p className="text-base sm:text-lg text-[#6A645D] leading-relaxed max-w-2xl mx-auto font-normal mb-8">
+          <p className="text-base sm:text-lg text-[#6A645D] leading-relaxed max-w-3xl mx-auto font-normal mb-8">
             We started Ecomstore with a simple idea: classic, well-made clothing doesn’t need a giant logo or an outrageous designer markup. Just good materials, clean design, and honest pricing.
           </p>
           <div className="flex justify-center gap-4">
             <Link
               to="/shop"
-              className="bg-[#1A1816] text-[#FAF8F5] px-7 py-3 text-xs font-bold uppercase tracking-wider hover:bg-[#C5A059] hover:text-[#1A1816] transition-colors inline-flex items-center gap-2 no-underline"
+              className="bg-[#1A1816] text-[#FAF8F5] px-8 py-3.5 text-xs font-bold uppercase tracking-wider hover:bg-[#C5A059] hover:text-[#1A1816] transition-colors inline-flex items-center gap-2 no-underline"
             >
               <span>Explore The Shop</span>
               <ArrowRight size={14} />
@@ -30,10 +30,10 @@ export default function About() {
 
       {/* Story & Philosophy Section */}
       <section className="py-20 border-b border-[#E5DFD5] bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
             {/* Visual Mosaic */}
-            <div className="lg:col-span-6 grid grid-cols-2 gap-4">
+            <div className="lg:col-span-6 grid grid-cols-2 gap-5">
               <div className="space-y-4">
                 <div className="aspect-[4/5] bg-[#F2EFE9] rounded-lg overflow-hidden border border-[#E5DFD5]">
                   <img
@@ -71,13 +71,13 @@ export default function About() {
               <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#1A1816] tracking-tight leading-snug">
                 Tired of clothes that fall apart after one season.
               </h2>
-              <p className="text-sm text-[#6A645D] leading-relaxed">
-                For years, finding good clothes felt like choosing between two bad options: cheap fast-fashion made from plastic polyester that shrinks after two washes, or luxury labels charging \$1,500 just to slap a logo on a plain sweater.
+              <p className="text-sm sm:text-base text-[#6A645D] leading-relaxed">
+                For years, finding good clothes felt like choosing between two bad options: cheap fast-fashion made from plastic polyester that shrinks after two washes, or luxury labels charging $1,500 just to slap a logo on a plain sweater.
               </p>
-              <p className="text-sm text-[#6A645D] leading-relaxed">
+              <p className="text-sm sm:text-base text-[#6A645D] leading-relaxed">
                 We built Ecomstore to offer a better third option. We work directly with independent workshops to craft timeless wardrobe essentials using pure virgin cashmere, long-staple cotton, and full-grain leather.
               </p>
-              <p className="text-sm text-[#6A645D] leading-relaxed">
+              <p className="text-sm sm:text-base text-[#6A645D] leading-relaxed">
                 No bloated wholesale markups, no flash sales, and no chasing weekly micro-trends. Just clothes that look great, fit comfortably, and hold up season after season.
               </p>
 
@@ -102,7 +102,7 @@ export default function About() {
 
       {/* Core Values / What Sets Us Apart */}
       <section className="py-20 bg-[#FAF8F5] border-b border-[#E5DFD5]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12">
           <div className="text-center max-w-2xl mx-auto mb-14">
             <span className="text-xs font-bold uppercase tracking-wider text-[#C5A059] block mb-2">
               Our Principles
@@ -163,7 +163,7 @@ export default function About() {
 
       {/* Behind the Craft: 3 Real Steps */}
       <section className="py-20 bg-white border-b border-[#E5DFD5]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12">
           <div className="max-w-2xl mb-12">
             <span className="text-xs font-bold uppercase tracking-wider text-[#C5A059] block mb-2">
               Our Process
@@ -227,7 +227,7 @@ export default function About() {
 
       {/* Customer Guarantees */}
       <section className="py-14 bg-[#FAF8F5] border-b border-[#E5DFD5]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center sm:text-left">
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3.5">
               <Truck size={24} className="text-[#C5A059] shrink-0" />
@@ -258,7 +258,7 @@ export default function About() {
 
       {/* Call to Action */}
       <section className="py-20 bg-[#1A1816] text-[#FAF8F5]">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-5xl mx-auto px-6 sm:px-10 lg:px-12 text-center">
           <h2 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight mb-4 text-white">
             Ready to find your next staple?
           </h2>
