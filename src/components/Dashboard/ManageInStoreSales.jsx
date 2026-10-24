@@ -7,9 +7,6 @@ import {
   FileText,
   Printer,
   X,
-  TrendingUp,
-  Package,
-  Users,
 } from "lucide-react"
 
 export default function ManageInStoreSales() {
@@ -57,31 +54,6 @@ export default function ManageInStoreSales() {
     })
   }, [orders, searchQuery])
 
-  // Summary Metrics
-  const metrics = useMemo(() => {
-    const totalRevenue = orders.reduce(
-      (sum, o) => sum + (Number(o.totalAmount) || 0),
-      0
-    )
-    const staffSet = new Set(
-      orders.map((o) => o.soldBy).filter((name) => Boolean(name))
-    )
-    const totalItemsCount = orders.reduce((sum, o) => {
-      const orderItems = o.items || []
-      return (
-        sum +
-        orderItems.reduce((iSum, it) => iSum + (Number(it.quantity) || 1), 0)
-      )
-    }, 0)
-
-    return {
-      revenue: totalRevenue,
-      billsCount: orders.length,
-      staffCount: staffSet.size || 1,
-      itemsSold: totalItemsCount,
-    }
-  }, [orders])
-
   const handlePrint = () => {
     window.print()
   }
@@ -114,65 +86,19 @@ export default function ManageInStoreSales() {
         </button>
       </div>
 
-      {/* Metrics Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="p-4 bg-white border border-[#E6E2DE] shadow-xs">
-          <div className="flex items-center justify-between text-[#8E877E] mb-1">
-            <span className="text-[11px] font-bold uppercase tracking-wider">
-              In-Store Revenue
-            </span>
-            <TrendingUp size={16} className="text-[#C5A059]" />
-          </div>
-          <p className="text-xl font-serif font-bold text-[#1A1816]">
-            ${metrics.revenue.toFixed(2)}
-          </p>
-        </div>
-
-        <div className="p-4 bg-white border border-[#E6E2DE] shadow-xs">
-          <div className="flex items-center justify-between text-[#8E877E] mb-1">
-            <span className="text-[11px] font-bold uppercase tracking-wider">
-              Total Bills
-            </span>
-            <Receipt size={16} className="text-[#C5A059]" />
-          </div>
-          <p className="text-xl font-serif font-bold text-[#1A1816]">
-            {metrics.billsCount}
-          </p>
-        </div>
-
-        <div className="p-4 bg-white border border-[#E6E2DE] shadow-xs">
-          <div className="flex items-center justify-between text-[#8E877E] mb-1">
-            <span className="text-[11px] font-bold uppercase tracking-wider">
-              Authorized Staff
-            </span>
-            <Users size={16} className="text-[#C5A059]" />
-          </div>
-          <p className="text-xl font-serif font-bold text-[#1A1816]">
-            {metrics.staffCount} Salesperson{metrics.staffCount > 1 ? "s" : ""}
-          </p>
-        </div>
-      </div>
-
       {/* Search Bar */}
-      <div className="bg-white p-4 border border-[#E6E2DE] shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="relative w-full sm:w-80">
-          <Search
-            size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9C948A]"
-          />
-          <input
-            type="text"
-            placeholder="Search bill #, salesperson, or item..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-xs border border-[#D5D0C9] rounded focus:border-[#C5A059] focus:outline-none"
-          />
-        </div>
-
-        <div className="text-xs text-[#6A645D]">
-          Showing <span className="font-bold text-[#1A1816]">{filteredBills.length}</span> of{" "}
-          <span className="font-bold text-[#1A1816]">{orders.length}</span> sales bills
-        </div>
+      <div className="relative max-w-sm">
+        <Search
+          size={15}
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9C948A]"
+        />
+        <input
+          type="text"
+          placeholder="Search bill #, salesperson, or item..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full pl-9 pr-3 py-2 text-xs border border-[#D5D0C9] bg-white rounded focus:border-[#C5A059] focus:outline-none"
+        />
       </div>
 
       {/* Sales Registry Table */}
