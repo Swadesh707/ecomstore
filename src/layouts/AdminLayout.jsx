@@ -8,6 +8,7 @@ import {
   Users,
   Store,
   Mail,
+  Receipt,
 } from "lucide-react"
 
 export default function AdminLayout() {
@@ -94,6 +95,21 @@ export default function AdminLayout() {
           >
             <Truck size={16} />
             <span className="font-bold">Orders</span>
+          </NavLink>
+
+          {/* In-Store Sales */}
+          <NavLink
+            to="/admin/in-store-sales"
+            className={({ isActive }) =>
+              `w-full text-left px-3.5 py-2.5 transition-colors flex items-center gap-3 no-underline ${
+                isActive
+                  ? "bg-[#C5A059] text-[#1A1816] font-bold"
+                  : "text-[#FAF8F5]/80 hover:bg-[#FAF8F5]/10 hover:text-[#FAF8F5]"
+              }`
+            }
+          >
+            <Receipt size={16} />
+            <span className="font-bold">In-Store Sales</span>
           </NavLink>
 
           {/* 3. Products */}

@@ -20,6 +20,7 @@ import ManageCategories from "./components/Dashboard/ManageCategories"
 import ManageCoupons from "./components/Dashboard/ManageCoupons"
 import ManageStaff from "./components/Dashboard/ManageStaff"
 import ManageCollectedMails from "./components/Dashboard/ManageCollectedMails"
+import ManageInStoreSales from "./components/Dashboard/ManageInStoreSales"
 import SalespersonDashboard from "./pages/SalespersonDashboard"
 import LogisticsDashboard from "./pages/LogisticsDashboard"
 import UserAccount from "./pages/UserAccount"
@@ -66,6 +67,8 @@ export default function App() {
           <Route index element={<Navigate to="/admin/analytics" replace />} />
           <Route path="analytics" element={<AdminAnalytics />} />
           <Route path="orders" element={<ManageOrders />} />
+          <Route path="in-store-sales" element={<ManageInStoreSales />} />
+          <Route path="sales-bills" element={<ManageInStoreSales />} />
           <Route path="products" element={<ManageProducts />} />
           <Route path="categories" element={<ManageCategories />} />
           <Route path="coupons" element={<ManageCoupons />} />
