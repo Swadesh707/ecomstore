@@ -315,13 +315,13 @@ export default function Navbar() {
                 setProfileOpened(false)
                 navigate("/account")
               }}
-              className="w-full p-3 bg-[#1A1816] text-[#FAF8F5] hover:bg-[#C5A059] hover:text-[#1A1816] flex items-center justify-between text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer"
+              className="w-full p-3 bg-[#C5A059] hover:bg-[#b59048] text-[#1A1816] flex items-center justify-between text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer shadow-xs"
             >
               <span className="flex items-center gap-2">
                 <Package size={15} />
-                <span>My Orders</span>
+                <span>Orders & Purchases</span>
               </span>
-              <span className="text-[10px] text-[#C5A059] font-bold">&rarr;</span>
+              <span className="text-xs font-bold">&rarr;</span>
             </button>
           ) : (
             <button
@@ -329,13 +329,13 @@ export default function Navbar() {
                 setProfileOpened(false)
                 navigate("/account?tab=track")
               }}
-              className="w-full p-2.5 bg-[#FAF8F5] border border-[#E5DFD5] hover:border-[#1A1816] flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-[#1A1816] transition-colors cursor-pointer"
+              className="w-full p-3 bg-[#C5A059] hover:bg-[#b59048] text-[#1A1816] flex items-center justify-between text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer shadow-xs"
             >
               <span className="flex items-center gap-2">
-                <Truck size={14} className="text-[#C5A059]" />
-                <span>Track Order</span>
+                <Truck size={15} />
+                <span>Orders & Purchases</span>
               </span>
-              <span className="text-[10px] text-[#8E877E]">&rarr;</span>
+              <span className="text-xs font-bold">&rarr;</span>
             </button>
           )}
 
