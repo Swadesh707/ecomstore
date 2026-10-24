@@ -34,7 +34,7 @@ export default function SalespersonDashboard() {
     quantity: 1,
     unitPrice: 0,
     paymentMethod: "card",
-    discountAmount: 0,
+    discountPercentage: 0,
   })
 
   const loadDashboardData = async () => {
@@ -70,7 +70,7 @@ export default function SalespersonDashboard() {
       quantity: 1,
       unitPrice: firstProduct ? Number(firstProduct.price || 0) : 0,
       paymentMethod: "card",
-      discountAmount: 0,
+      discountPercentage: 0,
     })
     setIsCustomBillModalOpen(true)
   }
@@ -103,7 +103,9 @@ export default function SalespersonDashboard() {
     const timestamp = Date.now().toString().slice(-4)
     const random = Math.floor(1000 + Math.random() * 9000)
     const subtotal = Number(customBill.unitPrice) * Number(customBill.quantity)
-    const totalAmount = Math.max(0, subtotal - Number(customBill.discountAmount))
+    const discountPercent = Math.max(0, Math.min(100, Number(customBill.discountPercentage) || 0))
+    const discountAmount = (subtotal * discountPercent) / 100
+    const totalAmount = Math.max(0, subtotal - discountAmount)
 
     const selectedProd = products.find((p) => String(p._id) === String(customBill.productId))
     const itemImage = selectedProd?.image || (selectedProd?.images && selectedProd.images[0]) || ""
@@ -134,7 +136,8 @@ export default function SalespersonDashboard() {
         },
       ],
       subtotal,
-      discountAmount: Number(customBill.discountAmount),
+      discountAmount,
+      discountPercentage: discountPercent,
       shippingFee: 0,
       totalAmount,
       paymentMethod: customBill.paymentMethod,
@@ -576,15 +579,70 @@ export default function SalespersonDashboard() {
                     </select>
                   </div>
                   <div>
-                    <label className="block mb-1 text-[#8E877E]">Discount ($)</label>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-[#8E877E]">Discount (%)</label>
+                      {Number(customBill.discountPercentage || 0) > 0 && (
+                        <span className="text-[10px] text-[#C5A059] font-bold">
+                          -${(
+                            ((Number(customBill.unitPrice || 0) * Number(customBill.quantity || 1)) *
+                              Number(customBill.discountPercentage || 0)) /
+                            100
+                          ).toFixed(2)}
+                        </span>
+                      )}
+                    </div>
                     <input
                       type="number"
                       min="0"
-                      step="0.01"
-                      value={customBill.discountAmount}
-                      onChange={(e) => setCustomBill({ ...customBill, discountAmount: e.target.value })}
-                      className="w-full p-2.5 bg-white border border-[#E5DFD5] text-xs text-[#1A1816] focus:outline-none focus:border-[#1A1816]"
+                      max="100"
+                      step="1"
+                      placeholder="0"
+                      value={customBill.discountPercentage}
+                      onChange={(e) =>
+                        setCustomBill({
+                          ...customBill,
+                          discountPercentage:
+                            e.target.value === ""
+                              ? ""
+                              : Math.max(0, Math.min(100, Number(e.target.value))),
+                        })
+                      }
+                      className="w-full p-2.5 bg-white border border-[#E5DFD5] text-xs text-[#1A1816] focus:outline-none focus:border-[#C5A059]"
                     />
+                  </div>
+                </div>
+
+                {/* Live Bill Summary */}
+                <div className="p-3 bg-[#FAF8F5] border border-[#E5DFD5] text-xs space-y-1">
+                  <div className="flex justify-between text-[#8E877E]">
+                    <span>Subtotal:</span>
+                    <span className="font-mono text-[#1A1816]">
+                      ${(Number(customBill.unitPrice || 0) * Number(customBill.quantity || 1)).toFixed(2)}
+                    </span>
+                  </div>
+                  {Number(customBill.discountPercentage || 0) > 0 && (
+                    <div className="flex justify-between text-[#C5A059]">
+                      <span>Discount ({customBill.discountPercentage}%):</span>
+                      <span className="font-mono">
+                        -${(
+                          ((Number(customBill.unitPrice || 0) * Number(customBill.quantity || 1)) *
+                            Number(customBill.discountPercentage || 0)) /
+                          100
+                        ).toFixed(2)}
+                      </span>
+                    </div>
+                  )}
+                  <div className="flex justify-between font-bold text-[#1A1816] pt-1.5 border-t border-[#E5DFD5]">
+                    <span>Total Settled:</span>
+                    <span className="font-mono text-sm text-[#1A1816]">
+                      ${Math.max(
+                        0,
+                        (Number(customBill.unitPrice || 0) * Number(customBill.quantity || 1)) -
+                          (((Number(customBill.unitPrice || 0) * Number(customBill.quantity || 1)) *
+                            Number(customBill.discountPercentage || 0)) /
+                            100)
+                      ).toFixed(2)}
+                    </span>
                   </div>
                 </div>
 
