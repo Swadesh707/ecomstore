@@ -1,7 +1,7 @@
 import axios from "axios"
-import { APIURL } from "./constant"
+import { API_URL } from "./constant"
 
-const cleanUrl = (url) => `${APIURL}/${String(url || "").replace(/^\/+/, "")}`
+const cleanUrl = (url) => `${API_URL}/${String(url || "").replace(/^\/+/, "")}`
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem("token")
