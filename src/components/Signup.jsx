@@ -171,61 +171,6 @@ export default function Signup({ initialMode }) {
             </p>
           </div>
 
-          {/* Quick Role Credentials */}
-          {authType === "login" && (
-            <div className="mb-6 p-3 bg-[#FAF8F5] border border-[#E5DFD5]">
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#8E877E] mb-2">
-                Quick Role Credentials
-              </p>
-              <div className="grid grid-cols-2 gap-2 text-[10px]">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEmail("admin@ecomstore.com")
-                    setPassword("password123")
-                  }}
-                  className="px-2 py-1.5 text-left border border-[#E5DFD5] hover:border-[#C5A059] bg-white transition-colors cursor-pointer"
-                >
-                  <span className="font-bold text-[#1A1816] block">Admin</span>
-                  <span className="text-[#8E877E] text-[9px]">admin@ecomstore.com</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEmail("sales@ecomstore.com")
-                    setPassword("password123")
-                  }}
-                  className="px-2 py-1.5 text-left border border-[#E5DFD5] hover:border-[#C5A059] bg-white transition-colors cursor-pointer"
-                >
-                  <span className="font-bold text-[#1A1816] block">Salesperson</span>
-                  <span className="text-[#8E877E] text-[9px]">sales@ecomstore.com</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEmail("logistics@ecomstore.com")
-                    setPassword("password123")
-                  }}
-                  className="px-2 py-1.5 text-left border border-[#E5DFD5] hover:border-[#C5A059] bg-white transition-colors cursor-pointer"
-                >
-                  <span className="font-bold text-[#1A1816] block">Logistics</span>
-                  <span className="text-[#8E877E] text-[9px]">logistics@ecomstore.com</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEmail("user@ecomstore.com")
-                    setPassword("password123")
-                  }}
-                  className="px-2 py-1.5 text-left border border-[#E5DFD5] hover:border-[#C5A059] bg-white transition-colors cursor-pointer"
-                >
-                  <span className="font-bold text-[#1A1816] block">User</span>
-                  <span className="text-[#8E877E] text-[9px]">user@ecomstore.com</span>
-                </button>
-              </div>
-            </div>
-          )}
-
           {/* Error Banner */}
           {errorMessage && (
             <div className="mb-6 p-3 bg-red-50 border border-red-300 text-red-800 text-xs font-normal">
