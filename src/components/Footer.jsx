@@ -1,26 +1,38 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
+import { ArrowRight, CheckCircle2 } from "lucide-react"
 
 export default function Footer() {
+  const [email, setEmail] = useState("")
   const [subscribed, setSubscribed] = useState(false)
+
+  const handleSubscribe = (e) => {
+    e.preventDefault()
+    if (!email.trim()) return
+    setSubscribed(true)
+    setEmail("")
+  }
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+    document.documentElement.scrollTop = 0
+    document.body.scrollTop = 0
+  }
+
   return (
-    <footer className="bg-[#1A1816] text-[#FAF8F5] pt-20 pb-12 border-t border-[#C5A059]/40 mt-auto font-sans">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
-          {/* Maison Brand Info */}
-          <div className="md:col-span-4">
+    <footer className="bg-[#141312] text-[#FAF8F5] pt-16 pb-12 border-t border-[#262422] mt-auto font-sans">
+      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-12 pb-14 border-b border-[#262422]">
+          {/* Brand Info */}
+          <div className="md:col-span-4 space-y-4">
             <Link
               to="/"
-              onClick={() => {
-                window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
-                document.documentElement.scrollTop = 0
-                document.body.scrollTop = 0
-              }}
-              className="font-serif font-bold text-2xl tracking-[0.2em] flex items-center gap-2.5 mb-4 text-[#FAF8F5] no-underline cursor-pointer"
+              onClick={scrollToTop}
+              className="font-serif font-bold text-xl tracking-[0.2em] flex items-center gap-2.5 text-[#FAF8F5] no-underline cursor-pointer"
             >
               <svg
-                width="22"
-                height="22"
+                width="20"
+                height="20"
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -41,97 +53,107 @@ export default function Footer() {
               </svg>
               <span>ECOMSTORE</span>
             </Link>
-            <p className="text-xs uppercase tracking-[0.25em] text-[#C5A059] font-bold mb-4">
-              Purveyors of Fine Tailoring & Leathercraft
+            <p className="text-xs sm:text-sm text-[#9C948A] leading-relaxed max-w-sm">
+              Timeless clothing made with premium natural fabrics, classic silhouettes, and honest pricing.
             </p>
-            <p className="text-[#8E877E] text-xs leading-relaxed max-w-sm font-normal">
-              Dedicated to the preservation of European bespoke sartorial standards, Goodyear-welted cobblery, full-grain bridle leather belts, and timeless wardrobe investments.
+            <p className="text-xs text-[#6A645D]">
+              Questions? Email us at <span className="text-[#C5A059]">support@ecomstore.com</span>
             </p>
           </div>
 
-          {/* Sartorial Catalog */}
-          <div className="md:col-span-3">
-            <h5 className="font-serif font-bold tracking-[0.2em] uppercase text-xs mb-6 text-[#C5A059]">
-              The Wardrobe
+          {/* Shop Column */}
+          <div className="md:col-span-2 sm:col-span-6">
+            <h5 className="text-xs font-bold uppercase tracking-wider text-[#FAF8F5] mb-4">
+              Shop
             </h5>
-            <ul className="space-y-3.5 font-medium text-xs tracking-wider uppercase text-[#8E877E] list-none p-0">
+            <ul className="space-y-2.5 text-xs text-[#9C948A] list-none p-0 m-0">
               <li>
-                <Link to="/shop?category=Tailoring+%26+Outerwear" className="hover:text-[#FAF8F5] transition-colors no-underline">
-                  Tailoring & Outerwear
+                <Link to="/shop" onClick={scrollToTop} className="hover:text-white transition-colors no-underline">
+                  All Products
                 </Link>
               </li>
               <li>
-                <Link to="/shop?category=Knitwear+%26+Shirts" className="hover:text-[#FAF8F5] transition-colors no-underline">
-                  Knitwear & Oxford Shirts
+                <Link to="/shop?category=Tailoring+%26+Outerwear" onClick={scrollToTop} className="hover:text-white transition-colors no-underline">
+                  Jackets & Coats
                 </Link>
               </li>
               <li>
-                <Link to="/shop?category=Leather+Shoes" className="hover:text-[#FAF8F5] transition-colors no-underline">
-                  Goodyear Leather Shoes
+                <Link to="/shop?category=Knitwear+%26+Shirts" onClick={scrollToTop} className="hover:text-white transition-colors no-underline">
+                  Knitwear & Shirts
                 </Link>
               </li>
               <li>
-                <Link to="/shop?category=Belts+%26+Leather+Goods" className="hover:text-[#FAF8F5] transition-colors no-underline">
-                  Belts & Leather Goods
+                <Link to="/shop?category=Leather+Shoes" onClick={scrollToTop} className="hover:text-white transition-colors no-underline">
+                  Footwear
                 </Link>
               </li>
               <li>
-                <Link to="/shop?category=Fine+Accessories" className="hover:text-[#FAF8F5] transition-colors no-underline">
-                  Horology & Accessories
-                </Link>
-              </li>
-              <li>
-                <Link to="/sale" className="text-[#C5A059] hover:text-white transition-colors no-underline font-bold">
-                  ❖ Seasonal Archive Sale
+                <Link to="/sale" onClick={scrollToTop} className="text-[#C5A059] hover:text-white transition-colors no-underline font-semibold">
+                  Sale Items
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* The Maison */}
-          <div className="md:col-span-2">
-            <h5 className="font-serif font-bold tracking-[0.2em] uppercase text-xs mb-6 text-[#C5A059]">
-              The House
+          {/* About & Support Column */}
+          <div className="md:col-span-2 sm:col-span-6">
+            <h5 className="text-xs font-bold uppercase tracking-wider text-[#FAF8F5] mb-4">
+              Company
             </h5>
-            <ul className="space-y-3.5 font-medium text-xs tracking-wider uppercase text-[#8E877E] list-none p-0">
-              <li><Link to="/about" className="hover:text-[#FAF8F5] transition-colors no-underline">About The Maison</Link></li>
-              <li><Link to="/account" className="hover:text-[#FAF8F5] transition-colors no-underline">My Purchases & Orders</Link></li>
-              <li><Link to="/account?tab=track" className="hover:text-[#FAF8F5] transition-colors no-underline">Track Consignment</Link></li>
-              <li><Link to="/account?tab=returns" className="hover:text-[#FAF8F5] transition-colors no-underline">Returns & Exchanges</Link></li>
+            <ul className="space-y-2.5 text-xs text-[#9C948A] list-none p-0 m-0">
+              <li>
+                <Link to="/about" onClick={scrollToTop} className="hover:text-white transition-colors no-underline">
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link to="/account" onClick={scrollToTop} className="hover:text-white transition-colors no-underline">
+                  My Orders
+                </Link>
+              </li>
+              <li>
+                <Link to="/account?tab=track" onClick={scrollToTop} className="hover:text-white transition-colors no-underline">
+                  Track an Order
+                </Link>
+              </li>
+              <li>
+                <Link to="/account?tab=returns" onClick={scrollToTop} className="hover:text-white transition-colors no-underline">
+                  Returns & Exchanges
+                </Link>
+              </li>
             </ul>
           </div>
 
-          {/* Private Gazette / Newsletter */}
-          <div className="md:col-span-3">
-            <h5 className="font-serif font-bold tracking-[0.2em] uppercase text-xs mb-6 text-[#C5A059]">
-              Private Gazette
+          {/* Newsletter Column */}
+          <div className="md:col-span-4">
+            <h5 className="text-xs font-bold uppercase tracking-wider text-[#FAF8F5] mb-4">
+              Stay in Touch
             </h5>
-            <p className="text-[#8E877E] text-xs mb-4 leading-relaxed font-normal">
-              Receive private dispatches regarding seasonal cloth arrivals, limited leather batches, and trunk show appointments.
+            <p className="text-xs text-[#9C948A] leading-relaxed mb-4">
+              Subscribe for new product drops, seasonal releases, and private discounts.
             </p>
+
             {subscribed ? (
-              <p className="text-xs text-[#FAF8F5] pt-1">
-                You are subscribed to the private gazette.
-              </p>
+              <div className="flex items-center gap-2 p-3 bg-[#C5A059]/10 border border-[#C5A059]/30 text-xs text-[#C5A059] rounded">
+                <CheckCircle2 size={16} />
+                <span>Thank you! You’re on the list.</span>
+              </div>
             ) : (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault()
-                  setSubscribed(true)
-                }}
-                className="flex border-b border-[#C5A059] pb-2"
-              >
+              <form onSubmit={handleSubscribe} className="flex gap-2">
                 <input
                   type="email"
                   required
-                  placeholder="YOUR CORRESPONDENCE EMAIL"
-                  className="bg-transparent w-full focus:outline-none text-[11px] font-semibold placeholder:text-[#8E877E] uppercase tracking-wider text-[#FAF8F5]"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="flex-1 bg-[#1F1D1B] border border-[#33302C] focus:border-[#C5A059] focus:outline-none px-3.5 py-2.5 text-xs text-white placeholder:text-[#6A645D] rounded"
                 />
                 <button
                   type="submit"
-                  className="text-xs font-serif uppercase tracking-[0.2em] text-[#C5A059] hover:text-white transition-colors cursor-pointer pl-2 font-bold"
+                  className="bg-[#C5A059] hover:bg-[#d8b368] text-[#141312] px-4 py-2.5 text-xs font-bold uppercase tracking-wider transition-colors rounded cursor-pointer shrink-0 inline-flex items-center gap-1.5"
                 >
-                  Inscribe
+                  <span>Join</span>
+                  <ArrowRight size={13} />
                 </button>
               </form>
             )}
@@ -139,12 +161,18 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-[#C5A059]/20 pt-8 flex flex-col md:flex-row justify-between items-center text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8E877E] gap-4">
-          <p>&copy; {new Date().getFullYear()} ECOMSTORE HERITAGE & SARTORIAL PURVEYORS. ALL RIGHTS RESERVED.</p>
-          <div className="flex space-x-6">
-            <a href="#" className="hover:text-[#FAF8F5] transition-colors no-underline">Bespoke Terms</a>
-            <a href="#" className="hover:text-[#FAF8F5] transition-colors no-underline">Privacy Dispatches</a>
-            <a href="#" className="hover:text-[#FAF8F5] transition-colors no-underline">Provenance</a>
+        <div className="pt-8 flex flex-col sm:flex-row justify-between items-center text-xs text-[#6A645D] gap-4">
+          <p>© {new Date().getFullYear()} Ecomstore. All rights reserved.</p>
+          <div className="flex gap-6 text-xs">
+            <Link to="/about" onClick={scrollToTop} className="hover:text-[#9C948A] transition-colors no-underline">
+              Terms of Service
+            </Link>
+            <Link to="/about" onClick={scrollToTop} className="hover:text-[#9C948A] transition-colors no-underline">
+              Privacy Policy
+            </Link>
+            <Link to="/about" onClick={scrollToTop} className="hover:text-[#9C948A] transition-colors no-underline">
+              Shipping & Returns
+            </Link>
           </div>
         </div>
       </div>
