@@ -29,30 +29,30 @@ export default function Wishlist() {
     <div className="min-h-screen bg-[#FAF8F5] text-[#1A1816] py-14 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-10 border-b border-[#E5DFD5] pb-6">
-          <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#8E877E] block mb-1">
-            Private Archive
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[#8E877E] block mb-1">
+            Wishlist
           </span>
           <h1 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-[#1A1816] mb-2">
-            Saved Wardrobe Pieces
+            Your Wishlist
           </h1>
           <p className="text-xs text-[#6A645D] uppercase tracking-wider">
-            Curated pieces reserved for future consideration.
+            Items you have saved to purchase later.
           </p>
         </div>
 
         {wishlist.length === 0 ? (
           <div className="text-center py-16 bg-[#F2EFE9] border border-[#E5DFD5] p-8 max-w-xl mx-auto">
             <p className="font-serif text-xl font-bold uppercase tracking-wider mb-2 text-[#1A1816]">
-              Your private archive is empty
+              Your wishlist is empty
             </p>
             <p className="text-xs text-[#8E877E] uppercase tracking-wider mb-6">
-              Explore our sartorial house collections and tap the heart icon on any piece to save it here.
+              Browse our shop and tap the heart icon on any product to save it here.
             </p>
             <Link
               to="/shop"
               className="inline-block bg-[#1A1816] text-[#FAF8F5] px-6 py-2.5 font-semibold uppercase tracking-wider text-xs no-underline"
             >
-              Start Exploring
+              Browse Products
             </Link>
           </div>
         ) : (
@@ -68,8 +68,8 @@ export default function Wishlist() {
                 </Link>
 
                 <div className="p-4 flex flex-col flex-1">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#8E877E] mb-1">
-                    {product.category || "Tailoring"}
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#8E877E] mb-1">
+                    {product.category || "Apparel"}
                   </span>
                   <Link
                     to={`/products/${product._id}`}
@@ -86,7 +86,7 @@ export default function Wishlist() {
                       onClick={() => handleMoveToCart(product)}
                       className="flex-1 bg-[#1A1816] text-[#FAF8F5] py-2 text-xs font-semibold uppercase tracking-wider hover:bg-[#C5A059] hover:text-[#1A1816] transition-colors cursor-pointer"
                     >
-                      Move To Bag
+                      Add to Cart
                     </button>
                     <button
                       onClick={() => removeFromWishlist(product)}

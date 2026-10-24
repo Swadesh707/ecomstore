@@ -58,14 +58,14 @@ export default function ProductDetails() {
   const handleAddToCart = () => {
     if (!product) return
     addToCart(product, quantity, selectedSize, selectedColor)
-    showToast(`Acquired ${quantity}x ${product.title} to your bag.`)
+    showToast(`Added ${quantity}x ${product.title} to your cart.`)
   }
 
   const handleToggleWishlist = async () => {
     if (!product) return
     const added = await toggleWishlist(product)
     setIsWishlisted(added)
-    showToast(added ? "Saved to your private archive." : "Removed from archive.")
+    showToast(added ? "Saved to your wishlist." : "Removed from wishlist.")
   }
 
   const showToast = (msg) => {
@@ -78,8 +78,8 @@ export default function ProductDetails() {
       <div className="min-h-[70vh] flex justify-center items-center font-sans bg-[#FAF8F5]">
         <div className="text-center">
           <div className="w-10 h-10 border-2 border-[#1A1816] border-t-[#C5A059] rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-xs font-serif uppercase tracking-[0.2em] text-[#8E877E]">
-            Consulting Archive...
+          <p className="text-xs uppercase tracking-wider text-[#8E877E]">
+            Loading product...
           </p>
         </div>
       </div>
@@ -90,13 +90,13 @@ export default function ProductDetails() {
     return (
       <div className="max-w-7xl mx-auto px-4 py-24 text-center font-sans bg-[#FAF8F5]">
         <p className="font-serif text-2xl font-bold uppercase tracking-wider mb-6 text-[#1A1816]">
-          Piece Not Located in Archive
+          Product Not Found
         </p>
         <Link
           to="/shop"
-          className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] bg-[#1A1816] text-[#FAF8F5] px-8 py-3.5 hover:bg-[#C5A059] hover:text-[#1A1816] transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider bg-[#1A1816] text-[#FAF8F5] px-8 py-3.5 hover:bg-[#C5A059] hover:text-[#1A1816] transition-colors"
         >
-          <ArrowLeft size={14} /> Back to Catalog
+          <ArrowLeft size={14} /> Back to Shop
         </Link>
       </div>
     )
@@ -108,10 +108,10 @@ export default function ProductDetails() {
         {/* Navigation Breadcrumb */}
         <Link
           to="/shop"
-          className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#8E877E] hover:text-[#1A1816] mb-10 transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#8E877E] hover:text-[#1A1816] mb-10 transition-colors"
         >
           <ArrowLeft size={14} />
-          Return to Sartorial Collection
+          Back to Shop
         </Link>
 
         {/* Product Display Container */}
@@ -129,8 +129,8 @@ export default function ProductDetails() {
                   }}
                   className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                 />
-                <div className="absolute top-4 left-4 bg-[#1A1816] text-[#FAF8F5] px-3.5 py-1 text-[9px] font-bold uppercase tracking-[0.2em]">
-                  {product.category || "Bespoke"}
+                <div className="absolute top-4 left-4 bg-[#1A1816] text-[#FAF8F5] px-3.5 py-1 text-[9px] font-bold uppercase tracking-wider">
+                  {product.category || "Featured"}
                 </div>
               </div>
             </TiltCard>
@@ -164,12 +164,8 @@ export default function ProductDetails() {
           <div className="flex flex-col space-y-7">
             <div>
               <div className="flex items-center gap-2.5 mb-2.5">
-                <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#8E877E]">
-                  {product.category || "Tailoring"}
-                </span>
-                <span className="text-[#8E877E]">•</span>
-                <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#C5A059]">
-                  Bespoke Handcrafted
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#8E877E]">
+                  {product.category || "Apparel"}
                 </span>
               </div>
 
@@ -185,11 +181,11 @@ export default function ProductDetails() {
             {/* Size Selector */}
             <div className="border-t border-[#E5DFD5] pt-6">
               <div className="flex justify-between items-center mb-3">
-                <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[#1A1816]">
-                  Select Sizing
+                <span className="text-xs font-semibold uppercase tracking-wider text-[#1A1816]">
+                  Select Size
                 </span>
-                <span className="text-[10px] uppercase tracking-widest text-[#8E877E]">
-                  Classic Fit Guarantee
+                <span className="text-[10px] uppercase tracking-wider text-[#8E877E]">
+                  Standard Sizing
                 </span>
               </div>
               <div className="grid grid-cols-5 gap-2">
@@ -212,8 +208,8 @@ export default function ProductDetails() {
 
             {/* Color Shade Swatches */}
             <div>
-              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[#1A1816] block mb-3">
-                Fabric Shade: {selectedColor}
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#1A1816] block mb-3">
+                Color: {selectedColor}
               </span>
               <div className="flex gap-3">
                 {colors.map((c) => (
@@ -265,10 +261,10 @@ export default function ProductDetails() {
 
                 <button
                   onClick={handleAddToCart}
-                  className="flex-1 bg-[#1A1816] text-[#FAF8F5] h-12 font-semibold uppercase tracking-[0.2em] text-xs hover:bg-[#C5A059] hover:text-[#1A1816] transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                  className="flex-1 bg-[#1A1816] text-[#FAF8F5] h-12 font-semibold uppercase tracking-wider text-xs hover:bg-[#C5A059] hover:text-[#1A1816] transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-md"
                 >
                   <ShoppingBag size={15} />
-                  Add To Wardrobe
+                  Add to Cart
                 </button>
 
                 <button
@@ -278,7 +274,7 @@ export default function ProductDetails() {
                       ? "border-[#78281F] text-[#78281F] bg-[#78281F]/5"
                       : "border-[#E5DFD5] text-[#1A1816] hover:border-[#1A1816] bg-[#F2EFE9]"
                   }`}
-                  title="Save in Private Archive"
+                  title="Save to Wishlist"
                 >
                   <Heart size={18} fill={isWishlisted ? "currentColor" : "none"} />
                 </button>
@@ -289,39 +285,39 @@ export default function ProductDetails() {
                   handleAddToCart()
                   navigate("/checkout")
                 }}
-                className="w-full bg-[#C5A059] text-[#1A1816] py-3.5 font-bold uppercase tracking-[0.2em] text-xs hover:bg-[#C5A059]/90 transition-colors cursor-pointer"
+                className="w-full bg-[#C5A059] text-[#1A1816] py-3.5 font-bold uppercase tracking-wider text-xs hover:bg-[#C5A059]/90 transition-colors cursor-pointer"
               >
-                Proceed To Commission
+                Buy Now
               </button>
             </div>
 
-            {/* Description / Sartorial Notes */}
+            {/* Description */}
             <div className="border-t border-[#E5DFD5] pt-6 space-y-3">
-              <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#1A1816]">
-                Sartorial Notes & Craftsmanship
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-[#1A1816]">
+                Product Details
               </h3>
               <p className="text-sm text-[#6A645D] leading-relaxed font-normal">
                 {product.description ||
-                  "Hand-stitched by master artisans using time-honored European tailoring practices. Crafted from unblended natural fibers for a fluid drape, sublime tactile sensation, and multigenerational longevity."}
+                  "Crafted from premium natural materials with durable stitching and classic design made to last."}
               </p>
             </div>
 
-            {/* Heritage Guarantees */}
+            {/* Guarantees */}
             <div className="border-t border-[#E5DFD5] pt-6 grid grid-cols-3 gap-4 text-center">
               <div className="flex flex-col items-center">
                 <Truck size={18} className="text-[#8E877E] mb-1.5" />
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#1A1816]">Private Courier</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#1A1816]">Free Shipping</span>
                 <span className="text-[9px] text-[#8E877E]">Orders over $150</span>
               </div>
               <div className="flex flex-col items-center">
                 <RefreshCw size={18} className="text-[#8E877E] mb-1.5" />
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#1A1816]">Complimentary</span>
-                <span className="text-[9px] text-[#8E877E]">30-Day Returns</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#1A1816]">30-Day Returns</span>
+                <span className="text-[9px] text-[#8E877E]">Hassle-free exchange</span>
               </div>
               <div className="flex flex-col items-center">
-                <Award size={18} className="text-[#C5A059] mb-1.5" />
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#1A1816]">Authentic</span>
-                <span className="text-[9px] text-[#8E877E]">Ancestral Mills</span>
+                <ShieldCheck size={18} className="text-[#C5A059] mb-1.5" />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#1A1816]">Quality Guarantee</span>
+                <span className="text-[9px] text-[#8E877E]">Authentic materials</span>
               </div>
             </div>
           </div>
