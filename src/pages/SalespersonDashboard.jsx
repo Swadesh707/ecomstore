@@ -423,7 +423,6 @@ export default function SalespersonDashboard() {
                     <th className="p-4">Customer</th>
                     <th className="p-4">Sold By</th>
                     <th className="p-4">Items Sold</th>
-                    <th className="p-4">Settlement</th>
                     <th className="p-4 text-right">Total</th>
                     <th className="p-4 text-center">Action</th>
                   </tr>
@@ -431,7 +430,6 @@ export default function SalespersonDashboard() {
                 <tbody className="divide-y divide-[#E5DFD5]">
                   {filteredOrders.map((order) => {
                     const seller = order.soldBy || (order._id?.startsWith("custom_") ? salespersonName : "In-Store Staff")
-                    const isCOD = order.paymentMethod === "cod"
 
                     return (
                       <tr key={order._id} className="hover:bg-[#FAF8F5]/60 transition-colors">
@@ -463,16 +461,6 @@ export default function SalespersonDashboard() {
                               </div>
                             ))}
                           </div>
-                        </td>
-
-                        <td className="p-4">
-                          <div className="flex items-center gap-1 text-[#1A1816] font-semibold text-[11px]">
-                            {isCOD ? <Banknote size={13} className="text-[#C5A059]" /> : <CreditCard size={13} />}
-                            <span>{isCOD ? "Cash" : "Card"}</span>
-                          </div>
-                          <span className="inline-block text-[9px] uppercase font-bold text-emerald-800 bg-emerald-50 px-1.5 py-0.2 mt-0.5 border border-emerald-200">
-                            {order.paymentStatus || "Paid"}
-                          </span>
                         </td>
 
                         <td className="p-4 text-right font-serif font-bold text-sm text-[#1A1816]">
@@ -627,7 +615,7 @@ export default function SalespersonDashboard() {
                   </div>
                 )}
                 <div className="flex justify-between text-base font-bold text-[#1A1816] pt-2 border-t border-[#E5DFD5]">
-                  <span>Total Settled:</span>
+                  <span>Total:</span>
                   <span className="font-mono font-bold">
                     ${Number(selectedInvoiceOrder.totalAmount || 0).toFixed(2)}
                   </span>
@@ -850,7 +838,7 @@ export default function SalespersonDashboard() {
                     </div>
                   )}
                   <div className="flex justify-between font-bold text-[#1A1816] pt-1.5 border-t border-[#E5DFD5]">
-                    <span>Total Settled:</span>
+                    <span>Total:</span>
                     <span className="font-mono text-sm text-[#1A1816]">
                       ${Math.max(
                         0,
@@ -1059,7 +1047,7 @@ export default function SalespersonDashboard() {
                     </div>
                   )}
                   <div className="flex justify-between font-bold text-[#1A1816] pt-1.5 border-t border-[#E5DFD5]">
-                    <span>Total Settled:</span>
+                    <span>Total:</span>
                     <span className="font-mono text-sm text-[#1A1816]">
                       ${Math.max(
                         0,
