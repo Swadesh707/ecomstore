@@ -134,7 +134,15 @@ export default function SalespersonDashboard() {
       const savedBill = res.data
       setOrders((prev) => [savedBill, ...prev])
       setSelectedInvoiceOrder(savedBill)
+      setProducts((prev) =>
+        prev.map((p) =>
+          String(p._id) === String(customBill.productId)
+            ? { ...p, stock: Math.max(0, (Number(p.stock) || 10) - Number(customBill.quantity || 1)) }
+            : p
+        )
+      )
       setIsCustomBillModalOpen(false)
+      loadDashboardData()
     } catch (err) {
       console.error("Failed to save bill in database, saving locally:", err)
       const timestamp = Date.now().toString().slice(-4)
@@ -549,7 +557,7 @@ export default function SalespersonDashboard() {
                       <option value="">-- Select an Item --</option>
                       {products.map((p) => (
                         <option key={p._id} value={p._id}>
-                          {p.title} (${Number(p.price || 0).toFixed(2)})
+                          {p.title} (${Number(p.price || 0).toFixed(2)}) — Stock: {p.stock !== undefined ? p.stock : 10}
                         </option>
                       ))}
                     </select>
