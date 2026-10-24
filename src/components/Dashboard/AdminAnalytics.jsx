@@ -40,7 +40,7 @@ export default function AdminAnalytics() {
       <div className="min-h-[60vh] flex flex-col justify-center items-center">
         <div className="w-10 h-10 border-2 border-[#1A1816] border-t-[#C5A059] rounded-full animate-spin mb-3"></div>
         <p className="text-xs uppercase tracking-[0.2em] text-[#8E877E] font-serif">
-          Compiling Financial & Atelier Intelligence...
+          Loading analytics...
         </p>
       </div>
     )
@@ -126,14 +126,14 @@ export default function AdminAnalytics() {
           </p>
           <div className="mt-2 flex items-center text-[10px] font-semibold text-[#1C352D] uppercase tracking-wider gap-1">
             <ArrowUpRight size={13} />
-            <span>From {data.totalOrders} Recorded Commissions</span>
+            <span>From {data.totalOrders} orders</span>
           </div>
         </div>
 
         {/* Card 2: Net Profit & Margin */}
         <div className="bg-white border border-[#E5DFD5] p-5 shadow-xs">
           <div className="flex items-center justify-between mb-3 text-[#8E877E]">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Net Atelier Profit</span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Net Profit</span>
             <div className="w-8 h-8 rounded-full bg-[#FAF8F5] border border-[#E5DFD5] flex items-center justify-center text-[#C5A059]">
               <Percent size={16} />
             </div>
@@ -158,14 +158,14 @@ export default function AdminAnalytics() {
             ${data.totalLogisticsCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}
           </p>
           <div className="mt-2 text-[10px] font-semibold uppercase tracking-wider text-[#8E877E]">
-            Collected: ${data.totalShippingCollected.toFixed(2)} ❖ Packaging & Dispatch
+            Collected: ${data.totalShippingCollected.toFixed(2)} — Shipping
           </div>
         </div>
 
         {/* Card 4: Product Manufacturing (COGS) */}
         <div className="bg-white border border-[#E5DFD5] p-5 shadow-xs">
           <div className="flex items-center justify-between mb-3 text-[#8E877E]">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Atelier Material Cost</span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Product Cost</span>
             <div className="w-8 h-8 rounded-full bg-[#FAF8F5] border border-[#E5DFD5] flex items-center justify-center text-[#1A1816]">
               <Package size={16} />
             </div>
@@ -174,7 +174,7 @@ export default function AdminAnalytics() {
             ${data.totalProductCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}
           </p>
           <div className="mt-2 text-[10px] font-semibold uppercase tracking-wider text-[#8E877E]">
-            Virgin Wool, Cashmere & Tuscan Cobblery
+            Cost of goods sold
           </div>
         </div>
       </div>
@@ -189,7 +189,7 @@ export default function AdminAnalytics() {
                 Revenue & Sales Trajectory
               </h3>
               <p className="text-[10px] uppercase tracking-wider text-[#8E877E]">
-                Daily & Periodic commission influx
+                Daily & periodic revenue
               </p>
             </div>
             <BarChart3 size={18} className="text-[#C5A059]" />
@@ -235,8 +235,8 @@ export default function AdminAnalytics() {
           </div>
 
           <div className="flex items-center justify-between text-[10px] text-[#8E877E] uppercase tracking-wider mt-3">
-            <span>Range: Recent Commissions</span>
-            <span className="font-semibold text-[#1A1816]">Scale Peak: ${maxRevenueInTrend.toFixed(2)}</span>
+            <span>Range: Recent orders</span>
+            <span className="font-semibold text-[#1A1816]">Peak: ${maxRevenueInTrend.toFixed(2)}</span>
           </div>
         </div>
 
@@ -248,7 +248,7 @@ export default function AdminAnalytics() {
                 Trending Categories
               </h3>
               <p className="text-[10px] uppercase tracking-wider text-[#8E877E]">
-                Revenue share by wardrobe classification
+                Revenue share by category
               </p>
             </div>
             <PieIcon size={18} className="text-[#C5A059]" />
@@ -315,7 +315,7 @@ export default function AdminAnalytics() {
                 <TrendingUp size={16} className="text-[#C5A059]" /> Trending in Orders
               </h3>
               <p className="text-[10px] uppercase tracking-wider text-[#8E877E]">
-                Most purchased pieces across commissions
+                Most purchased products
               </p>
             </div>
           </div>
@@ -338,7 +338,7 @@ export default function AdminAnalytics() {
                         {prod.title}
                       </span>
                       <span className="text-[10px] text-[#8E877E] uppercase tracking-wider block">
-                        Units Commissioned: <strong className="text-[#1A1816]">{prod.quantity}</strong>
+                        Units sold: <strong className="text-[#1A1816]">{prod.quantity}</strong>
                       </span>
                     </div>
                   </div>
@@ -361,7 +361,7 @@ export default function AdminAnalytics() {
                 <Heart size={16} className="text-[#78281F]" /> Trending in Wishlists
               </h3>
               <p className="text-[10px] uppercase tracking-wider text-[#8E877E]">
-                Most favorited pieces in patron private archives
+                Most wishlisted products
               </p>
             </div>
           </div>
@@ -384,7 +384,7 @@ export default function AdminAnalytics() {
                         {item.title}
                       </span>
                       <span className="text-[10px] text-[#8E877E] uppercase tracking-wider block">
-                        {item.category} ❖ Saved in {item.wishlistCount} patron archives
+                        {item.category} — Saved by {item.wishlistCount} users
                       </span>
                     </div>
                   </div>
@@ -394,7 +394,7 @@ export default function AdminAnalytics() {
                 </div>
               ))
             ) : (
-              <p className="text-xs text-[#8E877E] py-4">No pieces currently saved in patron wishlists.</p>
+              <p className="text-xs text-[#8E877E] py-4">No items in wishlists yet.</p>
             )}
           </div>
         </div>
