@@ -467,10 +467,7 @@ export default function SalespersonDashboard() {
 
               <form onSubmit={handleCreateCustomBill} className="space-y-4 text-xs font-semibold uppercase tracking-wider">
                 <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <label className="text-[#8E877E]">Sold By (Salesperson)</label>
-                    <span className="text-[10px] text-[#C5A059] font-bold">Auto-placed</span>
-                  </div>
+                  <label className="block mb-1 text-[#8E877E]">Sold By (Salesperson)</label>
                   <input
                     type="text"
                     required
@@ -539,10 +536,7 @@ export default function SalespersonDashboard() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <div className="flex items-center justify-between mb-1">
-                      <label className="text-[#8E877E]">Unit Price ($)</label>
-                      <span className="text-[10px] text-[#C5A059] font-bold">Auto-placed</span>
-                    </div>
+                    <label className="block mb-1 text-[#8E877E]">Unit Price ($)</label>
                     <input
                       type="number"
                       required
