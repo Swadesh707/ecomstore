@@ -4,7 +4,6 @@ import {
   Receipt,
   Search,
   RefreshCw,
-  UserCheck,
   FileText,
   Printer,
   X,
@@ -199,7 +198,7 @@ export default function ManageInStoreSales() {
               <thead className="bg-[#FAF8F5] border-b border-[#E6E2DE] text-[#6A645D] uppercase tracking-wider font-semibold">
                 <tr>
                   <th className="py-3.5 px-4">Bill #</th>
-                  <th className="py-3.5 px-4">Authorized By</th>
+                  <th className="py-3.5 px-4">Sold By</th>
                   <th className="py-3.5 px-4">Items Sold</th>
                   <th className="py-3.5 px-4 text-center">Discount</th>
                   <th className="py-3.5 px-4 text-right">Total</th>
@@ -209,7 +208,7 @@ export default function ManageInStoreSales() {
               <tbody className="divide-y divide-[#E6E2DE]">
                 {filteredBills.map((bill) => {
                   const authorizingSalesperson =
-                    bill.soldBy || "In-Store Salesperson"
+                    bill.soldBy || "Salesperson"
                   const discountVal = Number(bill.discountAmount || 0)
 
                   return (
@@ -236,12 +235,9 @@ export default function ManageInStoreSales() {
                         </span>
                       </td>
 
-                      {/* Authorized By (Salesperson) */}
-                      <td className="py-3.5 px-4">
-                        <div className="flex items-center gap-1.5 font-semibold text-[#1A1816]">
-                          <UserCheck size={14} className="text-[#C5A059] shrink-0" />
-                          <span>{authorizingSalesperson}</span>
-                        </div>
+                      {/* Sold By (Salesperson) */}
+                      <td className="py-3.5 px-4 font-semibold text-[#1A1816]">
+                        {authorizingSalesperson}
                       </td>
 
                       {/* Items Sold */}
@@ -337,11 +333,10 @@ export default function ManageInStoreSales() {
             <div className="bg-[#FAF8F5] border border-[#E5DFD5] p-4 mb-6 flex items-center justify-between">
               <div>
                 <span className="text-[10px] uppercase font-bold text-[#C5A059] block mb-0.5">
-                  Authorized By (Salesperson)
+                  Sold By (Salesperson)
                 </span>
-                <p className="font-bold text-[#1A1816] text-sm flex items-center gap-1.5 m-0">
-                  <UserCheck size={14} className="text-[#C5A059]" />
-                  <span>{selectedBill.soldBy || "In-Store Salesperson"}</span>
+                <p className="font-bold text-[#1A1816] text-sm m-0">
+                  {selectedBill.soldBy || "Salesperson"}
                 </p>
               </div>
               <div className="text-right">

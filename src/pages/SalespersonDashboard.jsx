@@ -11,7 +11,6 @@ import {
   Banknote,
   ArrowLeft,
   X,
-  UserCheck,
   Edit2,
   Trash2,
 } from "lucide-react"
@@ -446,10 +445,7 @@ export default function SalespersonDashboard() {
                         </td>
 
                         <td className="p-4">
-                          <div className="flex items-center gap-1.5 text-xs font-semibold text-[#1A1816]">
-                            <UserCheck size={13} className="text-[#C5A059]" />
-                            <span>{seller}</span>
-                          </div>
+                          <span className="text-xs font-semibold text-[#1A1816]">{seller}</span>
                         </td>
 
                         <td className="p-4">
