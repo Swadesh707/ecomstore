@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
-import { GetRequest, PostRequest } from "../config/http"
+import { GetRequest, PostRequest, PutRequest, DeleteRequest } from "../config/http"
 import {
   FileText,
   Printer,
@@ -12,6 +12,8 @@ import {
   ArrowLeft,
   X,
   UserCheck,
+  Edit2,
+  Trash2,
 } from "lucide-react"
 
 export default function SalespersonDashboard() {
@@ -189,6 +191,155 @@ export default function SalespersonDashboard() {
     }
   }
 
+  // Edit Bill State & Handlers
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [editingBillId, setEditingBillId] = useState(null)
+  const [editBillForm, setEditBillForm] = useState({
+    soldBy: "",
+    customerName: "",
+    customerEmail: "",
+    productId: "",
+    itemTitle: "",
+    quantity: 1,
+    unitPrice: 0,
+    paymentMethod: "card",
+    discountPercentage: 0,
+  })
+
+  const handleOpenEditBill = (order) => {
+    const primaryItem = order.items && order.items.length > 0 ? order.items[0] : null
+    let matchedProdId = primaryItem?.productId || ""
+    if (!matchedProdId && primaryItem?.title) {
+      const found = products.find((p) => p.title === primaryItem.title)
+      if (found) matchedProdId = found._id
+    }
+
+    let discountPercent = order.discountPercentage || 0
+    if (!discountPercent && order.subtotal && order.discountAmount) {
+      discountPercent = Math.round((Number(order.discountAmount) / Number(order.subtotal)) * 100)
+    }
+
+    setEditingBillId(order._id)
+    setEditBillForm({
+      soldBy: order.soldBy || salespersonName,
+      customerName: order.customer?.name || "",
+      customerEmail: order.customer?.email || "",
+      productId: matchedProdId,
+      itemTitle: primaryItem?.title || "",
+      quantity: primaryItem?.quantity || 1,
+      unitPrice: primaryItem?.price || 0,
+      paymentMethod: order.paymentMethod || "card",
+      discountPercentage: discountPercent,
+    })
+    setIsEditModalOpen(true)
+  }
+
+  const handleEditItemSelect = (selectedId) => {
+    const selected = products.find((p) => String(p._id) === String(selectedId))
+    if (selected) {
+      setEditBillForm((prev) => ({
+        ...prev,
+        productId: selected._id,
+        itemTitle: selected.title,
+        unitPrice: Number(selected.price || 0),
+      }))
+    } else {
+      setEditBillForm((prev) => ({
+        ...prev,
+        productId: "",
+        itemTitle: "",
+        unitPrice: 0,
+      }))
+    }
+  }
+
+  const handleSaveEditedBill = async (e) => {
+    e.preventDefault()
+    if (!editingBillId) return
+
+    const subtotal = Number(editBillForm.unitPrice) * Number(editBillForm.quantity)
+    const discountPercent = Math.max(0, Math.min(100, Number(editBillForm.discountPercentage) || 0))
+    const discountAmount = (subtotal * discountPercent) / 100
+    const totalAmount = Math.max(0, subtotal - discountAmount)
+
+    const selectedProd = products.find((p) => String(p._id) === String(editBillForm.productId))
+    const itemImage = selectedProd?.image || (selectedProd?.images && selectedProd.images[0]) || ""
+
+    const payload = {
+      customerName: editBillForm.customerName,
+      customerEmail: editBillForm.customerEmail,
+      productId: editBillForm.productId || null,
+      itemTitle: editBillForm.itemTitle || (selectedProd ? selectedProd.title : "Custom Item"),
+      unitPrice: Number(editBillForm.unitPrice),
+      quantity: Number(editBillForm.quantity),
+      discountPercentage: discountPercent,
+      discountAmount,
+      totalAmount,
+      paymentMethod: editBillForm.paymentMethod,
+      image: itemImage,
+    }
+
+    try {
+      const res = await PutRequest(`orders/in-store-bill/${editingBillId}`, payload)
+      const updated = res.data
+      setOrders((prev) => prev.map((o) => (o._id === editingBillId ? updated : o)))
+      if (selectedInvoiceOrder && selectedInvoiceOrder._id === editingBillId) {
+        setSelectedInvoiceOrder(updated)
+      }
+      setIsEditModalOpen(false)
+      loadDashboardData()
+    } catch (err) {
+      console.error("Failed to update bill in database:", err)
+      setOrders((prev) =>
+        prev.map((o) => {
+          if (o._id !== editingBillId) return o
+          return {
+            ...o,
+            customer: {
+              ...o.customer,
+              name: editBillForm.customerName,
+              email: editBillForm.customerEmail,
+            },
+            items: [
+              {
+                productId: editBillForm.productId,
+                title: editBillForm.itemTitle,
+                price: Number(editBillForm.unitPrice),
+                quantity: Number(editBillForm.quantity),
+                size: "Standard",
+                color: "Classic",
+                image: itemImage,
+              },
+            ],
+            subtotal,
+            discountAmount,
+            totalAmount,
+            paymentMethod: editBillForm.paymentMethod,
+          }
+        })
+      )
+      setIsEditModalOpen(false)
+    }
+  }
+
+  const handleDeleteBill = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this bill? Stock will be restored.")) return
+    try {
+      await DeleteRequest(`orders/in-store-bill/${id}`)
+      setOrders((prev) => prev.filter((o) => o._id !== id))
+      if (selectedInvoiceOrder && selectedInvoiceOrder._id === id) {
+        setSelectedInvoiceOrder(null)
+      }
+      loadDashboardData()
+    } catch (err) {
+      console.error("Failed to delete bill:", err)
+      setOrders((prev) => prev.filter((o) => o._id !== id))
+      if (selectedInvoiceOrder && selectedInvoiceOrder._id === id) {
+        setSelectedInvoiceOrder(null)
+      }
+    }
+  }
+
   const filteredOrders = orders.filter((o) => {
     if (!searchQuery.trim()) return true
     const q = searchQuery.toLowerCase()
@@ -329,13 +480,30 @@ export default function SalespersonDashboard() {
                         </td>
 
                         <td className="p-4 text-center">
-                          <button
-                            onClick={() => setSelectedInvoiceOrder({ ...order, soldBy: seller })}
-                            className="bg-[#1A1816] hover:bg-[#C5A059] text-white hover:text-[#1A1816] px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-colors inline-flex items-center gap-1.5 cursor-pointer shadow-xs"
-                          >
-                            <FileText size={13} />
-                            <span>View Bill</span>
-                          </button>
+                          <div className="flex items-center justify-center gap-1.5">
+                            <button
+                              onClick={() => setSelectedInvoiceOrder({ ...order, soldBy: seller })}
+                              className="bg-[#1A1816] hover:bg-[#C5A059] text-white hover:text-[#1A1816] px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-colors inline-flex items-center gap-1 cursor-pointer shadow-xs"
+                              title="View Bill"
+                            >
+                              <FileText size={13} />
+                              <span className="hidden sm:inline">View</span>
+                            </button>
+                            <button
+                              onClick={() => handleOpenEditBill(order)}
+                              className="border border-[#E5DFD5] hover:border-[#1A1816] hover:bg-[#FAF8F5] text-[#1A1816] p-1.5 text-[11px] transition-colors cursor-pointer"
+                              title="Edit Bill"
+                            >
+                              <Edit2 size={13} />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteBill(order._id)}
+                              className="border border-[#E5DFD5] hover:border-red-600 hover:bg-red-50 text-[#8E877E] hover:text-red-600 p-1.5 text-[11px] transition-colors cursor-pointer"
+                              title="Delete Bill"
+                            >
+                              <Trash2 size={13} />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     )
@@ -470,20 +638,36 @@ export default function SalespersonDashboard() {
               </div>
 
               {/* Printable Modal Actions */}
-              <div className="mt-8 pt-4 border-t border-[#E5DFD5] flex justify-end gap-3 print:hidden">
+              <div className="mt-8 pt-4 border-t border-[#E5DFD5] flex flex-wrap items-center justify-between gap-3 print:hidden">
                 <button
-                  onClick={() => setSelectedInvoiceOrder(null)}
-                  className="px-4 py-2 border border-[#E5DFD5] text-xs uppercase font-bold tracking-wider text-[#8E877E] hover:text-[#1A1816] cursor-pointer"
+                  onClick={() => handleDeleteBill(selectedInvoiceOrder._id)}
+                  className="px-3.5 py-2 border border-red-200 text-xs uppercase font-bold tracking-wider text-red-600 hover:bg-red-50 transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
-                  Close
+                  <Trash2 size={14} />
+                  <span>Delete Bill</span>
                 </button>
-                <button
-                  onClick={handlePrint}
-                  className="px-5 py-2 bg-[#1A1816] text-[#FAF8F5] hover:bg-[#C5A059] hover:text-[#1A1816] text-xs uppercase font-bold tracking-wider transition-colors flex items-center gap-2 cursor-pointer shadow-xs"
-                >
-                  <Printer size={15} />
-                  Print Receipt / Bill
-                </button>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      const orderToEdit = selectedInvoiceOrder
+                      setSelectedInvoiceOrder(null)
+                      handleOpenEditBill(orderToEdit)
+                    }}
+                    className="px-4 py-2 border border-[#E5DFD5] hover:border-[#1A1816] text-xs uppercase font-bold tracking-wider text-[#1A1816] hover:bg-[#FAF8F5] transition-colors flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Edit2 size={14} />
+                    <span>Edit Bill</span>
+                  </button>
+
+                  <button
+                    onClick={handlePrint}
+                    className="px-5 py-2 bg-[#1A1816] text-[#FAF8F5] hover:bg-[#C5A059] hover:text-[#1A1816] text-xs uppercase font-bold tracking-wider transition-colors flex items-center gap-2 cursor-pointer shadow-xs"
+                  >
+                    <Printer size={15} />
+                    <span>Print Receipt</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -692,6 +876,215 @@ export default function SalespersonDashboard() {
                     className="px-6 py-2 bg-[#1A1816] text-[#FAF8F5] hover:bg-[#C5A059] hover:text-[#1A1816] text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer shadow-xs"
                   >
                     Generate Bill
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+        {/* Modal: Edit In-Store Bill */}
+        {isEditModalOpen && (
+          <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+            <div className="bg-white border border-[#E5DFD5] max-w-lg w-full p-6 sm:p-8 relative shadow-2xl">
+              <button
+                onClick={() => setIsEditModalOpen(false)}
+                className="absolute top-4 right-4 text-[#8E877E] hover:text-[#1A1816] cursor-pointer"
+              >
+                <X size={20} />
+              </button>
+
+              <h2 className="font-serif text-2xl font-bold uppercase tracking-tight text-[#1A1816] mb-4">
+                Edit In-Store Bill
+              </h2>
+
+              <form onSubmit={handleSaveEditedBill} className="space-y-4 text-xs font-semibold uppercase tracking-wider">
+                <div>
+                  <label className="block mb-1 text-[#8E877E]">Sold By (Salesperson)</label>
+                  <input
+                    type="text"
+                    required
+                    readOnly
+                    value={editBillForm.soldBy || salespersonName}
+                    className="w-full p-2.5 bg-[#FAF8F5] border border-[#E5DFD5] text-xs font-semibold text-[#1A1816] focus:outline-none cursor-default"
+                  />
+                </div>
+
+                <div>
+                  <label className="block mb-1 text-[#8E877E]">Customer Name</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Johnathan Smith"
+                    value={editBillForm.customerName}
+                    onChange={(e) => setEditBillForm({ ...editBillForm, customerName: e.target.value })}
+                    className="w-full p-2.5 bg-white border border-[#E5DFD5] text-xs text-[#1A1816] focus:outline-none focus:border-[#C5A059]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block mb-1 text-[#8E877E]">Customer Email</label>
+                  <input
+                    type="email"
+                    required
+                    placeholder="client@domain.com"
+                    value={editBillForm.customerEmail}
+                    onChange={(e) => setEditBillForm({ ...editBillForm, customerEmail: e.target.value })}
+                    className="w-full p-2.5 bg-white border border-[#E5DFD5] text-xs text-[#1A1816] focus:outline-none focus:border-[#C5A059]"
+                  />
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[#8E877E]">Item Sold</label>
+                    <span className="text-[10px] text-[#8E877E]">
+                      {products.length > 0 ? `${products.length} Items in Inventory` : "Loading items..."}
+                    </span>
+                  </div>
+                  {products.length > 0 ? (
+                    <select
+                      required
+                      value={editBillForm.productId}
+                      onChange={(e) => handleEditItemSelect(e.target.value)}
+                      className="w-full p-2.5 bg-white border border-[#E5DFD5] text-xs text-[#1A1816] focus:outline-none focus:border-[#C5A059]"
+                    >
+                      <option value="">-- Select an Item --</option>
+                      {products.map((p) => (
+                        <option key={p._id} value={p._id}>
+                          {p.title} (${Number(p.price || 0).toFixed(2)}) — Stock: {p.stock !== undefined ? p.stock : 10}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      type="text"
+                      required
+                      placeholder="Enter item title"
+                      value={editBillForm.itemTitle}
+                      onChange={(e) => setEditBillForm({ ...editBillForm, itemTitle: e.target.value })}
+                      className="w-full p-2.5 bg-white border border-[#E5DFD5] text-xs text-[#1A1816] focus:outline-none focus:border-[#C5A059]"
+                    />
+                  )}
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block mb-1 text-[#8E877E]">Unit Price ($)</label>
+                    <input
+                      type="number"
+                      required
+                      min="0"
+                      step="0.01"
+                      value={editBillForm.unitPrice}
+                      onChange={(e) => setEditBillForm({ ...editBillForm, unitPrice: e.target.value })}
+                      className="w-full p-2.5 bg-[#FAF8F5] border border-[#E5DFD5] text-xs font-semibold text-[#1A1816] focus:outline-none focus:border-[#C5A059]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-1 text-[#8E877E]">Quantity</label>
+                    <input
+                      type="number"
+                      required
+                      min="1"
+                      value={editBillForm.quantity}
+                      onChange={(e) => setEditBillForm({ ...editBillForm, quantity: e.target.value })}
+                      className="w-full p-2.5 bg-white border border-[#E5DFD5] text-xs text-[#1A1816] focus:outline-none focus:border-[#C5A059]"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block mb-1 text-[#8E877E]">Payment Method</label>
+                    <select
+                      value={editBillForm.paymentMethod}
+                      onChange={(e) => setEditBillForm({ ...editBillForm, paymentMethod: e.target.value })}
+                      className="w-full p-2.5 bg-white border border-[#E5DFD5] text-xs text-[#1A1816] focus:outline-none focus:border-[#1A1816]"
+                    >
+                      <option value="card">Card Payment</option>
+                      <option value="cod">Cash at Counter</option>
+                    </select>
+                  </div>
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-[#8E877E]">Discount (%)</label>
+                      {Number(editBillForm.discountPercentage || 0) > 0 && (
+                        <span className="text-[10px] text-[#C5A059] font-bold">
+                          -${(
+                            ((Number(editBillForm.unitPrice || 0) * Number(editBillForm.quantity || 1)) *
+                              Number(editBillForm.discountPercentage || 0)) /
+                            100
+                          ).toFixed(2)}
+                        </span>
+                      )}
+                    </div>
+                    <input
+                      type="number"
+                      min="0"
+                      max="100"
+                      step="1"
+                      placeholder="0"
+                      value={editBillForm.discountPercentage}
+                      onChange={(e) =>
+                        setEditBillForm({
+                          ...editBillForm,
+                          discountPercentage:
+                            e.target.value === ""
+                              ? ""
+                              : Math.max(0, Math.min(100, Number(e.target.value))),
+                        })
+                      }
+                      className="w-full p-2.5 bg-white border border-[#E5DFD5] text-xs text-[#1A1816] focus:outline-none focus:border-[#C5A059]"
+                    />
+                  </div>
+                </div>
+
+                {/* Live Bill Summary */}
+                <div className="p-3 bg-[#FAF8F5] border border-[#E5DFD5] text-xs space-y-1">
+                  <div className="flex justify-between text-[#8E877E]">
+                    <span>Subtotal:</span>
+                    <span className="font-mono text-[#1A1816]">
+                      ${(Number(editBillForm.unitPrice || 0) * Number(editBillForm.quantity || 1)).toFixed(2)}
+                    </span>
+                  </div>
+                  {Number(editBillForm.discountPercentage || 0) > 0 && (
+                    <div className="flex justify-between text-[#C5A059]">
+                      <span>Discount ({editBillForm.discountPercentage}%):</span>
+                      <span className="font-mono">
+                        -${(
+                          ((Number(editBillForm.unitPrice || 0) * Number(editBillForm.quantity || 1)) *
+                            Number(editBillForm.discountPercentage || 0)) /
+                          100
+                        ).toFixed(2)}
+                      </span>
+                    </div>
+                  )}
+                  <div className="flex justify-between font-bold text-[#1A1816] pt-1.5 border-t border-[#E5DFD5]">
+                    <span>Total Settled:</span>
+                    <span className="font-mono text-sm text-[#1A1816]">
+                      ${Math.max(
+                        0,
+                        (Number(editBillForm.unitPrice || 0) * Number(editBillForm.quantity || 1)) -
+                          (((Number(editBillForm.unitPrice || 0) * Number(editBillForm.quantity || 1)) *
+                            Number(editBillForm.discountPercentage || 0)) /
+                            100)
+                      ).toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="pt-4 flex justify-end gap-3 border-t border-[#E5DFD5]">
+                  <button
+                    type="button"
+                    onClick={() => setIsEditModalOpen(false)}
+                    className="px-4 py-2 border border-[#E5DFD5] text-xs text-[#8E877E] hover:text-[#1A1816] cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-6 py-2 bg-[#1A1816] text-[#FAF8F5] hover:bg-[#C5A059] hover:text-[#1A1816] text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer shadow-xs"
+                  >
+                    Save Changes
                   </button>
                 </div>
               </form>
