@@ -1,96 +1,98 @@
 import { Link } from "react-router-dom"
-import { ShieldCheck, Award, Sparkles, Scissors, Clock, ArrowRight } from "lucide-react"
+import { ArrowRight, CheckCircle2, Shield, HeartHandshake, Sparkles, RefreshCw, Truck } from "lucide-react"
 
 export default function About() {
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-[#1A1816] font-sans">
       {/* Hero Section */}
-      <section className="relative py-24 sm:py-32 bg-[#F2EFE9] border-b border-[#E5DFD5] overflow-hidden">
-        <div className="absolute inset-0 opacity-5 pointer-events-none bg-[radial-gradient(#1A1816_1px,transparent_1px)] [background-size:16px_16px]"></div>
-        
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <span className="text-xs font-bold uppercase tracking-[0.3em] text-[#C5A059] block mb-4">
-            The Maison & Heritage
+      <section className="py-20 sm:py-28 border-b border-[#E5DFD5] bg-[#FAF8F5]">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <span className="text-xs font-bold uppercase tracking-wider text-[#C5A059] block mb-3">
+            About Ecomstore
           </span>
-          <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-[#1A1816] mb-6 leading-tight">
-            Quiet Luxury.<br />Heirloom Craftsmanship.
+          <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#1A1816] mb-6 leading-tight">
+            Quality clothing made for everyday life.
           </h1>
-          <p className="text-sm sm:text-base text-[#6A645D] max-w-2xl mx-auto leading-relaxed font-normal mb-8">
-            Founded on the conviction that authentic elegance never shouts. We curate bespoke tailoring, Goodyear-welted cobblery, and Tuscan vegetable-tanned leather goods for those who value enduring substance over transient trends.
+          <p className="text-base sm:text-lg text-[#6A645D] leading-relaxed max-w-2xl mx-auto font-normal mb-8">
+            We started Ecomstore with a simple idea: classic, well-made clothing doesn’t need a giant logo or an outrageous designer markup. Just good materials, clean design, and honest pricing.
           </p>
-          <div className="inline-flex items-center gap-3 border-t border-b border-[#C5A059]/40 py-2.5 px-6">
-            <span className="font-serif italic text-xs tracking-widest text-[#1A1816]">
-              Est. Savile Row & Florence ❖ Handcrafted in Europe
-            </span>
+          <div className="flex justify-center gap-4">
+            <Link
+              to="/shop"
+              className="bg-[#1A1816] text-[#FAF8F5] px-7 py-3 text-xs font-bold uppercase tracking-wider hover:bg-[#C5A059] hover:text-[#1A1816] transition-colors inline-flex items-center gap-2 no-underline"
+            >
+              <span>Explore The Shop</span>
+              <ArrowRight size={14} />
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Narrative Section - The Philosophy */}
-      <section className="py-20 border-b border-[#E5DFD5]">
+      {/* Story & Philosophy Section */}
+      <section className="py-20 border-b border-[#E5DFD5] bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            {/* Left Imagery Grid */}
-            <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            {/* Visual Mosaic */}
+            <div className="lg:col-span-6 grid grid-cols-2 gap-4">
               <div className="space-y-4">
-                <div className="aspect-[3/4] bg-[#E5DFD5] overflow-hidden">
+                <div className="aspect-[4/5] bg-[#F2EFE9] rounded-lg overflow-hidden border border-[#E5DFD5]">
                   <img
                     src="https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=800&auto=format&fit=crop&q=80"
-                    alt="Artisan Cutting Fabric"
-                    className="w-full h-full object-cover grayscale contrast-125 hover:grayscale-0 transition-all duration-500"
+                    alt="Fabric tailoring and crafting"
+                    className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="p-4 bg-[#F2EFE9] border border-[#E5DFD5] text-center">
-                  <span className="font-serif text-2xl font-bold text-[#1A1816] block">100%</span>
-                  <span className="text-[10px] uppercase tracking-widest text-[#8E877E] font-semibold">Noble Natural Fibers</span>
+                <div className="p-5 bg-[#FAF8F5] border border-[#E5DFD5] rounded-lg">
+                  <p className="font-serif text-2xl font-bold text-[#1A1816]">100%</p>
+                  <p className="text-xs text-[#6A645D] mt-0.5 font-medium">Natural fibers: wool, cotton, and leather.</p>
                 </div>
               </div>
-              <div className="space-y-4 pt-8">
-                <div className="p-4 bg-[#1A1816] text-[#FAF8F5] text-center">
-                  <span className="font-serif text-2xl font-bold text-[#C5A059] block">180+</span>
-                  <span className="text-[10px] uppercase tracking-widest text-[#8E877E] font-semibold">Operations per Shoe</span>
+
+              <div className="space-y-4 pt-6">
+                <div className="p-5 bg-[#1A1816] text-[#FAF8F5] rounded-lg">
+                  <p className="font-serif text-2xl font-bold text-[#C5A059]">Zero</p>
+                  <p className="text-xs text-[#FAF8F5]/80 mt-0.5 font-medium">Middleman markups. Direct to you.</p>
                 </div>
-                <div className="aspect-[3/4] bg-[#E5DFD5] overflow-hidden">
+                <div className="aspect-[4/5] bg-[#F2EFE9] rounded-lg overflow-hidden border border-[#E5DFD5]">
                   <img
-                    src="https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=800&auto=format&fit=crop&q=80"
-                    alt="Leather Cobbler Finish"
-                    className="w-full h-full object-cover grayscale contrast-125 hover:grayscale-0 transition-all duration-500"
+                    src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&auto=format&fit=crop&q=80"
+                    alt="Gentleman wearing tailored blazer"
+                    className="w-full h-full object-cover"
                   />
                 </div>
               </div>
             </div>
 
-            {/* Right Philosophy Narrative */}
-            <div className="space-y-6">
-              <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#C5A059] block">
-                The Sartorial Philosophy
+            {/* Narrative */}
+            <div className="lg:col-span-6 space-y-6">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#C5A059] block">
+                How We Started
               </span>
-              <h2 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-[#1A1816] leading-snug">
-                An antidote to disposable fashion. Designed to be inherited, not discarded.
+              <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#1A1816] tracking-tight leading-snug">
+                Tired of clothes that fall apart after one season.
               </h2>
-              <p className="text-xs sm:text-sm text-[#6A645D] leading-relaxed font-normal">
-                True old money dressing is fundamentally understated. It eschews conspicuous emblems, synthetic blends, and the restless cadence of runway seasons. In their stead, we champion natural heavyweight tweeds, Mongolian combed cashmere, full-grain bridle leathers, and hand-rolled silks.
+              <p className="text-sm text-[#6A645D] leading-relaxed">
+                For years, finding good clothes felt like choosing between two bad options: cheap fast-fashion made from plastic polyester that shrinks after two washes, or luxury labels charging \$1,500 just to slap a logo on a plain sweater.
               </p>
-              <p className="text-xs sm:text-sm text-[#6A645D] leading-relaxed font-normal">
-                Every silhouette in our collection has been refined over decades. A double-breasted overcoat cut to flatter naturally without constriction; trousers with forward pleats that fall into an unbroken break; shoes welted to withstand thirty years of cobblestones.
+              <p className="text-sm text-[#6A645D] leading-relaxed">
+                We built Ecomstore to offer a better third option. We work directly with independent workshops to craft timeless wardrobe essentials using pure virgin cashmere, long-staple cotton, and full-grain leather.
+              </p>
+              <p className="text-sm text-[#6A645D] leading-relaxed">
+                No bloated wholesale markups, no flash sales, and no chasing weekly micro-trends. Just clothes that look great, fit comfortably, and hold up season after season.
               </p>
 
-              <div className="pt-4 grid grid-cols-2 gap-6 border-t border-[#E5DFD5]">
-                <div>
-                  <h4 className="font-serif text-sm font-bold uppercase tracking-wider text-[#1A1816] mb-1">
-                    Zero Synthetic Blends
-                  </h4>
-                  <p className="text-xs text-[#8E877E]">
-                    Only virgin wool, combed cashmere, Sea Island cotton, and pure mulberry silk.
-                  </p>
+              <div className="pt-2 flex flex-wrap gap-6 text-xs text-[#1A1816] font-semibold">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 size={16} className="text-[#C5A059]" />
+                  <span>Ethically produced</span>
                 </div>
-                <div>
-                  <h4 className="font-serif text-sm font-bold uppercase tracking-wider text-[#1A1816] mb-1">
-                    Goodyear-Welted Soles
-                  </h4>
-                  <p className="text-xs text-[#8E877E]">
-                    Resolable over decades by any master cobbler around the globe.
-                  </p>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 size={16} className="text-[#C5A059]" />
+                  <span>No synthetic blends</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 size={16} className="text-[#C5A059]" />
+                  <span>Fair factory wages</span>
                 </div>
               </div>
             </div>
@@ -98,143 +100,184 @@ export default function About() {
         </div>
       </section>
 
-      {/* Four Pillars of Craftsmanship */}
-      <section className="py-20 bg-[#F2EFE9] border-b border-[#E5DFD5]">
+      {/* Core Values / What Sets Us Apart */}
+      <section className="py-20 bg-[#FAF8F5] border-b border-[#E5DFD5]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#C5A059] block mb-2">
-              The Four Pillars
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#C5A059] block mb-2">
+              Our Principles
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-[#1A1816]">
-              Mastery of Raw Materials
+              What we stand for
             </h2>
-            <p className="text-xs sm:text-sm text-[#6A645D] mt-3">
-              We source solely from ancestral mills and tanneries whose archives date back over two centuries.
+            <p className="text-xs sm:text-sm text-[#6A645D] mt-2">
+              Simple commitments we stick to on every single product we release.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Pillar 1 */}
-            <div className="bg-[#FAF8F5] p-8 border border-[#E5DFD5] flex flex-col justify-between hover:border-[#1A1816] transition-colors">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="p-8 bg-white border border-[#E5DFD5] rounded-xl flex flex-col justify-between hover:border-[#1A1816] transition-colors">
               <div>
-                <div className="w-10 h-10 bg-[#1A1816] text-[#C5A059] flex items-center justify-center mb-6">
-                  <Scissors size={20} />
+                <div className="w-12 h-12 rounded-lg bg-[#FAF8F5] border border-[#E5DFD5] flex items-center justify-center text-[#1A1816] mb-5">
+                  <Shield size={22} className="text-[#C5A059]" />
                 </div>
-                <h3 className="font-serif text-lg font-bold text-[#1A1816] mb-2 uppercase tracking-wide">
-                  Scottish Cashmere
+                <h3 className="font-serif text-lg font-bold text-[#1A1816] mb-2">
+                  Real, Honest Materials
                 </h3>
-                <p className="text-xs text-[#6A645D] leading-relaxed">
-                  Spun from the delicate underfleece of capra hircus goats, washed in mineral-rich Scottish loch waters for unmatched softness that deepens with age.
+                <p className="text-xs sm:text-sm text-[#6A645D] leading-relaxed">
+                  We refuse to cut corners with synthetic polyesters or flimsy blends. Every sweater is pure wool or cashmere, every shirt is 100% long-staple cotton, and every shoe is authentic full-grain leather.
                 </p>
               </div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[#C5A059] mt-6 block">
-                Hawick & Elgin Mills
-              </span>
             </div>
 
-            {/* Pillar 2 */}
-            <div className="bg-[#FAF8F5] p-8 border border-[#E5DFD5] flex flex-col justify-between hover:border-[#1A1816] transition-colors">
+            <div className="p-8 bg-white border border-[#E5DFD5] rounded-xl flex flex-col justify-between hover:border-[#1A1816] transition-colors">
               <div>
-                <div className="w-10 h-10 bg-[#1A1816] text-[#C5A059] flex items-center justify-center mb-6">
-                  <ShieldCheck size={20} />
+                <div className="w-12 h-12 rounded-lg bg-[#FAF8F5] border border-[#E5DFD5] flex items-center justify-center text-[#1A1816] mb-5">
+                  <HeartHandshake size={22} className="text-[#C5A059]" />
                 </div>
-                <h3 className="font-serif text-lg font-bold text-[#1A1816] mb-2 uppercase tracking-wide">
-                  Tuscan Tanneries
+                <h3 className="font-serif text-lg font-bold text-[#1A1816] mb-2">
+                  Transparent Pricing
                 </h3>
-                <p className="text-xs text-[#6A645D] leading-relaxed">
-                  Full-grain French calf and bovine hides pit-tanned with natural chestnut and mimosa barks over 60 days, yielding a lustrous, enduring patina.
+                <p className="text-xs sm:text-sm text-[#6A645D] leading-relaxed">
+                  Traditional department stores mark up their items 5 to 8 times above manufacturing cost. By selling directly to you online, we offer the same artisan caliber at a fraction of the price.
                 </p>
               </div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[#C5A059] mt-6 block">
-                Santa Croce sull'Arno
-              </span>
             </div>
 
-            {/* Pillar 3 */}
-            <div className="bg-[#FAF8F5] p-8 border border-[#E5DFD5] flex flex-col justify-between hover:border-[#1A1816] transition-colors">
+            <div className="p-8 bg-white border border-[#E5DFD5] rounded-xl flex flex-col justify-between hover:border-[#1A1816] transition-colors">
               <div>
-                <div className="w-10 h-10 bg-[#1A1816] text-[#C5A059] flex items-center justify-center mb-6">
-                  <Award size={20} />
+                <div className="w-12 h-12 rounded-lg bg-[#FAF8F5] border border-[#E5DFD5] flex items-center justify-center text-[#1A1816] mb-5">
+                  <Sparkles size={22} className="text-[#C5A059]" />
                 </div>
-                <h3 className="font-serif text-lg font-bold text-[#1A1816] mb-2 uppercase tracking-wide">
-                  Goodyear Welting
+                <h3 className="font-serif text-lg font-bold text-[#1A1816] mb-2">
+                  Timeless, Clean Design
                 </h3>
-                <p className="text-xs text-[#6A645D] leading-relaxed">
-                  Ribbed gemming and oak bark-tanned leather soles sewn together with lock-stitch linen thread, guaranteeing waterproof durability and perpetual recrafting.
+                <p className="text-xs sm:text-sm text-[#6A645D] leading-relaxed">
+                  We don’t chase whatever trend is hot this month on social media. We design versatile, understated pieces that look just as sharp ten years from now as they do today.
                 </p>
               </div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[#C5A059] mt-6 block">
-                Northamptonshire Tradition
-              </span>
-            </div>
-
-            {/* Pillar 4 */}
-            <div className="bg-[#FAF8F5] p-8 border border-[#E5DFD5] flex flex-col justify-between hover:border-[#1A1816] transition-colors">
-              <div>
-                <div className="w-10 h-10 bg-[#1A1816] text-[#C5A059] flex items-center justify-center mb-6">
-                  <Clock size={20} />
-                </div>
-                <h3 className="font-serif text-lg font-bold text-[#1A1816] mb-2 uppercase tracking-wide">
-                  Sea Island Cotton
-                </h3>
-                <p className="text-xs text-[#6A645D] leading-relaxed">
-                  Extra-long staple Gossypium barbadense fibers grown in the West Indies, offering the tensile strength of linen with the supreme softness of silk.
-                </p>
-              </div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[#C5A059] mt-6 block">
-                Single-Needle Bespoke
-              </span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Atelier Standards & Heritage Pledge */}
-      <section className="py-20 border-b border-[#E5DFD5]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-block p-3 bg-[#F2EFE9] border border-[#E5DFD5] mb-6">
-            <Sparkles size={24} className="text-[#C5A059]" />
+      {/* Behind the Craft: 3 Real Steps */}
+      <section className="py-20 bg-white border-b border-[#E5DFD5]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-2xl mb-12">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#C5A059] block mb-2">
+              Our Process
+            </span>
+            <h2 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-[#1A1816]">
+              From workshop to your door
+            </h2>
+            <p className="text-xs sm:text-sm text-[#6A645D] mt-2">
+              How we take an idea and turn it into a wardrobe staple you’ll reach for every day.
+            </p>
           </div>
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-[#1A1816] mb-6">
-            The Wardrobe Covenant
-          </h2>
-          <blockquote className="font-serif italic text-lg sm:text-xl text-[#3D3833] leading-relaxed mb-8 max-w-3xl mx-auto">
-            "A gentleman’s attire should never call attention to its novelty. It should appear as though it has always belonged to him — pressed into service with quiet confidence and preserved with attentive reverence."
-          </blockquote>
-          <p className="text-xs uppercase tracking-[0.2em] font-bold text-[#8E877E]">
-            — Archival Atelier Manifesto, London
-          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="space-y-4">
+              <div className="aspect-[16/10] bg-[#FAF8F5] border border-[#E5DFD5] rounded-lg overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=800&auto=format&fit=crop&q=80"
+                  alt="Raw fabric selection"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <span className="text-xs font-bold text-[#C5A059] uppercase tracking-wider block">Step 01</span>
+              <h3 className="font-serif text-lg font-bold text-[#1A1816]">Direct Sourcing</h3>
+              <p className="text-xs text-[#6A645D] leading-relaxed">
+                We visit mills and tanneries in person to select fabrics with the right weight, drape, and durability before any cutting begins.
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <div className="aspect-[16/10] bg-[#FAF8F5] border border-[#E5DFD5] rounded-lg overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=800&auto=format&fit=crop&q=80"
+                  alt="Crafting and stitching"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <span className="text-xs font-bold text-[#C5A059] uppercase tracking-wider block">Step 02</span>
+              <h3 className="font-serif text-lg font-bold text-[#1A1816]">Precision Stitching</h3>
+              <p className="text-xs text-[#6A645D] leading-relaxed">
+                Independent family-run workshops cut and tailor each piece. From reinforced seams to welted soles, every detail is built to endure wear.
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <div className="aspect-[16/10] bg-[#FAF8F5] border border-[#E5DFD5] rounded-lg overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1544441893-675973e31985?w=800&auto=format&fit=crop&q=80"
+                  alt="Finished product inspection"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <span className="text-xs font-bold text-[#C5A059] uppercase tracking-wider block">Step 03</span>
+              <h3 className="font-serif text-lg font-bold text-[#1A1816]">Quality Check & Ship</h3>
+              <p className="text-xs text-[#6A645D] leading-relaxed">
+                Every single item is hand-inspected for stitching, fit, and finish before being carefully packaged and shipped to you.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Call To Action */}
-      <section className="py-24 bg-[#1A1816] text-[#FAF8F5]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="text-xs font-bold uppercase tracking-[0.3em] text-[#C5A059] block mb-3">
-            Inquire & Acquire
-          </span>
-          <h2 className="font-serif text-3xl sm:text-5xl font-bold tracking-tight text-[#FAF8F5] mb-6">
-            Invest in Timeless Wardrobe Pieces
-          </h2>
-          <p className="text-xs sm:text-sm text-[#8E877E] max-w-xl mx-auto mb-10 leading-relaxed">
-            Browse our full seasonal collection or explore the private seasonal sale archive with privileged member pricing.
-          </p>
+      {/* Customer Guarantees */}
+      <section className="py-14 bg-[#FAF8F5] border-b border-[#E5DFD5]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center sm:text-left">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3.5">
+              <Truck size={24} className="text-[#C5A059] shrink-0" />
+              <div>
+                <h4 className="font-serif text-sm font-bold text-[#1A1816]">Free Shipping Over $150</h4>
+                <p className="text-xs text-[#6A645D] mt-0.5">Reliable express delivery with real-time tracking.</p>
+              </div>
+            </div>
 
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3.5">
+              <RefreshCw size={24} className="text-[#C5A059] shrink-0" />
+              <div>
+                <h4 className="font-serif text-sm font-bold text-[#1A1816]">30-Day Easy Returns</h4>
+                <p className="text-xs text-[#6A645D] mt-0.5">Try it at home. If the fit isn't right, return it hassle-free.</p>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3.5">
+              <HeartHandshake size={24} className="text-[#C5A059] shrink-0" />
+              <div>
+                <h4 className="font-serif text-sm font-bold text-[#1A1816]">Direct Human Support</h4>
+                <p className="text-xs text-[#6A645D] mt-0.5">Reach out anytime — our team is here to help with sizing and orders.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action */}
+      <section className="py-20 bg-[#1A1816] text-[#FAF8F5]">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight mb-4 text-white">
+            Ready to find your next staple?
+          </h2>
+          <p className="text-sm text-[#FAF8F5]/80 max-w-lg mx-auto mb-8 font-normal leading-relaxed">
+            Check out our collection of jackets, knitwear, shirts, and footwear — all made with the same commitment to real quality.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4">
             <Link
               to="/shop"
-              className="bg-[#C5A059] text-[#1A1816] px-8 py-3.5 text-xs font-bold uppercase tracking-[0.16em] hover:bg-[#d8b368] transition-colors inline-flex items-center justify-center gap-2 no-underline"
+              className="bg-[#C5A059] text-[#1A1816] px-8 py-3.5 text-xs font-bold uppercase tracking-wider hover:bg-white transition-colors no-underline inline-flex items-center gap-2"
             >
-              <span>Explore The Collection</span>
+              <span>Shop All Products</span>
               <ArrowRight size={14} />
             </Link>
-
             <Link
               to="/sale"
-              className="border border-[#FAF8F5]/30 text-[#FAF8F5] px-8 py-3.5 text-xs font-bold uppercase tracking-[0.16em] hover:border-white hover:bg-white/10 transition-colors inline-flex items-center justify-center gap-2 no-underline"
+              className="border border-[#FAF8F5]/30 text-[#FAF8F5] px-8 py-3.5 text-xs font-bold uppercase tracking-wider hover:border-white hover:bg-white/10 transition-colors no-underline"
             >
-              <span>Seasonal Archive Sale</span>
-              <ArrowRight size={14} />
+              <span>View Sale</span>
             </Link>
           </div>
         </div>

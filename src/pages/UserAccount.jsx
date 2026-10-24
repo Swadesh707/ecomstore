@@ -40,7 +40,7 @@ export default function UserAccount() {
   const [feedback, setFeedback] = useState({ type: "", message: "" })
 
   const token = localStorage.getItem("token")
-  const userName = localStorage.getItem("name") || "Patron"
+  const userName = localStorage.getItem("name") || "User"
   const userEmail = localStorage.getItem("email") || ""
 
   const showToast = (type, message) => {

@@ -105,6 +105,26 @@ export default function Navbar() {
     document.body.scrollTop = 0
   }
 
+  const getDisplayName = () => {
+    if (!userName) return "Account"
+    const lower = userName.toLowerCase()
+    if (lower.includes("admin")) return "admin"
+    if (lower.includes("sales")) return "salesperson"
+    if (lower.includes("logistics")) return "logistics"
+    if (lower.includes("user") || lower.includes("customer") || lower.includes("patron")) return "user"
+    return userName
+  }
+
+  const getDisplayRole = () => {
+    if (!userRole) return ""
+    const lower = userRole.toLowerCase()
+    if (lower.includes("admin")) return "admin"
+    if (lower.includes("sales")) return "salesperson"
+    if (lower.includes("logistics")) return "logistics"
+    if (lower.includes("user")) return "user"
+    return userRole.toLowerCase()
+  }
+
   return (
     <>
       {/* Simple, Unbloated Navbar */}
@@ -191,7 +211,7 @@ export default function Navbar() {
               </NavLink>
             </Group>
 
-            {/* Right Icons + Profile Maximizer Trigger */}
+            {/* Right Icons + Profile Trigger */}
             <Group gap={14} align="center">
               {/* Search */}
               <ActionIcon
@@ -233,12 +253,12 @@ export default function Navbar() {
               <button
                 onClick={() => setProfileOpened(true)}
                 className="flex items-center gap-1.5 px-2.5 py-1.5 border border-[#E5DFD5] hover:border-[#1A1816] bg-[#FAF8F5] hover:bg-[#F2EFE9] text-xs font-semibold uppercase tracking-wider text-[#1A1816] transition-colors cursor-pointer rounded-none"
-                title="Client Account & Menu"
+                title="Account Menu"
                 aria-label="Account"
               >
                 <CircleUserRound size={18} strokeWidth={1.7} className="text-[#1A1816]" />
                 <span className="hidden sm:inline text-[11px] font-semibold">
-                  {userName || "Account"}
+                  {getDisplayName()}
                 </span>
               </button>
             </Group>
@@ -246,7 +266,7 @@ export default function Navbar() {
         </Container>
       </nav>
 
-      {/* Mantine Profile Maximizer Drawer with Dynamic DB Categories Accordion */}
+      {/* Mantine Profile Drawer */}
       <Drawer
         opened={profileOpened}
         onClose={() => setProfileOpened(false)}
@@ -254,8 +274,8 @@ export default function Navbar() {
         size="md"
         padding="xl"
         title={
-          <Text fw={700} size="sm" className="font-serif tracking-[0.2em] uppercase text-[#1A1816]">
-            Profile & House Navigation
+          <Text fw={700} size="sm" className="font-serif tracking-wider uppercase text-[#1A1816]">
+            Account
           </Text>
         }
         styles={{
@@ -267,22 +287,22 @@ export default function Navbar() {
           {/* User Profile Card Section */}
           <div className="p-4 bg-[#F2EFE9] border border-[#E5DFD5] flex items-center gap-4">
             <div className="w-12 h-12 bg-[#1A1816] text-[#FAF8F5] flex items-center justify-center font-serif text-lg font-bold shrink-0">
-              {userName ? (
-                userName.charAt(0).toUpperCase()
+              {getDisplayName() ? (
+                getDisplayName().charAt(0).toUpperCase()
               ) : (
                 <CircleUserRound size={26} strokeWidth={1.6} className="text-[#C5A059]" />
               )}
             </div>
             <div className="flex-1 overflow-hidden">
               <Text fw={700} size="sm" className="font-serif text-[#1A1816] truncate">
-                {userName || "Guest Patron"}
+                {getDisplayName()}
               </Text>
               <Text size="xs" c="dimmed" className="truncate">
-                {userEmail || (token ? "Authenticated Client" : "Browsing catalog")}
+                {userEmail || (token ? "Signed in" : "Guest")}
               </Text>
               {token && userRole && (
                 <span className="inline-block mt-1 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider bg-[#C5A059]/20 text-[#8B6E33] border border-[#C5A059]/40">
-                  {userRole.toLowerCase().includes("admin") ? "Admin" : userRole}
+                  {getDisplayRole()}
                 </span>
               )}
             </div>
@@ -299,9 +319,9 @@ export default function Navbar() {
             >
               <span className="flex items-center gap-2">
                 <Package size={15} />
-                <span>My Orders & Purchases</span>
+                <span>My Orders</span>
               </span>
-              <span className="text-[10px] text-[#C5A059] font-bold">Track & Returns &rarr;</span>
+              <span className="text-[10px] text-[#C5A059] font-bold">&rarr;</span>
             </button>
           ) : (
             <button
@@ -313,63 +333,10 @@ export default function Navbar() {
             >
               <span className="flex items-center gap-2">
                 <Truck size={14} className="text-[#C5A059]" />
-                <span>Track Consignment</span>
+                <span>Track Order</span>
               </span>
               <span className="text-[10px] text-[#8E877E]">&rarr;</span>
             </button>
-          )}
-
-          {/* Direct Workspace Action: Strictly for authenticated staff role only */}
-          {token && userRole && userRole !== "user" && (
-            <div>
-              {userRole === "admin" && (
-                <button
-                  onClick={() => {
-                    setProfileOpened(false)
-                    navigate("/admin/analytics")
-                  }}
-                  className="w-full p-2.5 bg-[#1A1816] text-[#FAF8F5] hover:bg-[#C5A059] hover:text-[#1A1816] flex items-center justify-between text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer"
-                >
-                  <span className="flex items-center gap-2">
-                    <ShieldCheck size={15} />
-                    <span>Admin Dashboard</span>
-                  </span>
-                  <span className="text-[10px]">/admin</span>
-                </button>
-              )}
-
-              {userRole === "salesperson" && (
-                <button
-                  onClick={() => {
-                    setProfileOpened(false)
-                    navigate("/salesperson")
-                  }}
-                  className="w-full p-2.5 bg-[#1C352D] text-[#FAF8F5] hover:bg-[#1A1816] flex items-center justify-between text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer"
-                >
-                  <span className="flex items-center gap-2">
-                    <FileText size={15} className="text-[#C5A059]" />
-                    <span>Invoicing Workspace</span>
-                  </span>
-                  <span className="text-[10px]">/salesperson</span>
-                </button>
-              )}
-
-              {userRole === "logistics" && (
-                <button
-                  onClick={() => {
-                    setProfileOpened(false)
-                    navigate("/logistics")
-                  }}
-                  className="w-full p-2.5 bg-[#78281F] text-[#FAF8F5] hover:bg-[#1A1816] flex items-center justify-between text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer"
-                >
-                  <span className="flex items-center gap-2">
-                    <Truck size={15} className="text-[#C5A059]" />
-                    <span>Courier & Dispatch</span>
-                  </span>
-                  <span className="text-[10px]">/logistics</span>
-                </button>
-              )}
-            </div>
           )}
 
           {/* Quick Direct Actions */}
@@ -381,7 +348,7 @@ export default function Navbar() {
               }}
               className="p-3 bg-[#FAF8F5] border border-[#E5DFD5] hover:border-[#1A1816] flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-[#1A1816] cursor-pointer"
             >
-              <span>My Bag</span>
+              <span>Cart</span>
               <Badge size="xs" color="dark" circle>{cartCount}</Badge>
             </button>
 
@@ -410,7 +377,7 @@ export default function Navbar() {
               leftSection={<LogOut size={14} />}
               className="text-xs font-bold uppercase tracking-wider border-[#1A1816]"
             >
-              Sign Out of Account
+              Sign Out
             </Button>
           ) : (
             <Button
@@ -424,7 +391,7 @@ export default function Navbar() {
               }}
               className="text-xs font-bold uppercase tracking-wider bg-[#1A1816] text-[#FAF8F5]"
             >
-              Sign In / Register Account
+              Sign In / Register
             </Button>
           )}
         </Stack>

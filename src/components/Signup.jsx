@@ -162,12 +162,12 @@ export default function Signup({ initialMode }) {
               <span>ECOMSTORE</span>
             </Link>
             <h1 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight uppercase text-[#1A1816]">
-              {authType === "login" ? "CLIENT ACCESS" : "CLIENT ENROLLMENT"}
+              {authType === "login" ? "SIGN IN" : "CREATE ACCOUNT"}
             </h1>
-            <p className="text-[10px] text-[#8E877E] mt-1.5 uppercase tracking-[0.25em] font-semibold">
+            <p className="text-[10px] text-[#8E877E] mt-1.5 uppercase tracking-wider font-semibold">
               {authType === "login"
-                ? "Enter your credentials to access your private salon"
-                : "Register for bespoke invitations and order records"}
+                ? "Enter your email and password to sign in"
+                : "Register an account to track your orders"}
             </p>
           </div>
 
@@ -182,11 +182,11 @@ export default function Signup({ initialMode }) {
           <form onSubmit={handleSubmit} className="space-y-4 text-xs font-semibold uppercase tracking-wider">
             {authType === "signup" && (
               <div>
-                <label className="block mb-1.5 text-[#1A1816]">Full Title & Name *</label>
+                <label className="block mb-1.5 text-[#1A1816]">Full Name *</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Lord Edward Sterling"
+                  placeholder="e.g. John Doe"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full bg-[#FAF8F5] border border-[#E5DFD5] px-4 py-3 text-xs focus:outline-none focus:border-[#1A1816] text-[#1A1816]"
@@ -195,11 +195,11 @@ export default function Signup({ initialMode }) {
             )}
 
             <div>
-              <label className="block mb-1.5 text-[#1A1816]">Correspondence Email *</label>
+              <label className="block mb-1.5 text-[#1A1816]">Email Address *</label>
               <input
                 type="email"
                 required
-                placeholder="client@estate.com"
+                placeholder="name@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full bg-[#FAF8F5] border border-[#E5DFD5] px-4 py-3 text-xs focus:outline-none focus:border-[#1A1816] text-[#1A1816]"
@@ -207,7 +207,7 @@ export default function Signup({ initialMode }) {
             </div>
 
             <div>
-              <label className="block mb-1.5 text-[#1A1816]">Private Passphrase *</label>
+              <label className="block mb-1.5 text-[#1A1816]">Password *</label>
               <input
                 type="password"
                 required
@@ -221,13 +221,13 @@ export default function Signup({ initialMode }) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#1A1816] text-[#FAF8F5] py-4 font-bold uppercase tracking-[0.2em] text-xs hover:bg-[#C5A059] hover:text-[#1A1816] transition-colors mt-6 disabled:opacity-50 cursor-pointer shadow-md"
+              className="w-full bg-[#1A1816] text-[#FAF8F5] py-4 font-bold uppercase tracking-wider text-xs hover:bg-[#C5A059] hover:text-[#1A1816] transition-colors mt-6 disabled:opacity-50 cursor-pointer shadow-md"
             >
               {loading
-                ? "AUTHENTICATING..."
+                ? "SIGNING IN..."
                 : authType === "login"
-                ? "SIGN IN TO SALON"
-                : "INSCRIBE IN ARCHIVE"}
+                ? "SIGN IN"
+                : "CREATE ACCOUNT"}
             </button>
           </form>
 
@@ -236,11 +236,11 @@ export default function Signup({ initialMode }) {
             <button
               type="button"
               onClick={() => handleModeChange(authType === "login" ? "signup" : "login")}
-              className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8E877E] hover:text-[#1A1816] underline cursor-pointer"
+              className="text-xs font-semibold uppercase tracking-wider text-[#8E877E] hover:text-[#1A1816] underline cursor-pointer"
             >
               {authType === "login"
-                ? "Not yet inscribed? Request enrollment"
-                : "Already enrolled? Return to sign in"}
+                ? "Don't have an account? Sign up"
+                : "Already have an account? Sign in"}
             </button>
           </div>
 

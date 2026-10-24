@@ -28,6 +28,7 @@ import {
 
 export default function Checkout() {
   const navigate = useNavigate()
+  const token = localStorage.getItem("token")
   const [cart, setCart] = useState([])
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
@@ -91,7 +92,7 @@ export default function Checkout() {
       if (!validateLuhn(sanitized)) {
         setCardErrors((prev) => ({
           ...prev,
-          cardNumber: "Credit card number failed mathematical checksum (Luhn algorithm).",
+          cardNumber: "Invalid card number.",
         }))
       } else {
         setCardErrors((prev) => {
@@ -117,7 +118,7 @@ export default function Checkout() {
       if (!validateExpiry(formatted)) {
         setCardErrors((prev) => ({
           ...prev,
-          expiry: "Card is expired or invalid expiry month/year.",
+          expiry: "Card is expired or date is invalid (MM/YY).",
         }))
       } else {
         setCardErrors((prev) => {
@@ -143,7 +144,7 @@ export default function Checkout() {
       if (!validateCVV(digits, cardBrand)) {
         setCardErrors((prev) => ({
           ...prev,
-          cvv: "Invalid security code (3 digits, or 4 for American Express).",
+          cvv: "Invalid security code (CVV).",
         }))
       } else {
         setCardErrors((prev) => {
@@ -178,7 +179,7 @@ export default function Checkout() {
       setCouponError("")
     } catch (err) {
       setAppliedCoupon(null)
-      setCouponError(err.response?.data?.message || "Invalid or ineligible discount coupon.")
+      setCouponError(err.response?.data?.message || "Invalid discount code.")
     } finally {
       setValidatingCoupon(false)
     }
@@ -191,25 +192,25 @@ export default function Checkout() {
   }
 
   const validateForm = () => {
-    if (!formData.name.trim()) return "Patron full name is required."
-    if (!formData.email.trim()) return "Patron email address is required."
-    if (!formData.address.trim()) return "Street delivery address is required."
-    if (!formData.city.trim()) return "Delivery city is required."
+    if (!formData.name.trim()) return "Full name is required."
+    if (!formData.email.trim()) return "Email address is required."
+    if (!formData.address.trim()) return "Street address is required."
+    if (!formData.city.trim()) return "City is required."
     if (!formData.zip.trim()) return "Postal / ZIP code is required."
 
     if (paymentMethod === "card") {
       const sanitizedNum = cardData.cardNumber.replace(/\D/g, "")
       if (!sanitizedNum || sanitizedNum.length < 13) {
-        return "Please input a complete credit card number."
+        return "Please enter a valid credit card number."
       }
       if (!validateLuhn(sanitizedNum)) {
-        return "Card number is invalid (Luhn algorithm checksum failed)."
+        return "Card number is invalid."
       }
       if (!validateExpiry(cardData.expiry)) {
-        return "Please input a valid, unexpired card date (MM/YY)."
+        return "Please enter a valid expiry date (MM/YY)."
       }
       if (!validateCVV(cardData.cvv, cardBrand)) {
-        return "Please input a valid 3 or 4 digit card security code."
+        return "Please enter a valid security code (CVV)."
       }
     }
 
@@ -220,8 +221,14 @@ export default function Checkout() {
     e.preventDefault()
     setErrorMessage("")
 
+    if (!token) {
+      setErrorMessage("Please sign in to complete your purchase.")
+      navigate("/login")
+      return
+    }
+
     if (cart.length === 0) {
-      setErrorMessage("Your commission bag contains no pieces.")
+      setErrorMessage("Your cart is empty.")
       return
     }
 
@@ -279,21 +286,21 @@ export default function Checkout() {
 
       const order = res.data
 
-      // Clear bag upon recorded commission
+      // Clear cart upon successful order
       localStorage.removeItem("cart")
       window.dispatchEvent(new Event("cart-updated"))
       setCompletedOrder(order)
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
     } catch (err) {
-      console.error("Commission submission error:", err)
+      console.error("Order submission error:", err)
       const serverMsg =
         err.response?.data?.message ||
         err.response?.data?.error ||
         (err.response?.status === 404
-          ? "Unable to reach atelier order service (404). Please ensure your backend server is running on http://localhost:8000."
+          ? "Unable to reach order service. Please check your backend connection."
           : err.message)
       setErrorMessage(
-        serverMsg || "Failed to finalize commission order with the atelier."
+        serverMsg || "Failed to place your order. Please try again."
       )
     } finally {
       setSubmitting(false)
@@ -305,7 +312,7 @@ export default function Checkout() {
   }
 
   // ==========================================
-  // INVOICE & BILLING DOCUMENT VIEW
+  // INVOICE & ORDER RECEIPT VIEW
   // ==========================================
   if (completedOrder) {
     const formattedDate = new Date(completedOrder.createdAt || Date.now()).toLocaleDateString(
@@ -332,9 +339,9 @@ export default function Checkout() {
         <div className="max-w-4xl mx-auto mb-6 flex flex-wrap items-center justify-between gap-4 no-print">
           <Link
             to="/shop"
-            className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8E877E] hover:text-[#1A1816] flex items-center gap-2 no-underline"
+            className="text-xs font-semibold uppercase tracking-wider text-[#8E877E] hover:text-[#1A1816] flex items-center gap-2 no-underline"
           >
-            <ArrowLeft size={14} /> Return to Storefront
+            <ArrowLeft size={14} /> Continue Shopping
           </Link>
 
           <div className="flex items-center gap-3">
@@ -342,13 +349,13 @@ export default function Checkout() {
               to="/account"
               className="bg-[#FAF8F5] border border-[#1A1816] text-[#1A1816] hover:bg-[#E5DFD5] px-4 py-2.5 text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer"
             >
-              <Truck size={14} /> My Orders & Tracking
+              <Truck size={14} /> My Orders
             </Link>
             <button
               onClick={handlePrint}
               className="bg-[#1A1816] text-[#FAF8F5] hover:bg-[#C5A059] hover:text-[#1A1816] px-5 py-2.5 text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer shadow-sm"
             >
-              <Printer size={15} /> Print / Save Invoice (PDF)
+              <Printer size={15} /> Print Invoice
             </button>
           </div>
         </div>
@@ -359,7 +366,7 @@ export default function Checkout() {
           <div className="border-b-2 border-[#1A1816] pb-8 mb-8">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
-                <span className="font-serif font-bold text-2xl tracking-[0.25em] text-[#1A1816] flex items-center gap-2">
+                <span className="font-serif font-bold text-2xl tracking-[0.2em] text-[#1A1816] flex items-center gap-2">
                   <svg
                     width="22"
                     height="22"
@@ -383,31 +390,28 @@ export default function Checkout() {
                   </svg>
                   <span>ECOMSTORE</span>
                 </span>
-                <p className="text-[10px] uppercase tracking-[0.25em] text-[#C5A059] font-bold mt-1">
-                  Maison of Fine Tailoring & Leathercraft
-                </p>
                 <p className="text-[11px] text-[#8E877E] mt-1 font-sans">
-                  Savile Row & Florence Atelier ❖ VAT Reg: GB-84920412
+                  Official Order Receipt
                 </p>
               </div>
 
               <div className="text-left sm:text-right">
-                <span className="inline-block bg-[#1A1816] text-[#FAF8F5] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] mb-2">
-                  Official Bill of Sale & Invoice
+                <span className="inline-block bg-[#1A1816] text-[#FAF8F5] px-3 py-1 text-[10px] font-bold uppercase tracking-wider mb-2">
+                  Order Receipt
                 </span>
                 <p className="font-serif text-sm font-bold text-[#1A1816]">
-                  Invoice #: {completedOrder.orderNumber.replace("ORD", "INV")}
+                  Invoice #: {completedOrder.orderNumber ? completedOrder.orderNumber.replace("ORD", "INV") : "INV-000"}
                 </p>
-                <p className="text-xs text-[#8E877E]">Date of Record: {formattedDate}</p>
+                <p className="text-xs text-[#8E877E]">Order Date: {formattedDate}</p>
               </div>
             </div>
           </div>
 
-          {/* Key Reference Bar: Order # & Tracking # */}
+          {/* Reference Bar: Order # & Tracking # */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-[#F2EFE9] border border-[#E5DFD5] p-5 mb-8">
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#8E877E] block">
-                Atelier Order Reference
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#8E877E] block">
+                Order Number
               </span>
               <p className="font-serif text-xl font-bold tracking-wider text-[#1A1816] mt-0.5">
                 {completedOrder.orderNumber}
@@ -418,45 +422,44 @@ export default function Checkout() {
             </div>
 
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#8E877E] block">
-                Official Tracking Number
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#8E877E] block">
+                Tracking Number
               </span>
               <p className="font-mono text-base font-bold tracking-wider text-[#78281F] mt-0.5">
-                {completedOrder.trackingNumber || "Assigned Upon Courier Dispatch"}
+                {completedOrder.trackingNumber || "Assigned upon shipping"}
               </p>
               <p className="text-[11px] text-[#6A645D] mt-1">
-                Carrier: <span className="font-semibold text-[#1A1816]">Royal Sartorial Dispatch (Express)</span>
+                Carrier: <span className="font-semibold text-[#1A1816]">Standard Delivery</span>
               </p>
             </div>
           </div>
 
-          {/* Dispatch & Delivery Timeline Indicator */}
+          {/* Delivery Timeline Indicator */}
           <div className="mb-8 border border-[#E5DFD5] p-4 bg-[#FAF8F5]">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center text-xs gap-2 mb-3">
               <span className="font-bold uppercase tracking-wider text-[#1A1816] flex items-center gap-1.5">
-                <Truck size={14} className="text-[#C5A059]" /> Courier Status: Registered & In Preparation
+                <Truck size={14} className="text-[#C5A059]" /> Status: Order Confirmed
               </span>
               <span className="text-[#8E877E] text-[11px]">
-                Estimated Delivery Arrival: <strong>{estDeliveryDate}</strong>
+                Estimated Delivery: <strong>{estDeliveryDate}</strong>
               </span>
             </div>
-            {/* Visual Tracking Progress Bar */}
             <div className="w-full bg-[#E5DFD5] h-2 rounded-full overflow-hidden">
               <div className="bg-[#1A1816] h-full w-2/5"></div>
             </div>
             <div className="flex justify-between text-[10px] text-[#8E877E] uppercase tracking-wider font-semibold mt-2">
-              <span>Commission Recorded</span>
-              <span className="text-[#1A1816] font-bold">Atelier Preparation</span>
+              <span className="text-[#1A1816] font-bold">Order Placed</span>
+              <span>Processing</span>
               <span>In Transit</span>
               <span>Delivered</span>
             </div>
           </div>
 
-          {/* Patron Addresses & Payment Info */}
+          {/* Customer & Payment Info */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 text-xs">
             <div>
               <h5 className="font-serif font-bold uppercase tracking-wider text-xs border-b border-[#E5DFD5] pb-1.5 mb-2 text-[#1A1816]">
-                Patron & Bill To
+                Billing Address
               </h5>
               <p className="font-bold text-[#1A1816]">{completedOrder.customer.name}</p>
               <p className="text-[#6A645D]">{completedOrder.customer.email}</p>
@@ -467,7 +470,7 @@ export default function Checkout() {
 
             <div>
               <h5 className="font-serif font-bold uppercase tracking-wider text-xs border-b border-[#E5DFD5] pb-1.5 mb-2 text-[#1A1816]">
-                Dispatch Address
+                Shipping Address
               </h5>
               <p className="text-[#6A645D]">{completedOrder.customer.address}</p>
               <p className="text-[#6A645D]">
@@ -478,7 +481,7 @@ export default function Checkout() {
 
             <div>
               <h5 className="font-serif font-bold uppercase tracking-wider text-xs border-b border-[#E5DFD5] pb-1.5 mb-2 text-[#1A1816]">
-                Settlement & Method
+                Payment Method
               </h5>
               <p className="font-bold text-[#1A1816]">
                 {completedOrder.paymentMethod === "cod"
@@ -498,26 +501,26 @@ export default function Checkout() {
               </p>
               {completedOrder.paymentMethod === "cod" && (
                 <p className="text-[10px] text-[#8E877E] mt-1 leading-tight">
-                  Amount due in cash upon handover by the dispatch courier.
+                  Pay with cash upon delivery.
                 </p>
               )}
             </div>
           </div>
 
-          {/* Itemized Line Items Table */}
+          {/* Itemized Table */}
           <div className="mb-8">
             <h5 className="font-serif font-bold uppercase tracking-wider text-xs mb-3 text-[#1A1816]">
-              Commissioned Articles & Garments
+              Order Items
             </h5>
             <div className="overflow-x-auto border border-[#E5DFD5]">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr className="bg-[#FAF8F5] border-b border-[#E5DFD5] text-[10px] uppercase font-bold text-[#8E877E] tracking-wider">
-                    <th className="p-3">Article Description</th>
-                    <th className="p-3">Specification</th>
-                    <th className="p-3 text-right">Unit Price</th>
+                    <th className="p-3">Item</th>
+                    <th className="p-3">Details</th>
+                    <th className="p-3 text-right">Price</th>
                     <th className="p-3 text-center">Qty</th>
-                    <th className="p-3 text-right">Line Total</th>
+                    <th className="p-3 text-right">Total</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#E5DFD5]">
@@ -535,9 +538,6 @@ export default function Checkout() {
                           <div>
                             <span className="font-serif font-bold text-sm text-[#1A1816] block">
                               {item.title}
-                            </span>
-                            <span className="text-[10px] text-[#8E877E] uppercase tracking-wider">
-                              Hand-Crafted
                             </span>
                           </div>
                         </div>
@@ -560,61 +560,55 @@ export default function Checkout() {
             </div>
           </div>
 
-          {/* Financial Totals Breakdown */}
+          {/* Totals Breakdown */}
           <div className="flex flex-col sm:flex-row justify-between items-start gap-8 border-t border-[#E5DFD5] pt-6 mb-8">
             <div className="max-w-xs text-xs text-[#8E877E] space-y-2">
               <p className="font-serif font-bold uppercase tracking-wider text-[#1A1816]">
-                Atelier Guarantee & Care
+                Customer Support
               </p>
               <p className="text-[11px] leading-relaxed">
-                All leather goods include Goodyear-welted cobblery warranty and pure virgin wools have passed sartorial quality inspection.
-              </p>
-              <p className="text-[11px] leading-relaxed">
-                For returns or alterations, contact concierge within 14 days of delivery.
+                Thank you for your order! If you have any questions or need to return an item, please reach out to customer support within 14 days of delivery.
               </p>
             </div>
 
             <div className="w-full sm:w-64 space-y-2 text-xs">
               <div className="flex justify-between text-[#6A645D]">
-                <span>Articles Subtotal:</span>
+                <span>Subtotal:</span>
                 <span className="font-serif">${completedOrder.subtotal.toFixed(2)}</span>
               </div>
               {completedOrder.discountAmount > 0 && (
                 <div className="flex justify-between text-[#78281F] font-semibold">
-                  <span>Promotional Privilege ({completedOrder.couponCode}):</span>
+                  <span>Discount ({completedOrder.couponCode}):</span>
                   <span className="font-serif">-${completedOrder.discountAmount.toFixed(2)}</span>
                 </div>
               )}
               <div className="flex justify-between text-[#6A645D]">
-                <span>Courier Dispatch:</span>
+                <span>Shipping:</span>
                 <span className="font-serif">
-                  {completedOrder.shippingFee === 0 ? "Complimentary" : `$${completedOrder.shippingFee.toFixed(2)}`}
+                  {completedOrder.shippingFee === 0 ? "Free" : `$${completedOrder.shippingFee.toFixed(2)}`}
                 </span>
               </div>
               <div className="flex justify-between text-[#6A645D]">
-                <span>Estimated VAT / Duties:</span>
-                <span className="font-serif">$0.00 (Included)</span>
+                <span>Estimated Tax:</span>
+                <span className="font-serif">$0.00</span>
               </div>
               <div className="border-t-2 border-[#1A1816] pt-2 flex justify-between font-serif font-bold text-base text-[#1A1816]">
-                <span>Total Amount:</span>
+                <span>Total:</span>
                 <span className="text-lg">${completedOrder.totalAmount.toFixed(2)}</span>
               </div>
               <div className="text-[10px] text-right text-[#8E877E] uppercase tracking-wider">
-                Currency: United States Dollars (USD)
+                Currency: USD
               </div>
             </div>
           </div>
 
-          {/* Official Sign-Off & Seal */}
-          <div className="border-t border-[#E5DFD5] pt-6 flex flex-col sm:flex-row justify-between items-center text-center sm:text-left gap-4 text-[10px] uppercase tracking-[0.2em] text-[#8E877E]">
+          {/* Official Sign-Off */}
+          <div className="border-t border-[#E5DFD5] pt-6 flex flex-col sm:flex-row justify-between items-center text-center sm:text-left gap-4 text-[10px] uppercase tracking-wider text-[#8E877E]">
             <div>
-              <p className="font-serif italic text-xs text-[#1A1816] tracking-normal mb-1">
-                "Substance before trend, craftsmanship before haste."
-              </p>
-              <p>© {new Date().getFullYear()} ECOMSTORE SARTORIAL PURVEYORS</p>
+              <p>© {new Date().getFullYear()} Ecomstore. All rights reserved.</p>
             </div>
-            <div className="border border-[#C5A059] px-4 py-2 font-serif font-bold text-[#C5A059] tracking-[0.3em]">
-              VERIFIED ATELIER DISPATCH
+            <div className="border border-[#C5A059] px-4 py-2 font-serif font-bold text-[#C5A059] tracking-wider">
+              ORDER CONFIRMED
             </div>
           </div>
         </div>
@@ -631,40 +625,40 @@ export default function Checkout() {
         {/* Header Breadcrumb */}
         <div className="mb-10 flex flex-wrap items-center justify-between border-b border-[#E5DFD5] pb-6 gap-4">
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#8E877E] block mb-1">
-              Atelier Settlement
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#8E877E] block mb-1">
+              Checkout
             </span>
             <h1 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-[#1A1816]">
-              Finalize Commission
+              Place Your Order
             </h1>
           </div>
           <Link
             to="/cart"
-            className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8E877E] hover:text-[#1A1816] flex items-center gap-2 no-underline"
+            className="text-xs font-semibold uppercase tracking-wider text-[#8E877E] hover:text-[#1A1816] flex items-center gap-2 no-underline"
           >
-            <ArrowLeft size={14} /> Back to Bag
+            <ArrowLeft size={14} /> Back to Cart
           </Link>
         </div>
 
         {cart.length === 0 ? (
           <div className="text-center py-20 bg-[#F2EFE9] border border-[#E5DFD5] p-8 max-w-lg mx-auto">
             <p className="font-serif text-2xl font-bold uppercase tracking-wider mb-3 text-[#1A1816]">
-              Your wardrobe bag is empty
+              Your cart is empty
             </p>
             <p className="text-xs text-[#8E877E] uppercase tracking-wider mb-6">
-              Please select garments or accessories from our collections before proceeding to checkout.
+              Add items to your cart before proceeding to checkout.
             </p>
             <Link
               to="/shop"
               className="inline-block bg-[#1A1816] text-[#FAF8F5] px-8 py-3 text-xs font-semibold uppercase tracking-wider no-underline"
             >
-              Explore Collection
+              Continue Shopping
             </Link>
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-              {/* Left Column: Delivery & Payment Details */}
+              {/* Left Column: Customer & Delivery Details */}
               <div className="lg:col-span-7 space-y-8">
                 {/* Error Banner */}
                 {errorMessage && (
@@ -673,10 +667,10 @@ export default function Checkout() {
                   </div>
                 )}
 
-                {/* 1. Patron & Correspondence */}
+                {/* 1. Customer Information */}
                 <div className="bg-white border border-[#E5DFD5] p-6 sm:p-8">
                   <h3 className="font-serif text-lg font-bold uppercase tracking-wider mb-5 pb-3 border-b border-[#E5DFD5] text-[#1A1816]">
-                    1. Patron Correspondence
+                    1. Customer Information
                   </h3>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-bold uppercase tracking-wider">
@@ -687,7 +681,7 @@ export default function Checkout() {
                         required
                         value={formData.name}
                         onChange={(e) => handleInputChange("name", e.target.value)}
-                        placeholder="LORD / MR. / MS. SWADESH NEPAL"
+                        placeholder="John Doe"
                         className="w-full bg-[#FAF8F5] border border-[#E5DFD5] p-3 focus:outline-none focus:border-[#1A1816] font-normal text-xs text-[#1A1816]"
                       />
                     </div>
@@ -699,28 +693,28 @@ export default function Checkout() {
                         required
                         value={formData.email}
                         onChange={(e) => handleInputChange("email", e.target.value)}
-                        placeholder="CORRESPONDENCE@HOUSE.COM"
+                        placeholder="john@example.com"
                         className="w-full bg-[#FAF8F5] border border-[#E5DFD5] p-3 focus:outline-none focus:border-[#1A1816] font-normal text-xs text-[#1A1816]"
                       />
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-[#8E877E]">Contact Telephone</label>
+                      <label className="text-[#8E877E]">Phone Number</label>
                       <input
                         type="tel"
                         value={formData.phone}
                         onChange={(e) => handleInputChange("phone", e.target.value)}
-                        placeholder="+1 (555) 019-2834"
+                        placeholder="+1 (555) 000-0000"
                         className="w-full bg-[#FAF8F5] border border-[#E5DFD5] p-3 focus:outline-none focus:border-[#1A1816] font-normal text-xs text-[#1A1816]"
                       />
                     </div>
                   </div>
                 </div>
 
-                {/* 2. Dispatch Address */}
+                {/* 2. Shipping Address */}
                 <div className="bg-white border border-[#E5DFD5] p-6 sm:p-8">
                   <h3 className="font-serif text-lg font-bold uppercase tracking-wider mb-5 pb-3 border-b border-[#E5DFD5] text-[#1A1816]">
-                    2. Courier Dispatch Address
+                    2. Shipping Address
                   </h3>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-bold uppercase tracking-wider">
@@ -731,7 +725,7 @@ export default function Checkout() {
                         required
                         value={formData.address}
                         onChange={(e) => handleInputChange("address", e.target.value)}
-                        placeholder="740 PARK AVENUE, APT 12B"
+                        placeholder="123 Main St, Apt 4B"
                         className="w-full bg-[#FAF8F5] border border-[#E5DFD5] p-3 focus:outline-none focus:border-[#1A1816] font-normal text-xs text-[#1A1816]"
                       />
                     </div>
@@ -743,7 +737,7 @@ export default function Checkout() {
                         required
                         value={formData.city}
                         onChange={(e) => handleInputChange("city", e.target.value)}
-                        placeholder="NEW YORK"
+                        placeholder="New York"
                         className="w-full bg-[#FAF8F5] border border-[#E5DFD5] p-3 focus:outline-none focus:border-[#1A1816] font-normal text-xs text-[#1A1816]"
                       />
                     </div>
@@ -755,13 +749,13 @@ export default function Checkout() {
                         required
                         value={formData.zip}
                         onChange={(e) => handleInputChange("zip", e.target.value)}
-                        placeholder="10021"
+                        placeholder="10001"
                         className="w-full bg-[#FAF8F5] border border-[#E5DFD5] p-3 focus:outline-none focus:border-[#1A1816] font-normal text-xs text-[#1A1816]"
                       />
                     </div>
 
                     <div className="sm:col-span-2 space-y-1.5">
-                      <label className="text-[#8E877E]">Country / Territory</label>
+                      <label className="text-[#8E877E]">Country</label>
                       <input
                         type="text"
                         value={formData.country}
@@ -773,10 +767,10 @@ export default function Checkout() {
                   </div>
                 </div>
 
-                {/* 3. Settlement / Payment Method Selection */}
+                {/* 3. Payment Method */}
                 <div className="bg-white border border-[#E5DFD5] p-6 sm:p-8">
                   <h3 className="font-serif text-lg font-bold uppercase tracking-wider mb-5 pb-3 border-b border-[#E5DFD5] text-[#1A1816]">
-                    3. Payment & Settlement
+                    3. Payment Method
                   </h3>
 
                   {/* Payment Method Selector Cards */}
@@ -810,7 +804,7 @@ export default function Checkout() {
                       </div>
                       <div>
                         <span className="font-serif font-bold text-sm text-[#1A1816] block">
-                          Credit / Debit Card
+                          Credit or Debit Card
                         </span>
                         <span className="text-[10px] text-[#8E877E] uppercase tracking-wider block mt-0.5">
                           Visa, Mastercard, Amex, Discover
@@ -850,7 +844,7 @@ export default function Checkout() {
                           Cash on Delivery (COD)
                         </span>
                         <span className="text-[10px] text-[#8E877E] uppercase tracking-wider block mt-0.5">
-                          Pay cash upon courier arrival
+                          Pay cash upon delivery
                         </span>
                       </div>
                     </button>
@@ -860,14 +854,14 @@ export default function Checkout() {
                   {paymentMethod === "cod" ? (
                     <div className="p-4 bg-[#F2EFE9] border border-[#E5DFD5] text-xs text-[#6A645D] leading-relaxed">
                       <p className="font-serif font-bold uppercase tracking-wider text-[#1A1816] mb-1">
-                        Handover Settlement Policy
+                        Cash on Delivery
                       </p>
                       <p>
-                        Your commission will be crafted, packaged in our archival boxes, and dispatched. The total sum of <strong>${total.toFixed(2)}</strong> will be collected in cash by our courier driver upon delivery.
+                        You will pay the total amount of <strong>${total.toFixed(2)}</strong> in cash when your order is delivered to your address.
                       </p>
                     </div>
                   ) : (
-                    /* Card Input Fields with Real-Time Luhn Algorithm Validation */
+                    /* Card Input Fields */
                     <div className="space-y-4 pt-2">
                       <div className="space-y-1.5 text-xs font-bold uppercase tracking-wider">
                         <div className="flex justify-between items-center">
@@ -948,10 +942,10 @@ export default function Checkout() {
                 </div>
               </div>
 
-              {/* Right Column: Order Summary, Coupon Redemption & Place Commission */}
+              {/* Right Column: Order Summary & Checkout */}
               <div className="lg:col-span-5 bg-white border border-[#E5DFD5] p-6 sm:p-8 space-y-6 sticky top-24">
                 <h3 className="font-serif text-lg font-bold uppercase tracking-wider border-b border-[#E5DFD5] pb-3 text-[#1A1816]">
-                  Commission Summary
+                  Order Summary
                 </h3>
 
                 {/* Items Mini List */}
@@ -968,7 +962,7 @@ export default function Checkout() {
                           {item.title}
                         </span>
                         <span className="text-[10px] text-[#8E877E] uppercase tracking-wider block">
-                          Size: {item.size} ❖ {item.color}
+                          Size: {item.size} • {item.color}
                         </span>
                         <span className="text-[10px] text-[#8E877E] block">
                           Qty: {item.quantity} × ${Number(item.price).toFixed(2)}
@@ -984,7 +978,7 @@ export default function Checkout() {
                 {/* Promotional Coupon Application */}
                 <div className="border-t border-[#E5DFD5] pt-4">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-[#8E877E] block mb-2">
-                    Privilege Promotional Coupon
+                    Promo Code
                   </span>
 
                   {appliedCoupon ? (
@@ -996,14 +990,14 @@ export default function Checkout() {
                         <span className="text-[10px] text-[#1C352D]">
                           {appliedCoupon.discountType === "percentage"
                             ? `${appliedCoupon.discountValue}% applied`
-                            : `$${appliedCoupon.discountValue} credit applied`}
+                            : `$${appliedCoupon.discountValue} discount applied`}
                         </span>
                       </div>
                       <button
                         type="button"
                         onClick={handleRemoveCoupon}
                         className="text-[#78281F] hover:text-black font-bold text-xs cursor-pointer"
-                        title="Remove Coupon"
+                        title="Remove Promo Code"
                       >
                         <X size={16} />
                       </button>
@@ -1013,7 +1007,7 @@ export default function Checkout() {
                       <div className="flex gap-2">
                         <input
                           type="text"
-                          placeholder="PROMO CODE (E.G. HERITAGE20)"
+                          placeholder="ENTER PROMO CODE"
                           value={couponCodeInput}
                           onChange={(e) => setCouponCodeInput(e.target.value.toUpperCase())}
                           className="flex-1 bg-[#FAF8F5] border border-[#E5DFD5] px-3 py-2 text-xs font-mono uppercase tracking-wider focus:outline-none focus:border-[#1A1816] text-[#1A1816]"
@@ -1045,45 +1039,55 @@ export default function Checkout() {
 
                   {discountAmount > 0 && (
                     <div className="flex justify-between text-[#78281F] font-semibold">
-                      <span>Privilege Discount ({appliedCoupon?.code})</span>
+                      <span>Discount ({appliedCoupon?.code})</span>
                       <span className="font-serif">-${discountAmount.toFixed(2)}</span>
                     </div>
                   )}
 
                   <div className="flex justify-between text-[#6A645D]">
-                    <span>Private Courier Delivery</span>
+                    <span>Shipping</span>
                     <span className="font-serif font-medium">
-                      {shipping === 0 ? "Complimentary" : `$${shipping.toFixed(2)}`}
+                      {shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}
                     </span>
                   </div>
 
                   <div className="flex justify-between text-[#6A645D]">
-                    <span>Taxes & Import Duty</span>
-                    <span className="font-serif font-medium">$0.00 (Included)</span>
+                    <span>Estimated Tax</span>
+                    <span className="font-serif font-medium">$0.00</span>
                   </div>
 
                   <div className="border-t border-[#E5DFD5] pt-3 flex justify-between font-serif font-bold text-base text-[#1A1816]">
-                    <span>Total Amount</span>
+                    <span>Total</span>
                     <span className="text-xl">${total.toFixed(2)}</span>
                   </div>
                 </div>
 
                 {/* Submit Action */}
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="w-full bg-[#1A1816] text-[#FAF8F5] py-4 text-xs font-bold uppercase tracking-[0.2em] hover:bg-[#C5A059] hover:text-[#1A1816] transition-all duration-300 disabled:opacity-50 cursor-pointer shadow-sm"
-                >
-                  {submitting
-                    ? "Recording Commission..."
-                    : paymentMethod === "cod"
-                    ? "Confirm Order (Cash on Delivery)"
-                    : `Authorize & Pay $${total.toFixed(2)}`}
-                </button>
+                {!token ? (
+                  <button
+                    type="button"
+                    onClick={() => navigate("/login")}
+                    className="w-full bg-[#1A1816] text-[#FAF8F5] py-4 text-xs font-bold uppercase tracking-wider hover:bg-[#C5A059] hover:text-[#1A1816] transition-all duration-300 cursor-pointer shadow-sm text-center block"
+                  >
+                    Sign In to Purchase
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="w-full bg-[#1A1816] text-[#FAF8F5] py-4 text-xs font-bold uppercase tracking-wider hover:bg-[#C5A059] hover:text-[#1A1816] transition-all duration-300 disabled:opacity-50 cursor-pointer shadow-sm"
+                  >
+                    {submitting
+                      ? "Processing..."
+                      : paymentMethod === "cod"
+                      ? "Place Order (Cash on Delivery)"
+                      : `Pay $${total.toFixed(2)}`}
+                  </button>
+                )}
 
                 <div className="pt-2 text-center text-[10px] text-[#8E877E] flex items-center justify-center gap-1.5 uppercase tracking-wider">
                   <ShieldCheck size={14} className="text-[#C5A059]" />
-                  <span>256-Bit Encrypted Atelier Transaction</span>
+                  <span>256-Bit Secure Checkout</span>
                 </div>
               </div>
             </div>
