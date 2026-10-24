@@ -10,6 +10,7 @@ export default function ProductDetails() {
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [selectedImage, setSelectedImage] = useState("")
 
   const [selectedSize, setSelectedSize] = useState("40R")
   const [selectedColor, setSelectedColor] = useState("Espresso")
@@ -34,6 +35,10 @@ export default function ProductDetails() {
         setLoading(true)
         const response = await GetRequest(`products/${id}`)
         setProduct(response.data)
+        const allImages = response.data.images && response.data.images.length > 0
+          ? response.data.images
+          : [response.data.image].filter(Boolean)
+        setSelectedImage(allImages[0] || response.data.image || "")
 
         const wishlist = getWishlist()
         setIsWishlisted(wishlist.some((item) => item._id === id))
@@ -111,23 +116,49 @@ export default function ProductDetails() {
 
         {/* Product Display Container */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-start">
-          {/* Left: Product Image with 3D Tilt */}
-          <TiltCard className="w-full">
-            <div className="aspect-[3/4] bg-[#F2EFE9] border border-[#E5DFD5] overflow-hidden relative shadow-lg">
-              <img
-                src={product.image || "https://images.unsplash.com/photo-1544441893-675973e31985?w=800"}
-                alt={product.title}
-                onError={(e) => {
-                  e.currentTarget.onerror = null
-                  e.currentTarget.src = "https://images.unsplash.com/photo-1544441893-675973e31985?w=800"
-                }}
-                className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-              />
-              <div className="absolute top-4 left-4 bg-[#1A1816] text-[#FAF8F5] px-3.5 py-1 text-[9px] font-bold uppercase tracking-[0.2em]">
-                {product.category || "Bespoke"}
+          {/* Left: Product Images (Main Photo + Gallery Thumbnails) */}
+          <div className="space-y-4">
+            <TiltCard className="w-full">
+              <div className="aspect-[3/4] bg-[#F2EFE9] border border-[#E5DFD5] overflow-hidden relative shadow-lg">
+                <img
+                  src={selectedImage || product.image || "https://images.unsplash.com/photo-1544441893-675973e31985?w=800"}
+                  alt={product.title}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null
+                    e.currentTarget.src = "https://images.unsplash.com/photo-1544441893-675973e31985?w=800"
+                  }}
+                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                />
+                <div className="absolute top-4 left-4 bg-[#1A1816] text-[#FAF8F5] px-3.5 py-1 text-[9px] font-bold uppercase tracking-[0.2em]">
+                  {product.category || "Bespoke"}
+                </div>
               </div>
-            </div>
-          </TiltCard>
+            </TiltCard>
+
+            {/* 2-3 Thumbnail Selector */}
+            {product.images && product.images.length > 1 && (
+              <div className="flex items-center gap-3">
+                {product.images.map((imgUrl, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setSelectedImage(imgUrl)}
+                    className={`w-20 h-24 border overflow-hidden cursor-pointer bg-[#F2EFE9] transition-all ${
+                      selectedImage === imgUrl
+                        ? "border-[#1A1816] shadow-sm scale-102"
+                        : "border-[#E5DFD5] opacity-70 hover:opacity-100"
+                    }`}
+                  >
+                    <img
+                      src={imgUrl}
+                      alt={`View ${idx + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
           {/* Right: Garment Attributes & Ordering */}
           <div className="flex flex-col space-y-7">

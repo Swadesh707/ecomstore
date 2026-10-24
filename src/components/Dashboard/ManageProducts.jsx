@@ -32,6 +32,7 @@ export default function ManageProducts() {
   const [category, setCategory] = useState("")
   const [stock, setStock] = useState(15)
   const [image, setImage] = useState("")
+  const [images, setImages] = useState([])
   const [description, setDescription] = useState("")
   const [uploadingImage, setUploadingImage] = useState(false)
   const [imageMode, setImageMode] = useState("device")
@@ -42,30 +43,48 @@ export default function ManageProducts() {
   const [formError, setFormError] = useState("")
 
   const handleDeviceImageUpload = async (e) => {
-    const file = e.target.files?.[0]
-    if (!file) return
+    const files = Array.from(e.target.files || [])
+    if (files.length === 0) return
 
-    const previewUrl = URL.createObjectURL(file)
-    setImage(previewUrl)
+    // Create local previews immediately
+    const previews = files.map((file) => URL.createObjectURL(file))
+    setImages((prev) => [...prev, ...previews].slice(0, 5))
+    if (!image) {
+      setImage(previews[0])
+    }
 
     try {
       setUploadingImage(true)
-      const formData = new FormData()
-      formData.append("image", file)
+      const uploadedUrls = []
 
-      const res = await UploadRequest("upload", formData)
-      if (res.data?.url) {
-        setImage(res.data.url)
-      }
-    } catch (err) {
-      console.error("Device upload fallback to base64:", err)
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        if (reader.result) {
-          setImage(reader.result)
+      for (const file of files) {
+        const formData = new FormData()
+        formData.append("image", file)
+        try {
+          const res = await UploadRequest("upload", formData)
+          if (res.data?.url) {
+            uploadedUrls.push(res.data.url)
+          }
+        } catch {
+          // Fallback to base64
+          const base64 = await new Promise((resolve) => {
+            const reader = new FileReader()
+            reader.onloadend = () => resolve(reader.result)
+            reader.readAsDataURL(file)
+          })
+          if (base64) uploadedUrls.push(base64)
         }
       }
-      reader.readAsDataURL(file)
+
+      if (uploadedUrls.length > 0) {
+        setImages((prev) => {
+          const combined = [...prev.filter((u) => !u.startsWith("blob:")), ...uploadedUrls]
+          return combined.slice(0, 5)
+        })
+        setImage(uploadedUrls[0])
+      }
+    } catch (err) {
+      console.error("Device upload error:", err)
     } finally {
       setUploadingImage(false)
     }
@@ -114,6 +133,7 @@ export default function ManageProducts() {
     setCategory(categories[0] || "Tailoring & Outerwear")
     setStock(15)
     setImage("")
+    setImages([])
     setDescription("")
     setFormOpen(true)
   }
@@ -128,6 +148,7 @@ export default function ManageProducts() {
     setCategory(product.category || (categories[0] || "General"))
     setStock(product.stock ?? 10)
     setImage(product.image || "")
+    setImages(product.images && product.images.length > 0 ? product.images : (product.image ? [product.image] : []))
     setDescription(product.description || "")
     setFormOpen(true)
   }
@@ -138,6 +159,7 @@ export default function ManageProducts() {
     setIsEditing(false)
     setCurrentId(null)
     setFormError("")
+    setImages([])
   }
 
   // Handle Submit (Unified for both Create and Update)
@@ -152,12 +174,14 @@ export default function ManageProducts() {
 
     try {
       setSubmitting(true)
+      const validImages = images.length > 0 ? images : (image ? [image] : [])
       const payload = {
         title: title.trim(),
         price: Number(price),
         category: category || "General",
         stock: Number(stock) || 0,
-        image: image.trim() || "https://images.unsplash.com/photo-1544441893-675973e31985?w=800",
+        image: image.trim() || validImages[0] || "https://images.unsplash.com/photo-1544441893-675973e31985?w=800",
+        images: validImages,
         description: description.trim(),
       }
 
@@ -553,16 +577,17 @@ export default function ManageProducts() {
                   <label className="border-2 border-dashed border-[#E5DFD5] hover:border-[#1A1816] bg-[#F2EFE9] p-4 flex flex-col items-center justify-center cursor-pointer transition-colors text-center block">
                     <input
                       type="file"
+                      multiple
                       accept="image/*"
                       onChange={handleDeviceImageUpload}
                       className="hidden"
                     />
                     <Upload size={18} className="text-[#8E877E] mb-1.5" />
                     <span className="text-xs font-semibold text-[#1A1816]">
-                      {uploadingImage ? "Uploading from device..." : "Choose image from device"}
+                      {uploadingImage ? "Uploading from device..." : "Choose 1 to 3 images from device"}
                     </span>
                     <span className="text-[10px] text-[#8E877E] normal-case mt-0.5">
-                      PNG, JPG, WEBP, GIF up to 10MB
+                      Select local photos (JPG, PNG, WEBP)
                     </span>
                   </label>
                 ) : (
@@ -570,34 +595,42 @@ export default function ManageProducts() {
                     type="url"
                     placeholder="https://images.unsplash.com/photo-..."
                     value={image}
-                    onChange={(e) => setImage(e.target.value)}
+                    onChange={(e) => {
+                      setImage(e.target.value)
+                      if (!images.includes(e.target.value)) {
+                        setImages([e.target.value])
+                      }
+                    }}
                     className="w-full bg-[#F2EFE9] border border-[#E5DFD5] px-3.5 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#1A1816] text-[#1A1816]"
                   />
                 )}
 
-                {/* Live Image Preview */}
-                {image && (
-                  <div className="p-2.5 bg-[#F2EFE9] border border-[#E5DFD5] flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3 overflow-hidden">
-                      <img
-                        src={image}
-                        alt="Product preview"
-                        className="w-12 h-14 object-cover border border-[#E5DFD5] bg-[#FAF8F5] shrink-0"
-                      />
-                      <div className="text-[11px] normal-case text-[#6A645D] truncate">
-                        <span className="font-semibold text-[#1A1816] block">Selected Image Preview</span>
-                        <span className="truncate block max-w-xs text-[10px] text-[#8E877E]">
-                          {image.startsWith("data:") ? "Local Device File" : image}
-                        </span>
-                      </div>
+                {/* Multiple Images Preview Strip */}
+                {images.length > 0 && (
+                  <div className="space-y-1.5">
+                    <span className="text-[10px] uppercase font-bold text-[#8E877E] tracking-wider block">
+                      Selected Photos ({images.length})
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      {images.map((imgUrl, idx) => (
+                        <div key={idx} className="relative group w-14 h-16 border border-[#E5DFD5] overflow-hidden bg-white">
+                          <img src={imgUrl} alt={`Photo ${idx + 1}`} className="w-full h-full object-cover" />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const remaining = images.filter((_, i) => i !== idx)
+                              setImages(remaining)
+                              if (image === imgUrl) {
+                                setImage(remaining[0] || "")
+                              }
+                            }}
+                            className="absolute top-0 right-0 bg-red-600 text-white text-[9px] px-1 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => setImage("")}
-                      className="text-xs text-[#78281F] hover:underline cursor-pointer shrink-0 normal-case"
-                    >
-                      Remove
-                    </button>
                   </div>
                 )}
               </div>
