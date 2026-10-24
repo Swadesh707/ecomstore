@@ -16,6 +16,7 @@ import {
 
 export default function SalespersonDashboard() {
   const [orders, setOrders] = useState([])
+  const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedInvoiceOrder, setSelectedInvoiceOrder] = useState(null)
@@ -28,28 +29,70 @@ export default function SalespersonDashboard() {
     soldBy: salespersonName,
     customerName: "",
     customerEmail: "",
-    itemTitle: "Bespoke Cashmere Overcoat",
+    productId: "",
+    itemTitle: "",
     quantity: 1,
-    unitPrice: 850.0,
+    unitPrice: 0,
     paymentMethod: "card",
     discountAmount: 0,
   })
 
-  const loadOrders = async () => {
+  const loadDashboardData = async () => {
     try {
       setLoading(true)
-      const res = await GetRequest("orders/all")
-      setOrders(res.data || [])
+      const [ordersRes, prodsRes] = await Promise.all([
+        GetRequest("orders/all").catch(() => ({ data: [] })),
+        GetRequest("products").catch(() => ({ data: [] })),
+      ])
+      setOrders(ordersRes.data || [])
+      setProducts(prodsRes.data || [])
     } catch (err) {
-      console.error("Failed to load orders for invoicing:", err)
+      console.error("Failed to load dashboard data for salesperson:", err)
     } finally {
       setLoading(false)
     }
   }
 
   useEffect(() => {
-    loadOrders()
+    loadDashboardData()
   }, [])
+
+  const handleOpenCreateBill = () => {
+    const currentSalesperson = localStorage.getItem("name") || "Salesperson"
+    const firstProduct = products && products.length > 0 ? products[0] : null
+
+    setCustomBill({
+      soldBy: currentSalesperson,
+      customerName: "",
+      customerEmail: "",
+      productId: firstProduct ? firstProduct._id : "",
+      itemTitle: firstProduct ? firstProduct.title : "",
+      quantity: 1,
+      unitPrice: firstProduct ? Number(firstProduct.price || 0) : 0,
+      paymentMethod: "card",
+      discountAmount: 0,
+    })
+    setIsCustomBillModalOpen(true)
+  }
+
+  const handleItemSelect = (selectedId) => {
+    const selected = products.find((p) => String(p._id) === String(selectedId))
+    if (selected) {
+      setCustomBill((prev) => ({
+        ...prev,
+        productId: selected._id,
+        itemTitle: selected.title,
+        unitPrice: Number(selected.price || 0),
+      }))
+    } else {
+      setCustomBill((prev) => ({
+        ...prev,
+        productId: "",
+        itemTitle: "",
+        unitPrice: 0,
+      }))
+    }
+  }
 
   const handlePrint = () => {
     window.print()
@@ -61,6 +104,9 @@ export default function SalespersonDashboard() {
     const random = Math.floor(1000 + Math.random() * 9000)
     const subtotal = Number(customBill.unitPrice) * Number(customBill.quantity)
     const totalAmount = Math.max(0, subtotal - Number(customBill.discountAmount))
+
+    const selectedProd = products.find((p) => String(p._id) === String(customBill.productId))
+    const itemImage = selectedProd?.image || (selectedProd?.images && selectedProd.images[0]) || ""
 
     const newBill = {
       _id: `custom_${Date.now()}`,
@@ -78,11 +124,13 @@ export default function SalespersonDashboard() {
       },
       items: [
         {
-          title: customBill.itemTitle,
+          productId: customBill.productId || null,
+          title: customBill.itemTitle || (selectedProd ? selectedProd.title : "Custom Item"),
           price: Number(customBill.unitPrice),
           quantity: Number(customBill.quantity),
           size: "Standard",
           color: "Classic",
+          image: itemImage,
         },
       ],
       subtotal,
@@ -130,10 +178,7 @@ export default function SalespersonDashboard() {
 
           <div className="flex items-center gap-3">
             <button
-              onClick={() => {
-                setCustomBill((prev) => ({ ...prev, soldBy: salespersonName }))
-                setIsCustomBillModalOpen(true)
-              }}
+              onClick={handleOpenCreateBill}
               className="bg-[#1A1816] text-[#FAF8F5] hover:bg-[#C5A059] hover:text-[#1A1816] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
             >
               <Plus size={14} />
@@ -141,7 +186,7 @@ export default function SalespersonDashboard() {
             </button>
 
             <button
-              onClick={loadOrders}
+              onClick={loadDashboardData}
               className="border border-[#E5DFD5] hover:border-[#1A1816] px-2.5 py-1 text-xs font-semibold text-[#1A1816] hover:bg-[#FAF8F5] transition-colors cursor-pointer flex items-center gap-1.5"
               title="Refresh"
             >
@@ -419,13 +464,16 @@ export default function SalespersonDashboard() {
 
               <form onSubmit={handleCreateCustomBill} className="space-y-4 text-xs font-semibold uppercase tracking-wider">
                 <div>
-                  <label className="block mb-1 text-[#8E877E]">Sold By (Salesperson)</label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[#8E877E]">Sold By (Salesperson)</label>
+                    <span className="text-[10px] text-[#C5A059] font-bold">Auto-placed</span>
+                  </div>
                   <input
                     type="text"
                     required
-                    value={customBill.soldBy}
-                    onChange={(e) => setCustomBill({ ...customBill, soldBy: e.target.value })}
-                    className="w-full p-2.5 bg-[#FAF8F5] border border-[#E5DFD5] text-xs text-[#1A1816] focus:outline-none focus:border-[#1A1816]"
+                    readOnly
+                    value={customBill.soldBy || salespersonName}
+                    className="w-full p-2.5 bg-[#FAF8F5] border border-[#E5DFD5] text-xs font-semibold text-[#1A1816] focus:outline-none cursor-default"
                   />
                 </div>
 
@@ -437,7 +485,7 @@ export default function SalespersonDashboard() {
                     placeholder="e.g. Johnathan Smith"
                     value={customBill.customerName}
                     onChange={(e) => setCustomBill({ ...customBill, customerName: e.target.value })}
-                    className="w-full p-2.5 bg-white border border-[#E5DFD5] text-xs text-[#1A1816] focus:outline-none focus:border-[#1A1816]"
+                    className="w-full p-2.5 bg-white border border-[#E5DFD5] text-xs text-[#1A1816] focus:outline-none focus:border-[#C5A059]"
                   />
                 </div>
 
@@ -449,32 +497,57 @@ export default function SalespersonDashboard() {
                     placeholder="client@domain.com"
                     value={customBill.customerEmail}
                     onChange={(e) => setCustomBill({ ...customBill, customerEmail: e.target.value })}
-                    className="w-full p-2.5 bg-white border border-[#E5DFD5] text-xs text-[#1A1816] focus:outline-none focus:border-[#1A1816]"
+                    className="w-full p-2.5 bg-white border border-[#E5DFD5] text-xs text-[#1A1816] focus:outline-none focus:border-[#C5A059]"
                   />
                 </div>
 
                 <div>
-                  <label className="block mb-1 text-[#8E877E]">Item Sold</label>
-                  <input
-                    type="text"
-                    required
-                    value={customBill.itemTitle}
-                    onChange={(e) => setCustomBill({ ...customBill, itemTitle: e.target.value })}
-                    className="w-full p-2.5 bg-white border border-[#E5DFD5] text-xs text-[#1A1816] focus:outline-none focus:border-[#1A1816]"
-                  />
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[#8E877E]">Item Sold</label>
+                    <span className="text-[10px] text-[#8E877E]">
+                      {products.length > 0 ? `${products.length} Items in Inventory` : "Loading items..."}
+                    </span>
+                  </div>
+                  {products.length > 0 ? (
+                    <select
+                      required
+                      value={customBill.productId}
+                      onChange={(e) => handleItemSelect(e.target.value)}
+                      className="w-full p-2.5 bg-white border border-[#E5DFD5] text-xs text-[#1A1816] focus:outline-none focus:border-[#C5A059]"
+                    >
+                      <option value="">-- Select an Item --</option>
+                      {products.map((p) => (
+                        <option key={p._id} value={p._id}>
+                          {p.title} (${Number(p.price || 0).toFixed(2)})
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      type="text"
+                      required
+                      placeholder="Enter item title"
+                      value={customBill.itemTitle}
+                      onChange={(e) => setCustomBill({ ...customBill, itemTitle: e.target.value })}
+                      className="w-full p-2.5 bg-white border border-[#E5DFD5] text-xs text-[#1A1816] focus:outline-none focus:border-[#C5A059]"
+                    />
+                  )}
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block mb-1 text-[#8E877E]">Unit Price ($)</label>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-[#8E877E]">Unit Price ($)</label>
+                      <span className="text-[10px] text-[#C5A059] font-bold">Auto-placed</span>
+                    </div>
                     <input
                       type="number"
                       required
-                      min="1"
+                      min="0"
                       step="0.01"
                       value={customBill.unitPrice}
                       onChange={(e) => setCustomBill({ ...customBill, unitPrice: e.target.value })}
-                      className="w-full p-2.5 bg-white border border-[#E5DFD5] text-xs text-[#1A1816] focus:outline-none focus:border-[#1A1816]"
+                      className="w-full p-2.5 bg-[#FAF8F5] border border-[#E5DFD5] text-xs font-semibold text-[#1A1816] focus:outline-none focus:border-[#C5A059]"
                     />
                   </div>
                   <div>
@@ -485,7 +558,7 @@ export default function SalespersonDashboard() {
                       min="1"
                       value={customBill.quantity}
                       onChange={(e) => setCustomBill({ ...customBill, quantity: e.target.value })}
-                      className="w-full p-2.5 bg-white border border-[#E5DFD5] text-xs text-[#1A1816] focus:outline-none focus:border-[#1A1816]"
+                      className="w-full p-2.5 bg-white border border-[#E5DFD5] text-xs text-[#1A1816] focus:outline-none focus:border-[#C5A059]"
                     />
                   </div>
                 </div>
