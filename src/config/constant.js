@@ -1,9 +1,9 @@
 // Central API base URL configuration
-// Local: defaults to http://localhost:8000
-// Production (Vercel): configure VITE_API_URL or VITE_BACKEND_URL in Vercel environment settings
+// Exactly driven by API_URL
 export const API_BASE_URL = (
+  import.meta.env.API_URL ||
+  (typeof process !== "undefined" && process.env && process.env.API_URL) ||
   import.meta.env.VITE_API_URL ||
-  import.meta.env.VITE_BACKEND_URL ||
   "http://localhost:8000"
 ).replace(/\/+$/, "")
 
