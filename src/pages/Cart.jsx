@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { getCart } from "../utils/cartStore"
+import { getImageUrl } from "../config/http"
 
 export default function Cart() {
   const [cart, setCart] = useState([])
@@ -80,9 +81,13 @@ export default function Cart() {
                 >
                   <div className="w-28 h-36 bg-[#FAF8F5] border border-[#E5DFD5] shrink-0 overflow-hidden">
                     <img
-                      src={item.image || "https://images.unsplash.com/photo-1544441893-675973e31985?w=800"}
+                      src={getImageUrl(item.image) || "/logo.png"}
                       alt={item.title || item.name}
                       className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.onerror = null
+                        e.currentTarget.src = "/logo.png"
+                      }}
                     />
                   </div>
 

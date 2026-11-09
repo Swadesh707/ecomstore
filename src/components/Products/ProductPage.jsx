@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { useSearchParams } from "react-router-dom"
 import ProductCard from "./ProductCard"
-import { GetRequest } from "../../config/http"
-import { Search } from "lucide-react"
+import ProductSkeleton from "./ProductSkeleton"
+import { GetRequest, prefetchGet } from "../../config/http"
+import { Search, ArrowUpDown } from "lucide-react"
 
 export default function ProductPage({ defaultCategory, isSalePage }) {
   const [products, setProducts] = useState([])
@@ -14,6 +15,7 @@ export default function ProductPage({ defaultCategory, isSalePage }) {
     "Belts & Leather Goods",
     "Fine Accessories",
   ])
+  const [sortBy, setSortBy] = useState("default")
   const [loading, setLoading] = useState(true)
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -76,6 +78,38 @@ export default function ProductPage({ defaultCategory, isSalePage }) {
     fetchProducts()
   }, [currentCategory, currentSearch])
 
+  const handleCategoryHover = (cat) => {
+    const params = new URLSearchParams()
+    if (cat && cat !== "All") {
+      params.append("category", cat)
+    }
+    if (currentSearch) {
+      params.append("search", currentSearch)
+    }
+    const query = params.toString() ? `?${params.toString()}` : ""
+    prefetchGet(`products${query}`)
+  }
+
+  const handleSortHover = () => {
+    // Warm up the product cache for sorting transitions
+    prefetchGet("products")
+  }
+
+  const sortedProducts = useMemo(() => {
+    if (!products || products.length === 0) return []
+    const list = [...products]
+    if (sortBy === "price-low") {
+      return list.sort((a, b) => (Number(a.price) || 0) - (Number(b.price) || 0))
+    }
+    if (sortBy === "price-high") {
+      return list.sort((a, b) => (Number(b.price) || 0) - (Number(a.price) || 0))
+    }
+    if (sortBy === "name") {
+      return list.sort((a, b) => (a.title || "").localeCompare(b.title || ""))
+    }
+    return list
+  }, [products, sortBy])
+
   const handleCategorySelect = (cat) => {
     const newParams = new URLSearchParams(searchParams)
     if (cat === "All") {
@@ -118,21 +152,42 @@ export default function ProductPage({ defaultCategory, isSalePage }) {
           </p>
         </div>
 
-        {/* Filter Bar: Search & Category Tabs */}
+        {/* Filter Bar: Search, Category Tabs & Sorting */}
         <div className="mb-10 space-y-5">
-          {/* Search Input */}
-          <div className="relative max-w-sm">
-            <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8E877E]" />
-            <input
-              type="text"
-              placeholder="Search products..."
-              value={currentSearch}
-              onChange={(e) => handleSearchChange(e.target.value)}
-              className="w-full bg-[#F2EFE9] border border-[#E5DFD5] pl-10 pr-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#1A1816] transition-colors text-[#1A1816] placeholder:text-[#8E877E]"
-            />
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            {/* Search Input */}
+            <div className="relative w-full sm:max-w-xs">
+              <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8E877E]" />
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={currentSearch}
+                onChange={(e) => handleSearchChange(e.target.value)}
+                className="w-full bg-[#F2EFE9] border border-[#E5DFD5] pl-10 pr-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#1A1816] transition-colors text-[#1A1816] placeholder:text-[#8E877E]"
+              />
+            </div>
+
+            {/* Sorting Dropdown with Hover Warmup */}
+            <div
+              className="flex items-center gap-2 self-start sm:self-auto"
+              onMouseEnter={handleSortHover}
+            >
+              <ArrowUpDown size={14} className="text-[#8E877E]" />
+              <span className="text-[11px] uppercase tracking-wider font-bold text-[#8E877E]">Sort:</span>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="bg-[#F2EFE9] border border-[#E5DFD5] py-2 px-3 text-xs font-semibold text-[#1A1816] focus:outline-none focus:border-[#1A1816] cursor-pointer"
+              >
+                <option value="default">Default</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="name">Alphabetical</option>
+              </select>
+            </div>
           </div>
 
-          {/* Category Tabs */}
+          {/* Category Tabs with Hover Prefetching */}
           <div className="flex flex-wrap gap-2">
             {categories.map((cat) => {
               const isSelected =
@@ -143,6 +198,7 @@ export default function ProductPage({ defaultCategory, isSalePage }) {
                 <button
                   key={cat}
                   onClick={() => handleCategorySelect(cat)}
+                  onMouseEnter={() => handleCategoryHover(cat)}
                   className={`px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer rounded-none ${
                     isSelected
                       ? "bg-[#1A1816] text-[#FAF8F5] border border-[#1A1816]"
@@ -156,17 +212,14 @@ export default function ProductPage({ defaultCategory, isSalePage }) {
           </div>
         </div>
 
-        {/* Products Grid with Normal ProductCard */}
+        {/* Products Grid with Skeletons */}
         {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="text-center">
-              <div className="w-8 h-8 border-2 border-[#1A1816] border-t-[#C5A059] rounded-full animate-spin mx-auto mb-3"></div>
-              <p className="text-xs uppercase tracking-wider text-[#8E877E]">
-                Loading products...
-              </p>
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <ProductSkeleton key={i} />
+            ))}
           </div>
-        ) : products.length === 0 ? (
+        ) : sortedProducts.length === 0 ? (
           <div className="text-center py-16 bg-[#F2EFE9] border border-[#E5DFD5] p-8">
             <p className="font-serif text-xl font-bold uppercase tracking-wider mb-2 text-[#1A1816]">
               No products found
@@ -184,11 +237,11 @@ export default function ProductPage({ defaultCategory, isSalePage }) {
         ) : (
           <>
             <div className="mb-4 text-xs font-semibold uppercase tracking-wider text-[#8E877E]">
-              {products.length} {products.length === 1 ? "Product" : "Products"} Available
+              {sortedProducts.length} {sortedProducts.length === 1 ? "Product" : "Products"} Available
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {products.map((product) => (
+              {sortedProducts.map((product) => (
                 <ProductCard item={product} key={product._id} isSale={isSale} />
               ))}
             </div>

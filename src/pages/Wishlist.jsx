@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { getWishlist, addToCart, toggleWishlist, syncUserWishlistWithDB } from "../utils/cartStore"
+import { getImageUrl } from "../config/http"
 
 export default function Wishlist() {
   const [wishlist, setWishlist] = useState([])
@@ -61,9 +62,13 @@ export default function Wishlist() {
               <div key={product._id} className="bg-white border border-[#E5DFD5] overflow-hidden flex flex-col group hover:shadow-md transition-shadow">
                 <Link to={`/products/${product._id}`} className="relative aspect-[3/4] bg-[#F2EFE9] overflow-hidden block">
                   <img
-                    src={product.image || "https://images.unsplash.com/photo-1544441893-675973e31985?w=800"}
+                    src={getImageUrl(product.image) || "/logo.png"}
                     alt={product.title || product.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null
+                      e.currentTarget.src = "/logo.png"
+                    }}
                   />
                 </Link>
 

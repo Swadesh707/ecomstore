@@ -20,6 +20,14 @@ export default function Signup({ initialMode }) {
   const [errorMessage, setErrorMessage] = useState("")
 
   const redirectUserByRole = (userRole) => {
+    const searchParams = new URLSearchParams(location.search)
+    const redirectParam = searchParams.get("redirect")
+
+    if (redirectParam) {
+      navigate(redirectParam, { replace: true })
+      return
+    }
+
     const normalized = (userRole || "user").toLowerCase()
     if (normalized === "admin" || normalized.includes("admin")) {
       navigate("/admin/analytics", { replace: true })
@@ -52,10 +60,11 @@ export default function Signup({ initialMode }) {
   const handleModeChange = (mode) => {
     setAuthType(mode)
     setErrorMessage("")
+    const search = location.search || ""
     if (mode === "signup" && location.pathname !== "/signup") {
-      navigate("/signup", { replace: true })
+      navigate(`/signup${search}`, { replace: true })
     } else if (mode === "login" && location.pathname !== "/login") {
-      navigate("/login", { replace: true })
+      navigate(`/login${search}`, { replace: true })
     }
   }
 

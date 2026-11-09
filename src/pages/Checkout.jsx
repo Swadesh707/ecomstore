@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { getCart } from "../utils/cartStore"
-import { PostRequest } from "../config/http"
+import { PostRequest, getImageUrl } from "../config/http"
 import {
   validateLuhn,
   detectCardBrand,
@@ -34,17 +34,57 @@ export default function Checkout() {
   const [errorMessage, setErrorMessage] = useState("")
   const [completedOrder, setCompletedOrder] = useState(null)
 
-  const [formData, setFormData] = useState({
-    name: localStorage.getItem("name") || "",
-    email: localStorage.getItem("email") || "",
-    phone: "",
-    address: "",
-    city: "",
-    zip: "",
-    country: "United States",
+  const [formData, setFormData] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem("pending_checkout_draft")
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        if (parsed && typeof parsed === "object") {
+          return {
+            name: parsed.name || localStorage.getItem("name") || "",
+            email: parsed.email || localStorage.getItem("email") || "",
+            phone: parsed.phone || "",
+            address: parsed.address || "",
+            city: parsed.city || "",
+            zip: parsed.zip || "",
+            country: parsed.country || "United States",
+          }
+        }
+      }
+    } catch (e) {
+      // Ignore
+    }
+    return {
+      name: localStorage.getItem("name") || "",
+      email: localStorage.getItem("email") || "",
+      phone: "",
+      address: "",
+      city: "",
+      zip: "",
+      country: "United States",
+    }
   })
 
-  const [paymentMethod, setPaymentMethod] = useState("card") // 'card' or 'cod'
+  const [paymentMethod, setPaymentMethod] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem("pending_checkout_draft")
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        if (parsed?.paymentMethod) return parsed.paymentMethod
+      }
+    } catch (e) {}
+    return "card"
+  }) // 'card' or 'cod'
+
+  // Persist guest form progress in sessionStorage
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(
+        "pending_checkout_draft",
+        JSON.stringify({ ...formData, paymentMethod })
+      )
+    } catch (e) {}
+  }, [formData, paymentMethod])
 
   const [cardData, setCardData] = useState({
     cardNumber: "",
@@ -288,6 +328,9 @@ export default function Checkout() {
 
       // Clear cart upon successful order
       localStorage.removeItem("cart")
+      try {
+        sessionStorage.removeItem("pending_checkout_draft")
+      } catch (e) {}
       window.dispatchEvent(new Event("cart-updated"))
       setCompletedOrder(order)
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
@@ -669,9 +712,19 @@ export default function Checkout() {
 
                 {/* 1. Customer Information */}
                 <div className="bg-white border border-[#E5DFD5] p-6 sm:p-8">
-                  <h3 className="font-serif text-lg font-bold uppercase tracking-wider mb-5 pb-3 border-b border-[#E5DFD5] text-[#1A1816]">
-                    1. Customer Information
-                  </h3>
+                  <div className="flex items-center justify-between mb-5 pb-3 border-b border-[#E5DFD5]">
+                    <h3 className="font-serif text-lg font-bold uppercase tracking-wider text-[#1A1816]">
+                      1. Customer Information
+                    </h3>
+                    {!token && (
+                      <Link
+                        to="/login?redirect=/checkout"
+                        className="text-[11px] font-bold text-[#C5A059] hover:underline uppercase tracking-wider"
+                      >
+                        Sign in to purchase &rarr;
+                      </Link>
+                    )}
+                  </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-bold uppercase tracking-wider">
                     <div className="sm:col-span-2 space-y-1.5">
@@ -953,9 +1006,13 @@ export default function Checkout() {
                   {cart.map((item, idx) => (
                     <div key={idx} className="py-3 flex items-center gap-3">
                       <img
-                        src={item.image || "https://images.unsplash.com/photo-1544441893-675973e31985?w=800"}
+                        src={getImageUrl(item.image) || "/logo.png"}
                         alt={item.title}
                         className="w-12 h-14 object-cover border border-[#E5DFD5] shrink-0"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null
+                          e.currentTarget.src = "/logo.png"
+                        }}
                       />
                       <div className="flex-1 overflow-hidden">
                         <span className="font-serif font-bold text-xs text-[#1A1816] truncate block">

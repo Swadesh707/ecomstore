@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useParams, Link, useNavigate } from "react-router-dom"
 import { ArrowLeft, Heart, ShoppingBag, Truck, RefreshCw, Check, Award, ShieldCheck } from "lucide-react"
-import { GetRequest } from "../../config/http"
+import { GetRequest, getImageUrl } from "../../config/http"
 import { addToCart, toggleWishlist, getWishlist } from "../../utils/cartStore"
 import TiltCard from "../common/TiltCard"
 
@@ -121,11 +121,11 @@ export default function ProductDetails() {
             <TiltCard className="w-full">
               <div className="aspect-[3/4] bg-[#F2EFE9] border border-[#E5DFD5] overflow-hidden relative shadow-lg">
                 <img
-                  src={selectedImage || product.image || "https://images.unsplash.com/photo-1544441893-675973e31985?w=800"}
+                  src={getImageUrl(selectedImage || product.image) || "/logo.png"}
                   alt={product.title}
                   onError={(e) => {
                     e.currentTarget.onerror = null
-                    e.currentTarget.src = "https://images.unsplash.com/photo-1544441893-675973e31985?w=800"
+                    e.currentTarget.src = "/logo.png"
                   }}
                   className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                 />
@@ -150,9 +150,13 @@ export default function ProductDetails() {
                     }`}
                   >
                     <img
-                      src={imgUrl}
+                      src={getImageUrl(imgUrl) || "/logo.png"}
                       alt={`View ${idx + 1}`}
                       className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.onerror = null
+                        e.currentTarget.src = "/logo.png"
+                      }}
                     />
                   </button>
                 ))}

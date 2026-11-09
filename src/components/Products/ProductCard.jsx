@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Link } from "react-router-dom"
 import { Heart, ShoppingBag, Check } from "lucide-react"
 import { addToCart, toggleWishlist, getWishlist } from "../../utils/cartStore"
+import { getImageUrl, prefetchGet } from "../../config/http"
 import TiltCard from "../common/TiltCard"
 
 export default function ProductCard({ item, isSale, enableTilt = true }) {
@@ -13,6 +14,12 @@ export default function ProductCard({ item, isSale, enableTilt = true }) {
 
   const isItemOnSale = isSale || item.isSale || false
   const originalPrice = isItemOnSale ? (item.originalPrice || Math.round(item.price * 1.25)) : null
+
+  const handleMouseEnter = () => {
+    if (item._id) {
+      prefetchGet(`products/${item._id}`)
+    }
+  }
 
   const handleAddToCart = (e) => {
     e.preventDefault()
@@ -29,17 +36,22 @@ export default function ProductCard({ item, isSale, enableTilt = true }) {
     setIsWishlisted(active)
   }
 
+  const displayImage = getImageUrl(item.image) || "/logo.png"
+
   const cardContent = (
-    <div className="bg-white border border-[#E5DFD5] rounded-none overflow-hidden flex flex-col group hover:shadow-xl hover:border-[#1A1816] transition-all duration-300 h-full">
+    <div
+      onMouseEnter={handleMouseEnter}
+      className="bg-white border border-[#E5DFD5] rounded-none overflow-hidden flex flex-col group hover:shadow-xl hover:border-[#1A1816] transition-all duration-300 h-full"
+    >
       {/* Product Image Frame */}
       <Link to={`/products/${item._id}`} className="relative aspect-[3/4] bg-[#F2EFE9] overflow-hidden block">
         <img
-          src={item.image || "https://images.unsplash.com/photo-1544441893-675973e31985?w=800"}
+          src={displayImage}
           alt={item.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           onError={(e) => {
             e.currentTarget.onerror = null
-            e.currentTarget.src = "https://images.unsplash.com/photo-1544441893-675973e31985?w=800"
+            e.currentTarget.src = "/logo.png"
           }}
         />
 

@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import ProductCard from "../Products/ProductCard"
-import { GetRequest } from "../../config/http"
+import ProductSkeleton from "../Products/ProductSkeleton"
+import { GetRequest, getImageUrl } from "../../config/http"
 import { ArrowRight, ChevronLeft, ChevronRight, Eye } from "lucide-react"
 import TiltCard from "../common/TiltCard"
 
@@ -21,7 +22,7 @@ export default function HomePage() {
       category: "Outerwear",
       price: "$1,850.00",
       description: "100% Mongolian virgin cashmere tailored with handcrafted peak lapels.",
-      image: "https://images.unsplash.com/photo-1544441893-675973e31985?w=1400&auto=format&fit=crop&q=80",
+      image: getImageUrl("/uploads/product-1544441893-675973e31985.jpg"),
       searchKey: "cashmere overcoat",
     },
     {
@@ -30,7 +31,7 @@ export default function HomePage() {
       category: "Tailoring",
       price: "$1,250.00",
       description: "Traditional Scottish wool woven for structured poise and effortless warmth.",
-      image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=1400&auto=format&fit=crop&q=80",
+      image: getImageUrl("/uploads/product-1507679799987-c73779587ccf.jpg"),
       searchKey: "houndstooth blazer",
     },
     {
@@ -39,7 +40,7 @@ export default function HomePage() {
       category: "Knitwear",
       price: "$420.00",
       description: "Spun from 19.5-micron virgin merino wool for rich texture and softness.",
-      image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=1400&auto=format&fit=crop&q=80",
+      image: getImageUrl("/uploads/product-1620799140408-edc6dcb6d633.jpg"),
       searchKey: "cable-knit",
     },
     {
@@ -48,7 +49,7 @@ export default function HomePage() {
       category: "Shirting",
       price: "$280.00",
       description: "Silky 140/2 double-twisted long-staple cotton with mother-of-pearl buttons.",
-      image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=1400&auto=format&fit=crop&q=80",
+      image: getImageUrl("/uploads/product-1602810318383-e386cc2a3ccf.jpg"),
       searchKey: "dress shirt",
     },
   ]
@@ -157,9 +158,13 @@ export default function HomePage() {
                   className="block relative w-full h-full border border-[#E5DFD5] shadow-lg overflow-hidden bg-[#F2EFE9] group no-underline"
                 >
                   <img
-                    src={heroPiece.image || "https://images.unsplash.com/photo-1544441893-675973e31985?w=800"}
+                    src={getImageUrl(heroPiece.image) || "/logo.png"}
                     alt={heroPiece.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null
+                      e.currentTarget.src = "/logo.png"
+                    }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#1A1816]/80 via-transparent to-transparent"></div>
 
