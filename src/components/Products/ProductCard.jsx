@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Link } from "react-router-dom"
 import { Heart, ShoppingBag, Check } from "lucide-react"
 import { addToCart, toggleWishlist, getWishlist } from "../../utils/cartStore"
-import { getImageUrl, prefetchGet } from "../../config/http"
+import { getImageUrl } from "../../config/http"
 import TiltCard from "../common/TiltCard"
 
 export default function ProductCard({ item, isSale, enableTilt = true }) {
@@ -14,12 +14,6 @@ export default function ProductCard({ item, isSale, enableTilt = true }) {
 
   const isItemOnSale = isSale || item.isSale || false
   const originalPrice = isItemOnSale ? (item.originalPrice || Math.round(item.price * 1.25)) : null
-
-  const handleMouseEnter = () => {
-    if (item._id) {
-      prefetchGet(`products/${item._id}`)
-    }
-  }
 
   const handleAddToCart = (e) => {
     e.preventDefault()
@@ -40,7 +34,6 @@ export default function ProductCard({ item, isSale, enableTilt = true }) {
 
   const cardContent = (
     <div
-      onMouseEnter={handleMouseEnter}
       className="bg-white border border-[#E5DFD5] rounded-none overflow-hidden flex flex-col group hover:shadow-xl hover:border-[#1A1816] transition-all duration-300 h-full"
     >
       <Link to={`/products/${item._id}`} className="relative aspect-[3/4] bg-[#F2EFE9] overflow-hidden block">

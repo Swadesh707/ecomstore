@@ -17,24 +17,10 @@ export const getImageUrl = (img) => {
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem("token")
-  const email = localStorage.getItem("email")
-  const name = localStorage.getItem("name")
-  const role = localStorage.getItem("role")
-
-  const headers = {}
   if (token && token !== "null" && token !== "undefined") {
-    headers.Authorization = `Bearer ${token}`
+    return { Authorization: `Bearer ${token}` }
   }
-  if (email && email !== "null" && email !== "undefined") {
-    headers["x-user-email"] = email
-  }
-  if (name && name !== "null" && name !== "undefined") {
-    headers["x-user-name"] = name
-  }
-  if (role && role !== "null" && role !== "undefined") {
-    headers["x-user-role"] = role
-  }
-  return headers
+  return {}
 }
 
 const requestCache = new Map()
