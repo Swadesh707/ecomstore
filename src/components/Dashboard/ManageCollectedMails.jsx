@@ -41,7 +41,6 @@ export default function ManageCollectedMails() {
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
-      {/* Header */}
       <div className="flex items-center justify-between pb-5 border-b border-[#E6E2DE]">
         <div className="flex items-center gap-3">
           <h1 className="text-2xl font-serif font-bold text-[#1A1816]">
@@ -61,8 +60,6 @@ export default function ManageCollectedMails() {
           <RefreshCw size={15} className={loading ? "animate-spin" : ""} />
         </button>
       </div>
-
-      {/* Search */}
       <div className="relative max-w-sm">
         <Search
           size={15}
@@ -76,8 +73,6 @@ export default function ManageCollectedMails() {
           className="w-full pl-9 pr-3 py-2 text-xs border border-[#D5D0C9] bg-white rounded focus:border-[#C5A059] focus:outline-none"
         />
       </div>
-
-      {/* Simple Email Table */}
       <div className="bg-white border border-[#E6E2DE] shadow-xs overflow-hidden">
         {loading ? (
           <div className="py-12 text-center text-xs text-[#6A645D]">

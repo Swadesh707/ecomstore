@@ -105,7 +105,6 @@ export default function ProductDetails() {
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-[#1A1816] py-14 font-sans">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Navigation Breadcrumb */}
         <Link
           to="/shop"
           className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#8E877E] hover:text-[#1A1816] mb-10 transition-colors"
@@ -113,10 +112,7 @@ export default function ProductDetails() {
           <ArrowLeft size={14} />
           Back to Shop
         </Link>
-
-        {/* Product Display Container */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-start">
-          {/* Left: Product Images (Main Photo + Gallery Thumbnails) */}
           <div className="space-y-4">
             <TiltCard className="w-full">
               <div className="aspect-[3/4] bg-[#F2EFE9] border border-[#E5DFD5] overflow-hidden relative shadow-lg">
@@ -134,8 +130,6 @@ export default function ProductDetails() {
                 </div>
               </div>
             </TiltCard>
-
-            {/* 2-3 Thumbnail Selector */}
             {product.images && product.images.length > 1 && (
               <div className="flex items-center gap-3">
                 {product.images.map((imgUrl, idx) => (
@@ -163,8 +157,6 @@ export default function ProductDetails() {
               </div>
             )}
           </div>
-
-          {/* Right: Garment Attributes & Ordering */}
           <div className="flex flex-col space-y-7">
             <div>
               <div className="flex items-center gap-2.5 mb-2.5">
@@ -181,8 +173,6 @@ export default function ProductDetails() {
                 ${Number(product.price).toFixed(2)}
               </p>
             </div>
-
-            {/* Size Selector */}
             <div className="border-t border-[#E5DFD5] pt-6">
               <div className="flex justify-between items-center mb-3">
                 <span className="text-xs font-semibold uppercase tracking-wider text-[#1A1816]">
@@ -209,8 +199,6 @@ export default function ProductDetails() {
                 ))}
               </div>
             </div>
-
-            {/* Color Shade Swatches */}
             <div>
               <span className="text-xs font-semibold uppercase tracking-wider text-[#1A1816] block mb-3">
                 Color: {selectedColor}
@@ -233,16 +221,12 @@ export default function ProductDetails() {
                 ))}
               </div>
             </div>
-
-            {/* In-page notification */}
             {toastMessage && (
               <div className="p-3 bg-[#F2EFE9] border border-[#1A1816] text-[#1A1816] text-xs font-normal flex items-center gap-2">
                 <Check size={14} className="text-[#1A1816]" />
                 <span>{toastMessage}</span>
               </div>
             )}
-
-            {/* Stepper & Actions */}
             <div className="space-y-4 pt-2">
               <div className="flex items-center gap-4">
                 <div className="flex items-center border border-[#E5DFD5] bg-[#F2EFE9]">
@@ -294,8 +278,6 @@ export default function ProductDetails() {
                 Buy Now
               </button>
             </div>
-
-            {/* Description */}
             <div className="border-t border-[#E5DFD5] pt-6 space-y-3">
               <h3 className="text-xs font-semibold uppercase tracking-wider text-[#1A1816]">
                 Product Details
@@ -305,8 +287,6 @@ export default function ProductDetails() {
                   "Crafted from premium natural materials with durable stitching and classic design made to last."}
               </p>
             </div>
-
-            {/* Guarantees */}
             <div className="border-t border-[#E5DFD5] pt-6 grid grid-cols-3 gap-4 text-center">
               <div className="flex flex-col items-center">
                 <Truck size={18} className="text-[#8E877E] mb-1.5" />

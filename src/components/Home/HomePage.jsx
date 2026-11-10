@@ -14,7 +14,6 @@ export default function HomePage() {
   const cardRefs = useRef([])
   const navigate = useNavigate()
 
-  // Curated editorial looks showing people wearing different products
   const editorialLooks = [
     {
       id: "look-1",
@@ -70,7 +69,6 @@ export default function HomePage() {
     fetchDBData()
   }, [])
 
-  // Smoothly center the active card in the scroll track
   useEffect(() => {
     const card = cardRefs.current[activeLookIndex]
     const track = trackRef.current
@@ -91,7 +89,6 @@ export default function HomePage() {
     setActiveLookIndex((prev) => (prev === editorialLooks.length - 1 ? 0 : prev + 1))
   }
 
-  // Find corresponding DB product for a look
   const getProductForLook = (look) => {
     const matched = products.find((p) =>
       p.title?.toLowerCase().includes(look.searchKey.toLowerCase())
@@ -103,10 +100,8 @@ export default function HomePage() {
 
   return (
     <div className="bg-[#FAF8F5] text-[#1A1816]">
-      {/* Hero Section */}
       <section className="relative overflow-hidden border-b border-[#E5DFD5] bg-[#FAF8F5]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-12 gap-12 items-center py-16 lg:py-24">
-          {/* Hero Left Copy */}
           <div className="md:col-span-7 space-y-7">
             <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#1A1816] leading-[1.1]">
               Sartorial Elegance. <br />
@@ -131,8 +126,6 @@ export default function HomePage() {
                 Footwear
               </button>
             </div>
-
-            {/* Heritage Micro Stats */}
             <div className="pt-6 border-t border-[#E5DFD5] grid grid-cols-3 gap-6 max-w-md">
               <div>
                 <p className="font-serif text-xl font-bold text-[#1A1816]">100%</p>
@@ -148,8 +141,6 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-
-          {/* Hero Right Showcase */}
           <div className="md:col-span-5 relative w-full h-[400px] sm:h-[480px]">
             {heroPiece ? (
               <TiltCard className="w-full h-full">
@@ -189,8 +180,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* Marquee Banner */}
       <div className="bg-[#1A1816] text-[#FAF8F5] py-3 overflow-hidden border-y border-[#C5A059]/40 relative flex whitespace-nowrap select-none">
         <div className="animate-marquee flex gap-10 font-serif tracking-[0.2em] uppercase text-xs">
           <span className="text-[#C5A059]">❖ BESPOKE TAILORING</span>
@@ -203,10 +192,6 @@ export default function HomePage() {
           <span>GOODYEAR-WELTED LEATHER LOAFERS</span>
         </div>
       </div>
-
-      {/* ======================================================== */}
-      {/* APPLE-STYLE FEATURE SCROLLER: PEOPLE WEARING THE PRODUCTS */}
-      {/* ======================================================== */}
       <section className="py-20 bg-[#F2EFE9] border-b border-[#E5DFD5] overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
@@ -221,8 +206,6 @@ export default function HomePage() {
                 Click any look to view details. Scroll or swipe through each piece worn in everyday life.
               </p>
             </div>
-
-            {/* Next / Previous Controls */}
             <div className="flex items-center gap-2">
               <button
                 onClick={prevLook}
@@ -241,8 +224,6 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-
-        {/* The Carousel Track */}
         <div
           ref={trackRef}
           className="flex gap-4 sm:gap-6 overflow-x-auto py-4 px-4 sm:px-[12vw] scroll-smooth"
@@ -264,24 +245,17 @@ export default function HomePage() {
                     : "opacity-45 scale-[0.93] blur-[3.5px] hover:opacity-75 hover:blur-[1px] shadow-md z-10"
                 }`}
               >
-                {/* Background Photo of Person Wearing the Product */}
                 <img
                   src={look.image}
                   alt={look.title}
                   className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                 />
-
-                {/* Shading Gradient */}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#1A1816]/95 via-[#1A1816]/30 to-transparent"></div>
-
-                {/* Badge (Top-Left) */}
                 <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
                   <span className="bg-[#1A1816]/90 backdrop-blur-md text-[#C5A059] px-3.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full border border-[#C5A059]/30 shadow">
                     {look.category}
                   </span>
                 </div>
-
-                {/* Product Info & CTA on Active Card */}
                 <div
                   className={`absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 text-[#FAF8F5] transition-all duration-500 ${
                     isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3 pointer-events-none"
@@ -322,8 +296,6 @@ export default function HomePage() {
             )
           })}
         </div>
-
-        {/* Carousel Pill Indicators */}
         <div className="flex justify-center items-center gap-2.5 mt-6">
           {editorialLooks.map((_, idx) => (
             <button
@@ -339,10 +311,6 @@ export default function HomePage() {
           ))}
         </div>
       </section>
-
-      {/* ======================================================== */}
-      {/* FEATURED PRODUCTS: EXACTLY A SINGLE ROW OF FOUR PRODUCTS */}
-      {/* ======================================================== */}
       <section className="py-20 bg-[#FAF8F5]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 gap-4 border-b border-[#E5DFD5] pb-5">
@@ -382,7 +350,7 @@ export default function HomePage() {
               </button>
             </div>
           ) : (
-            /* Single row of four products */
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {products.slice(0, 4).map((product) => (
                 <ProductCard item={product} key={product._id} />

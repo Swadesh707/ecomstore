@@ -23,7 +23,6 @@ export default function ProductPage({ defaultCategory, isSalePage }) {
   const currentCategory = searchParams.get("category") || defaultCategory || "All"
   const currentSearch = searchParams.get("search") || ""
 
-  // Fetch categories from DB and merge with defaults
   useEffect(() => {
     const fetchCats = async () => {
       try {
@@ -51,7 +50,6 @@ export default function ProductPage({ defaultCategory, isSalePage }) {
     fetchCats()
   }, [])
 
-  // Fetch products with search and category filters
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -91,7 +89,7 @@ export default function ProductPage({ defaultCategory, isSalePage }) {
   }
 
   const handleSortHover = () => {
-    // Warm up the product cache for sorting transitions
+
     prefetchGet("products")
   }
 
@@ -133,7 +131,6 @@ export default function ProductPage({ defaultCategory, isSalePage }) {
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-[#1A1816] py-12 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
         <div className="mb-10 border-b border-[#E5DFD5] pb-6">
           <span className="text-[10px] font-bold uppercase tracking-wider text-[#C5A059] block mb-1.5">
             {isSale ? "Special Offers" : "Collection"}
@@ -151,11 +148,8 @@ export default function ProductPage({ defaultCategory, isSalePage }) {
               : "Quality clothing, footwear, and accessories made to last."}
           </p>
         </div>
-
-        {/* Filter Bar: Search, Category Tabs & Sorting */}
         <div className="mb-10 space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            {/* Search Input */}
             <div className="relative w-full sm:max-w-xs">
               <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8E877E]" />
               <input
@@ -166,8 +160,6 @@ export default function ProductPage({ defaultCategory, isSalePage }) {
                 className="w-full bg-[#F2EFE9] border border-[#E5DFD5] pl-10 pr-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#1A1816] transition-colors text-[#1A1816] placeholder:text-[#8E877E]"
               />
             </div>
-
-            {/* Sorting Dropdown with Hover Warmup */}
             <div
               className="flex items-center gap-2 self-start sm:self-auto"
               onMouseEnter={handleSortHover}
@@ -186,8 +178,6 @@ export default function ProductPage({ defaultCategory, isSalePage }) {
               </select>
             </div>
           </div>
-
-          {/* Category Tabs with Hover Prefetching */}
           <div className="flex flex-wrap gap-2">
             {categories.map((cat) => {
               const isSelected =
@@ -211,8 +201,6 @@ export default function ProductPage({ defaultCategory, isSalePage }) {
             })}
           </div>
         </div>
-
-        {/* Products Grid with Skeletons */}
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {Array.from({ length: 8 }).map((_, i) => (

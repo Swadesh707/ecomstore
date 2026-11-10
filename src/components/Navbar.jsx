@@ -38,7 +38,6 @@ export default function Navbar() {
 
   const navigate = useNavigate()
 
-  // Fetch categories dynamically from MongoDB
   useEffect(() => {
     const fetchCategoriesFromDB = async () => {
       try {
@@ -46,7 +45,7 @@ export default function Navbar() {
         if (Array.isArray(res.data) && res.data.length > 0) {
           setDbCategories(res.data.map((c) => c.title))
         } else {
-          // Fallback to distinct categories from products in DB
+
           const prodRes = await GetRequest("products")
           const cats = [...new Set(prodRes.data.map((p) => p.category).filter(Boolean))]
           setDbCategories(cats)
@@ -127,11 +126,9 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Simple, Unbloated Navbar */}
       <nav className="sticky top-0 z-40 bg-[#FAF8F5]/95 backdrop-blur-md border-b border-[#E5DFD5]">
         <Container size="xl" className="h-16">
           <Group justify="space-between" align="center" className="h-full">
-            {/* Minimal Brand Title */}
             <Link
               to="/"
               onClick={handleScrollToTop}
@@ -162,8 +159,6 @@ export default function Navbar() {
                 ECOMSTORE
               </span>
             </Link>
-
-            {/* Main Simple Navigation Links: Home, Shop, Sale, About */}
             <Group gap={28} visibleFrom="md">
               <NavLink
                 to="/"
@@ -210,10 +205,7 @@ export default function Navbar() {
                 About
               </NavLink>
             </Group>
-
-            {/* Right Icons + Profile Trigger */}
             <Group gap={14} align="center">
-              {/* Search */}
               <ActionIcon
                 variant="subtle"
                 color="dark"
@@ -224,8 +216,6 @@ export default function Navbar() {
               >
                 <Search size={18} strokeWidth={1.8} />
               </ActionIcon>
-
-              {/* Shopping Bag with Badge */}
               <div className="relative">
                 <ActionIcon
                   variant="subtle"
@@ -248,8 +238,6 @@ export default function Navbar() {
                   </Badge>
                 )}
               </div>
-
-              {/* Profile / Account Trigger */}
               <button
                 onClick={() => setProfileOpened(true)}
                 className="flex items-center gap-1.5 px-2.5 py-1.5 border border-[#E5DFD5] hover:border-[#1A1816] bg-[#FAF8F5] hover:bg-[#F2EFE9] text-xs font-semibold uppercase tracking-wider text-[#1A1816] transition-colors cursor-pointer rounded-none"
@@ -265,8 +253,6 @@ export default function Navbar() {
           </Group>
         </Container>
       </nav>
-
-      {/* Mantine Profile Drawer */}
       <Drawer
         opened={profileOpened}
         onClose={() => setProfileOpened(false)}
@@ -284,7 +270,6 @@ export default function Navbar() {
         }}
       >
         <Stack gap="lg" mt="xs">
-          {/* User Profile Card Section */}
           <div className="p-4 bg-[#F2EFE9] border border-[#E5DFD5] flex items-center gap-4">
             <div className="w-12 h-12 bg-[#1A1816] text-[#FAF8F5] flex items-center justify-center font-serif text-lg font-bold shrink-0">
               {getDisplayName() ? (
@@ -302,8 +287,6 @@ export default function Navbar() {
               </p>
             </div>
           </div>
-
-          {/* Customer Orders & Account Portal */}
           {token ? (
             <button
               onClick={() => {
@@ -333,8 +316,6 @@ export default function Navbar() {
               <span className="text-xs font-bold">&rarr;</span>
             </button>
           )}
-
-          {/* Quick Direct Actions */}
           <div className="grid grid-cols-2 gap-3">
             <button
               onClick={() => {
@@ -360,8 +341,6 @@ export default function Navbar() {
           </div>
 
           <Divider color="#E5DFD5" mt="auto" />
-
-          {/* Authentication Actions */}
           {token ? (
             <Button
               variant="outline"

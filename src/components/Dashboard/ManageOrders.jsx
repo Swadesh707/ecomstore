@@ -53,7 +53,6 @@ export default function ManageOrders() {
     }
   }
 
-  // Filtered Orders
   const filteredOrders = orders.filter((order) => {
     if (statusFilter === "Returns") {
       if (!order.isReturnRequested) return false
@@ -75,7 +74,6 @@ export default function ManageOrders() {
 
   return (
     <div className="space-y-8 font-sans">
-      {/* Header */}
       <div className="border-b border-[#E5DFD5] pb-4 flex justify-between items-center">
         <h1 className="font-serif text-2xl font-bold uppercase tracking-tight text-[#1A1816]">
           Orders
@@ -90,8 +88,6 @@ export default function ManageOrders() {
           <span>Refresh</span>
         </button>
       </div>
-
-      {/* Feedback Toast */}
       {feedback.message && (
         <div
           className={`p-4 border text-xs font-semibold uppercase tracking-wider ${
@@ -103,8 +99,6 @@ export default function ManageOrders() {
           {feedback.message}
         </div>
       )}
-
-      {/* Filters & Search Toolbar */}
       <div className="space-y-3">
         <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
           <div className="relative flex-1 max-w-md">
@@ -117,8 +111,6 @@ export default function ManageOrders() {
               className="w-full pl-10 pr-4 py-2.5 bg-white border border-[#E5DFD5] text-xs uppercase tracking-wider placeholder:text-[#8E877E] text-[#1A1816] focus:outline-none focus:border-[#1A1816]"
             />
           </div>
-
-          {/* Status Filter Tabs */}
           <div className="flex flex-wrap items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider">
             {["All", "Processing", "Dispatched", "In Transit", "Delivered", "Cancelled", "Returns"].map(
               (status) => {
@@ -150,8 +142,6 @@ export default function ManageOrders() {
           </div>
         </div>
       </div>
-
-      {/* Orders Ledger Table */}
       <div className="border border-[#E5DFD5] bg-white">
         <div className="p-4 bg-[#FAF8F5] border-b border-[#E5DFD5] flex justify-between items-center text-xs">
           <span className="font-serif font-bold uppercase tracking-wider text-[#1A1816]">
@@ -193,7 +183,6 @@ export default function ManageOrders() {
 
                   return (
                     <tr key={order._id} className="hover:bg-[#FAF8F5]/60 transition-colors">
-                      {/* Order & Tracking # */}
                       <td className="p-4">
                         <span className="font-serif font-bold text-sm text-[#1A1816] block">
                           {order.orderNumber}
@@ -205,8 +194,6 @@ export default function ManageOrders() {
                           {new Date(order.createdAt).toLocaleDateString()}
                         </span>
                       </td>
-
-                      {/* Patron Info */}
                       <td className="p-4">
                         <span className="font-bold text-[#1A1816] block">{order.customer?.name}</span>
                         <span className="text-[#8E877E] block text-[11px]">{order.customer?.email}</span>
@@ -214,8 +201,6 @@ export default function ManageOrders() {
                           {order.customer?.city}, {order.customer?.country || "US"}
                         </span>
                       </td>
-
-                      {/* Line Items: Name and Quantity (NO PHOTO) */}
                       <td className="p-4">
                         <div className="space-y-1.5 max-w-xs">
                           {order.items?.map((item, idx) => (
@@ -232,8 +217,6 @@ export default function ManageOrders() {
                           ))}
                         </div>
                       </td>
-
-                      {/* Settlement */}
                       <td className="p-4">
                         <div className="flex items-center gap-1 text-[#1A1816] font-semibold text-[11px]">
                           {isCOD ? <Banknote size={14} className="text-[#C5A059]" /> : <CreditCard size={14} />}
@@ -256,8 +239,6 @@ export default function ManageOrders() {
                           </span>
                         )}
                       </td>
-
-                      {/* Fulfillment Status Selector */}
                       <td className="p-4">
                         <select
                           value={order.orderStatus}
@@ -272,8 +253,6 @@ export default function ManageOrders() {
                           <option value="Cancelled">Cancelled</option>
                         </select>
                       </td>
-
-                      {/* Total Amount */}
                       <td className="p-4 text-right">
                         <span className="font-serif font-bold text-base text-[#1A1816] block">
                           ${order.totalAmount?.toFixed(2)}

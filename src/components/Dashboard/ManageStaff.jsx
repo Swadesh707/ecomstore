@@ -28,7 +28,6 @@ export default function ManageStaff() {
     phone: "",
   })
 
-  // Load User Categories from MongoDB
   const loadUserCategories = async () => {
     try {
       const res = await GetRequest("user-category")
@@ -40,7 +39,6 @@ export default function ManageStaff() {
     }
   }
 
-  // GET request to fetch users from MongoDB
   const loadUsers = async () => {
     try {
       setLoading(true)
@@ -59,10 +57,9 @@ export default function ManageStaff() {
     loadUsers()
   }, [])
 
-  // Reactive Instant Filtration
   const filteredUsers = useMemo(() => {
     return users.filter((u) => {
-      // 1. Role Filter
+
       if (roleFilter && roleFilter.toLowerCase() !== "all") {
         const target = roleFilter.toLowerCase().trim()
         const uRole = (u.role || "").toLowerCase().trim()
@@ -88,7 +85,6 @@ export default function ManageStaff() {
         }
       }
 
-      // 2. Search Filter
       if (searchQuery && searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim()
         const matches =
@@ -195,7 +191,6 @@ export default function ManageStaff() {
 
   return (
     <div className="space-y-6 font-sans">
-      {/* Header */}
       <div className="flex items-center justify-between border-b border-[#E5DFD5] pb-4">
         <h1 className="font-serif text-2xl font-bold uppercase tracking-tight text-[#1A1816]">
           Team
@@ -210,8 +205,6 @@ export default function ManageStaff() {
           <span>Add Member</span>
         </button>
       </div>
-
-      {/* Feedback Toast */}
       {feedback.message && (
         <div
           className={`p-4 border text-xs font-semibold uppercase tracking-wider ${
@@ -223,8 +216,6 @@ export default function ManageStaff() {
           {feedback.message}
         </div>
       )}
-
-      {/* Search & Filter Toolbar */}
       <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
         <div className="relative flex-1 max-w-md">
           <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8E877E]" />
@@ -236,8 +227,6 @@ export default function ManageStaff() {
             className="w-full pl-10 pr-4 py-2.5 bg-white border border-[#E5DFD5] text-xs uppercase tracking-wider placeholder:text-[#8E877E] text-[#1A1816] focus:outline-none focus:border-[#1A1816]"
           />
         </div>
-
-        {/* Dynamic Category Filters from Database */}
         <div className="flex flex-wrap items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider">
           <button
             onClick={() => setRoleFilter("All")}
@@ -281,8 +270,6 @@ export default function ManageStaff() {
           })}
         </div>
       </div>
-
-      {/* Users Directory Table */}
       <div className="bg-white border border-[#E5DFD5] overflow-hidden shadow-xs">
         {loading ? (
           <div className="p-16 text-center">
@@ -319,7 +306,6 @@ export default function ManageStaff() {
                         isCurrentUser ? "bg-[#FAF8F5]/40" : ""
                       }`}
                     >
-                      {/* Name & Avatar */}
                       <td className="p-4">
                         <div className="flex items-center gap-3">
                           <div className={`w-9 h-9 flex items-center justify-center font-serif font-bold text-sm ${
@@ -346,13 +332,9 @@ export default function ManageStaff() {
                           </div>
                         </div>
                       </td>
-
-                      {/* Email */}
                       <td className="p-4 font-mono text-xs text-[#6A645D]">
                         {user.email}
                       </td>
-
-                      {/* Status */}
                       <td className="p-4">
                         <button
                           onClick={() => handleStatusChange(user._id, user.status || "Active")}
@@ -366,8 +348,6 @@ export default function ManageStaff() {
                           {user.status || "Active"}
                         </button>
                       </td>
-
-                      {/* Category Badge */}
                       <td className="p-4">
                         <span
                           className={`inline-block text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 ${
@@ -385,8 +365,6 @@ export default function ManageStaff() {
                             : user.userCategory || (user.role === "salesperson" ? "Salesperson" : user.role === "logistics" ? "Logistics" : "User")}
                         </span>
                       </td>
-
-                      {/* Category Selector Dropdown from MongoDB */}
                       <td className="p-4">
                         <div className="flex items-center gap-2">
                           <select
@@ -408,8 +386,6 @@ export default function ManageStaff() {
                           )}
                         </div>
                       </td>
-
-                      {/* Actions */}
                       <td className="p-4 text-right">
                         <button
                           onClick={() => handleDeleteUser(user._id, user.email)}
@@ -428,8 +404,6 @@ export default function ManageStaff() {
           </div>
         )}
       </div>
-
-      {/* Modal: Register New User */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
           <div className="bg-[#FAF8F5] border border-[#E5DFD5] max-w-lg w-full p-6 sm:p-8 relative shadow-2xl">

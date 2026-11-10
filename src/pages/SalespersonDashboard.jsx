@@ -25,7 +25,6 @@ export default function SalespersonDashboard() {
 
   const salespersonName = localStorage.getItem("name") || "Salesperson"
 
-  // In-Store Sales Billing Form State
   const [customBill, setCustomBill] = useState({
     soldBy: salespersonName,
     customerName: "",
@@ -190,7 +189,6 @@ export default function SalespersonDashboard() {
     }
   }
 
-  // Edit Bill State & Handlers
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [editingBillId, setEditingBillId] = useState(null)
   const [editBillForm, setEditBillForm] = useState({
@@ -353,7 +351,6 @@ export default function SalespersonDashboard() {
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-[#1A1816] font-sans p-6 sm:p-10">
       <div className="max-w-6xl mx-auto space-y-8">
-        {/* Top Header */}
         <div className="border-b border-[#E5DFD5] pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex items-center gap-4">
             <Link
@@ -387,8 +384,6 @@ export default function SalespersonDashboard() {
             </button>
           </div>
         </div>
-
-        {/* Search Toolbar */}
         <div className="relative max-w-md">
           <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8E877E]" />
           <input
@@ -399,8 +394,6 @@ export default function SalespersonDashboard() {
             className="w-full pl-9 pr-4 py-2 bg-white border border-[#E5DFD5] text-xs uppercase tracking-wider placeholder:text-[#8E877E] text-[#1A1816] focus:outline-none focus:border-[#1A1816]"
           />
         </div>
-
-        {/* Sales Bills Registry Table */}
         <div className="bg-white border border-[#E5DFD5] overflow-hidden shadow-xs">
           {loading ? (
             <div className="p-16 text-center">
@@ -497,8 +490,6 @@ export default function SalespersonDashboard() {
             </div>
           )}
         </div>
-
-        {/* Printable In-Store Bill Modal */}
         {selectedInvoiceOrder && (
           <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
             <div className="bg-white border border-[#E5DFD5] max-w-2xl w-full max-h-[92vh] overflow-y-auto p-6 sm:p-10 shadow-2xl relative">
@@ -508,8 +499,6 @@ export default function SalespersonDashboard() {
               >
                 <X size={20} />
               </button>
-
-              {/* Printable Invoice Header */}
               <div className="border-b-2 border-[#1A1816] pb-6 flex justify-between items-start">
                 <div>
                   <div className="font-serif font-bold text-2xl tracking-[0.2em] flex items-center gap-2 mb-1 text-[#1A1816]">
@@ -550,8 +539,6 @@ export default function SalespersonDashboard() {
                   </p>
                 </div>
               </div>
-
-              {/* Bill Details: Customer and Sold By */}
               <div className="grid grid-cols-2 gap-6 my-6 text-xs bg-[#FAF8F5] p-4 border border-[#E5DFD5]">
                 <div>
                   <span className="text-[10px] uppercase font-bold text-[#8E877E] block mb-1">
@@ -571,8 +558,6 @@ export default function SalespersonDashboard() {
                   <p className="text-[#8E877E] text-[10px]">In-Store Counter Presentation</p>
                 </div>
               </div>
-
-              {/* Items List */}
               <table className="w-full text-xs text-left mb-6 border-collapse">
                 <thead>
                   <tr className="border-b border-[#E5DFD5] text-[#8E877E] uppercase text-[10px] font-bold">
@@ -595,8 +580,6 @@ export default function SalespersonDashboard() {
                   ))}
                 </tbody>
               </table>
-
-              {/* Totals */}
               <div className="border-t border-[#1A1816] pt-4 space-y-1.5 text-xs text-right">
                 <div className="flex justify-between text-[#8E877E]">
                   <span>Subtotal:</span>
@@ -620,8 +603,6 @@ export default function SalespersonDashboard() {
                   Payment: {selectedInvoiceOrder.paymentMethod === "cod" ? "Cash" : "Card"} ({selectedInvoiceOrder.paymentStatus || "Paid"})
                 </div>
               </div>
-
-              {/* Printable Modal Actions */}
               <div className="mt-8 pt-4 border-t border-[#E5DFD5] flex flex-wrap items-center justify-between gap-3 print:hidden">
                 <button
                   onClick={() => handleDeleteBill(selectedInvoiceOrder._id)}
@@ -656,8 +637,6 @@ export default function SalespersonDashboard() {
             </div>
           </div>
         )}
-
-        {/* Modal: Create In-Store Bill */}
         {isCustomBillModalOpen && (
           <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
             <div className="bg-white border border-[#E5DFD5] max-w-lg w-full p-6 sm:p-8 relative shadow-2xl">
@@ -812,8 +791,6 @@ export default function SalespersonDashboard() {
                     />
                   </div>
                 </div>
-
-                {/* Live Bill Summary */}
                 <div className="p-3 bg-[#FAF8F5] border border-[#E5DFD5] text-xs space-y-1">
                   <div className="flex justify-between text-[#8E877E]">
                     <span>Subtotal:</span>
@@ -866,7 +843,6 @@ export default function SalespersonDashboard() {
             </div>
           </div>
         )}
-        {/* Modal: Edit In-Store Bill */}
         {isEditModalOpen && (
           <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
             <div className="bg-white border border-[#E5DFD5] max-w-lg w-full p-6 sm:p-8 relative shadow-2xl">
@@ -1021,8 +997,6 @@ export default function SalespersonDashboard() {
                     />
                   </div>
                 </div>
-
-                {/* Live Bill Summary */}
                 <div className="p-3 bg-[#FAF8F5] border border-[#E5DFD5] text-xs space-y-1">
                   <div className="flex justify-between text-[#8E877E]">
                     <span>Subtotal:</span>

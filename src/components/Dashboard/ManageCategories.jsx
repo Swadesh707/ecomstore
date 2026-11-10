@@ -15,22 +15,19 @@ import {
 } from "lucide-react"
 
 export default function ManageCategories() {
-  const [activeTab, setActiveTab] = useState("product") // 'product' | 'user'
+  const [activeTab, setActiveTab] = useState("product")
 
-  // Product Categories State
   const [productCategories, setProductCategories] = useState([])
-  // User Categories State
+
   const [userCategories, setUserCategories] = useState([])
 
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
 
-  // Form State for Create & Update
   const [formOpen, setFormOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [currentId, setCurrentId] = useState(null)
 
-  // Form Fields
   const [title, setTitle] = useState("")
   const [roleKey, setRoleKey] = useState("user")
   const [description, setDescription] = useState("")
@@ -67,7 +64,6 @@ export default function ManageCategories() {
     loadAllData()
   }, [])
 
-  // Open Create Form
   const handleOpenCreate = () => {
     setIsEditing(false)
     setCurrentId(null)
@@ -79,7 +75,6 @@ export default function ManageCategories() {
     setFormOpen(true)
   }
 
-  // Open Edit Form
   const handleOpenEdit = (category) => {
     setIsEditing(true)
     setCurrentId(category._id)
@@ -91,7 +86,6 @@ export default function ManageCategories() {
     setFormOpen(true)
   }
 
-  // Close Form Modal
   const handleCloseForm = () => {
     setFormOpen(false)
     setIsEditing(false)
@@ -99,7 +93,6 @@ export default function ManageCategories() {
     setFormError("")
   }
 
-  // Submit Handler
   const handleSubmit = async (e) => {
     e.preventDefault()
     setFormError("")
@@ -131,7 +124,7 @@ export default function ManageCategories() {
           showFeedback("success", `Created new product category "${payload.title}".`)
         }
       } else {
-        // User Category Tab
+
         const cleanRoleKey = roleKey.toLowerCase().trim() || title.toLowerCase().trim().replace(/\s+/g, "-")
         const payload = {
           name: cleanRoleKey,
@@ -165,7 +158,6 @@ export default function ManageCategories() {
     }
   }
 
-  // Delete Handling
   const handleDelete = (category) => {
     setConfirmDelete(category)
   }
@@ -203,13 +195,10 @@ export default function ManageCategories() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-8 font-sans">
-      {/* Header Bar */}
       <div className="flex items-center justify-between border-b border-[#E5DFD5] pb-4">
         <h1 className="font-serif text-2xl font-bold uppercase tracking-tight text-[#1A1816]">
           Categories
         </h1>
-
-        {/* Primary Action Button */}
         <button
           onClick={handleOpenCreate}
           className="bg-[#1A1816] text-[#FAF8F5] px-4 py-2 text-xs font-bold uppercase tracking-wider hover:bg-[#C5A059] hover:text-[#1A1816] transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs rounded-none"
@@ -220,8 +209,6 @@ export default function ManageCategories() {
           </span>
         </button>
       </div>
-
-      {/* Tab Switcher: Product Categories vs User Categories */}
       <div className="flex items-center gap-2 border-b border-[#E5DFD5] pb-1">
         <button
           onClick={() => {
@@ -253,8 +240,6 @@ export default function ManageCategories() {
           <span>User Categories ({userCategories.length})</span>
         </button>
       </div>
-
-      {/* Global In-Page Feedback Banner */}
       {feedback.message && (
         <div
           className={`p-3 border text-xs font-normal flex items-center justify-between ${
@@ -272,8 +257,6 @@ export default function ManageCategories() {
           </button>
         </div>
       )}
-
-      {/* In-Page Confirmation for Deletion */}
       {confirmDelete && (
         <div className="p-3.5 bg-[#F2EFE9] border border-[#1A1816] text-[#1A1816] text-xs font-normal flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <span>
@@ -298,8 +281,6 @@ export default function ManageCategories() {
           </div>
         </div>
       )}
-
-      {/* Filter and Search Bar */}
       <div className="bg-[#F2EFE9] border border-[#E5DFD5] p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="relative w-full sm:w-80">
           <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8E877E]" />
@@ -321,8 +302,6 @@ export default function ManageCategories() {
           {activeTab === "product" ? "Product Categories" : "User Categories"}
         </span>
       </div>
-
-      {/* Categories Table */}
       {loading ? (
         <div className="py-24 text-center">
           <div className="w-8 h-8 border-2 border-[#1A1816] border-t-[#C5A059] rounded-full animate-spin mx-auto mb-3"></div>
@@ -425,12 +404,9 @@ export default function ManageCategories() {
           </table>
         </div>
       )}
-
-      {/* UNIFIED MODAL FOR CREATE & UPDATE */}
       {formOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
           <div className="bg-[#FAF8F5] border border-[#1A1816] w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl p-6 sm:p-8 relative font-sans">
-            {/* Modal Header */}
             <div className="flex items-center justify-between pb-4 mb-6 border-b border-[#E5DFD5]">
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#C5A059] block mb-1">
@@ -450,15 +426,11 @@ export default function ManageCategories() {
                 <X size={16} />
               </button>
             </div>
-
-            {/* In-Modal Form Error Banner */}
             {formError && (
               <div className="p-3 mb-4 bg-red-50 border border-red-200 text-red-800 text-xs font-normal">
                 {formError}
               </div>
             )}
-
-            {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4 text-xs font-semibold uppercase tracking-wider">
               <div>
                 <label className="block mb-1 text-[#1A1816]">
@@ -522,8 +494,6 @@ export default function ManageCategories() {
                   </span>
                 </label>
               </div>
-
-              {/* Action Buttons */}
               <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#E5DFD5]">
                 <button
                   type="button"

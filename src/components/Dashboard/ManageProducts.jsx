@@ -21,12 +21,10 @@ export default function ManageProducts() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("All")
 
-  // Modal / Form state for Create & Update
   const [formOpen, setFormOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [currentId, setCurrentId] = useState(null)
 
-  // Form Fields
   const [title, setTitle] = useState("")
   const [price, setPrice] = useState("")
   const [category, setCategory] = useState("")
@@ -46,7 +44,6 @@ export default function ManageProducts() {
     const files = Array.from(e.target.files || [])
     if (files.length === 0) return
 
-    // Create local previews immediately
     const previews = files.map((file) => URL.createObjectURL(file))
     setImages((prev) => [...prev, ...previews].slice(0, 5))
     if (!image) {
@@ -66,7 +63,7 @@ export default function ManageProducts() {
             uploadedUrls.push(res.data.url)
           }
         } catch {
-          // Fallback to base64
+
           const base64 = await new Promise((resolve) => {
             const reader = new FileReader()
             reader.onloadend = () => resolve(reader.result)
@@ -123,7 +120,6 @@ export default function ManageProducts() {
     setTimeout(() => setFeedback({ type: "", message: "" }), 4000)
   }
 
-  // Open Create Mode
   const handleOpenCreate = () => {
     setIsEditing(false)
     setCurrentId(null)
@@ -138,7 +134,6 @@ export default function ManageProducts() {
     setFormOpen(true)
   }
 
-  // Open Edit Mode
   const handleOpenEdit = (product) => {
     setIsEditing(true)
     setCurrentId(product._id)
@@ -153,7 +148,6 @@ export default function ManageProducts() {
     setFormOpen(true)
   }
 
-  // Close Form Modal
   const handleCloseForm = () => {
     setFormOpen(false)
     setIsEditing(false)
@@ -162,7 +156,6 @@ export default function ManageProducts() {
     setImages([])
   }
 
-  // Handle Submit (Unified for both Create and Update)
   const handleSubmit = async (e) => {
     e.preventDefault()
     setFormError("")
@@ -186,14 +179,14 @@ export default function ManageProducts() {
       }
 
       if (isEditing) {
-        // UPDATE existing product
+
         const res = await PutRequest(`products/${currentId}`, payload)
         setProducts((prev) =>
           prev.map((item) => (item._id === currentId ? res.data : item))
         )
         showFeedback("success", `Updated "${payload.title}" successfully.`)
       } else {
-        // CREATE new product
+
         const res = await PostRequest("products", payload)
         setProducts((prev) => [res.data, ...prev])
         showFeedback("success", `Created "${payload.title}" in archive catalog.`)
@@ -210,7 +203,6 @@ export default function ManageProducts() {
     }
   }
 
-  // In-Page Delete Handling (no window.confirm)
   const handleDelete = (product) => {
     setConfirmDelete(product)
   }
@@ -228,7 +220,6 @@ export default function ManageProducts() {
     }
   }
 
-  // Filtered list
   const filteredProducts = products.filter((p) => {
     const matchesSearch =
       p.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -240,13 +231,10 @@ export default function ManageProducts() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-8 font-sans">
-      {/* Header Bar */}
       <div className="flex items-center justify-between border-b border-[#E5DFD5] pb-4">
         <h1 className="font-serif text-2xl font-bold uppercase tracking-tight text-[#1A1816]">
           Products
         </h1>
-
-        {/* Primary Action Button */}
         <button
           onClick={handleOpenCreate}
           className="bg-[#1A1816] text-[#FAF8F5] px-4 py-2 text-xs font-bold uppercase tracking-wider hover:bg-[#C5A059] hover:text-[#1A1816] transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs rounded-none"
@@ -255,8 +243,6 @@ export default function ManageProducts() {
           <span>Create Product</span>
         </button>
       </div>
-
-      {/* Global In-Page Feedback Banner */}
       {feedback.message && (
         <div
           className={`p-3 border text-xs font-normal flex items-center justify-between ${
@@ -274,8 +260,6 @@ export default function ManageProducts() {
           </button>
         </div>
       )}
-
-      {/* In-Page Confirmation for Deletion */}
       {confirmDelete && (
         <div className="p-3.5 bg-[#F2EFE9] border border-[#1A1816] text-[#1A1816] text-xs font-normal flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <span>
@@ -297,10 +281,7 @@ export default function ManageProducts() {
           </div>
         </div>
       )}
-
-      {/* Filter and Search Bar */}
       <div className="bg-[#F2EFE9] border border-[#E5DFD5] p-4 flex flex-col md:flex-row items-center justify-between gap-4">
-        {/* Search */}
         <div className="relative w-full md:w-80">
           <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8E877E]" />
           <input
@@ -311,8 +292,6 @@ export default function ManageProducts() {
             className="w-full bg-[#FAF8F5] border border-[#E5DFD5] pl-10 pr-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#1A1816] text-[#1A1816] placeholder:text-[#8E877E]"
           />
         </div>
-
-        {/* Category Filter & Counter */}
         <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
           <select
             value={selectedCategory}
@@ -332,8 +311,6 @@ export default function ManageProducts() {
           </span>
         </div>
       </div>
-
-      {/* Products Table */}
       {loading ? (
         <div className="py-24 text-center">
           <div className="w-8 h-8 border-2 border-[#1A1816] border-t-[#C5A059] rounded-full animate-spin mx-auto mb-3"></div>
@@ -377,7 +354,6 @@ export default function ManageProducts() {
             <tbody className="divide-y divide-[#E5DFD5] text-xs">
               {filteredProducts.map((item) => (
                 <tr key={item._id} className="hover:bg-[#F2EFE9]/50 transition-colors">
-                  {/* Item Image + Title */}
                   <td className="py-3.5 px-4">
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-14 bg-[#F2EFE9] border border-[#E5DFD5] overflow-hidden shrink-0">
@@ -401,20 +377,14 @@ export default function ManageProducts() {
                       </div>
                     </div>
                   </td>
-
-                  {/* Category */}
                   <td className="py-3.5 px-4">
                     <span className="inline-block bg-[#F2EFE9] border border-[#E5DFD5] text-[#1A1816] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider">
                       {item.category || "General"}
                     </span>
                   </td>
-
-                  {/* Price */}
                   <td className="py-3.5 px-4 font-serif font-bold text-sm text-[#1A1816]">
                     ${Number(item.price).toFixed(2)}
                   </td>
-
-                  {/* Stock */}
                   <td className="py-3.5 px-4">
                     <span
                       className={`text-[10px] font-bold uppercase tracking-wider ${
@@ -424,8 +394,6 @@ export default function ManageProducts() {
                       {Number(item.stock) > 0 ? `${item.stock} in stock` : "Sold Out"}
                     </span>
                   </td>
-
-                  {/* Actions: Edit & Delete right in this same view */}
                   <td className="py-3.5 px-4 text-right">
                     <div className="inline-flex items-center gap-1.5">
                       <button
@@ -451,12 +419,9 @@ export default function ManageProducts() {
           </table>
         </div>
       )}
-
-      {/* UNIFIED MODAL FOR CREATE & UPDATE */}
       {formOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
           <div className="bg-[#FAF8F5] border border-[#1A1816] w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl p-6 sm:p-8 relative font-sans">
-            {/* Modal Header */}
             <div className="flex items-center justify-between pb-4 mb-6 border-b border-[#E5DFD5]">
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#C5A059] block mb-1">
@@ -474,17 +439,12 @@ export default function ManageProducts() {
                 <X size={16} />
               </button>
             </div>
-
-            {/* In-Modal Form Error Display */}
             {formError && (
               <div className="p-3 bg-red-50 border border-red-300 text-red-800 text-xs font-normal mb-4">
                 {formError}
               </div>
             )}
-
-            {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4 text-xs font-semibold uppercase tracking-wider">
-              {/* Title */}
               <div>
                 <label className="block mb-1 text-[#1A1816]">Product Title *</label>
                 <input
@@ -496,8 +456,6 @@ export default function ManageProducts() {
                   className="w-full bg-[#F2EFE9] border border-[#E5DFD5] px-3.5 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#1A1816] text-[#1A1816]"
                 />
               </div>
-
-              {/* Price & Stock */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block mb-1 text-[#1A1816]">Price (USD $) *</label>
@@ -524,8 +482,6 @@ export default function ManageProducts() {
                   />
                 </div>
               </div>
-
-              {/* Category */}
               <div>
                 <label className="block mb-1 text-[#1A1816]">Wardrobe Category *</label>
                 <div className="flex gap-2">
@@ -542,8 +498,6 @@ export default function ManageProducts() {
                   </select>
                 </div>
               </div>
-
-              {/* Product Image Section (From Device or Web URL) */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <label className="text-[#1A1816]">Product Image</label>
@@ -604,8 +558,6 @@ export default function ManageProducts() {
                     className="w-full bg-[#F2EFE9] border border-[#E5DFD5] px-3.5 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#1A1816] text-[#1A1816]"
                   />
                 )}
-
-                {/* Multiple Images Preview Strip */}
                 {images.length > 0 && (
                   <div className="space-y-1.5">
                     <span className="text-[10px] uppercase font-bold text-[#8E877E] tracking-wider block">
@@ -634,8 +586,6 @@ export default function ManageProducts() {
                   </div>
                 )}
               </div>
-
-              {/* Description */}
               <div>
                 <label className="block mb-1 text-[#1A1816]">Archival Description</label>
                 <textarea
@@ -646,8 +596,6 @@ export default function ManageProducts() {
                   className="w-full bg-[#F2EFE9] border border-[#E5DFD5] px-3.5 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#1A1816] text-[#1A1816] resize-none"
                 />
               </div>
-
-              {/* Action Buttons */}
               <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#E5DFD5]">
                 <button
                   type="button"

@@ -21,12 +21,10 @@ export default function ManageCoupons() {
   const [searchQuery, setSearchQuery] = useState("")
   const [feedback, setFeedback] = useState({ type: "", message: "" })
 
-  // Modal State
   const [modalOpen, setModalOpen] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [formError, setFormError] = useState("")
 
-  // Form Fields
   const [code, setCode] = useState("")
   const [description, setDescription] = useState("")
   const [discountType, setDiscountType] = useState("percentage")
@@ -145,7 +143,6 @@ export default function ManageCoupons() {
 
   return (
     <div className="space-y-8 font-sans">
-      {/* Header */}
       <div className="border-b border-[#E5DFD5] pb-4 flex justify-between items-center">
         <h1 className="font-serif text-2xl font-bold uppercase tracking-tight text-[#1A1816]">
           Coupons
@@ -158,8 +155,6 @@ export default function ManageCoupons() {
           <Plus size={14} /> <span>Create Coupon</span>
         </button>
       </div>
-
-      {/* Feedback Toast */}
       {feedback.message && (
         <div
           className={`p-4 border text-xs font-semibold uppercase tracking-wider ${
@@ -171,8 +166,6 @@ export default function ManageCoupons() {
           {feedback.message}
         </div>
       )}
-
-      {/* Search Toolbar */}
       <div className="flex items-center justify-between gap-4">
         <div className="relative flex-1 max-w-md">
           <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8E877E]" />
@@ -189,8 +182,6 @@ export default function ManageCoupons() {
           {coupons.length} Coupons Configured
         </span>
       </div>
-
-      {/* Coupons Table */}
       <div className="bg-white border border-[#E5DFD5] overflow-hidden shadow-xs">
         {loading ? (
           <div className="p-16 text-center">
@@ -227,7 +218,6 @@ export default function ManageCoupons() {
 
                   return (
                     <tr key={coupon._id} className="hover:bg-[#FAF8F5]/60 transition-colors">
-                      {/* Code */}
                       <td className="p-4">
                         <span className="font-mono font-bold text-sm tracking-wider text-[#1A1816] bg-[#FAF8F5] px-2 py-0.5 border border-[#E5DFD5] inline-block">
                           {coupon.code}
@@ -238,8 +228,6 @@ export default function ManageCoupons() {
                           </span>
                         )}
                       </td>
-
-                      {/* Value */}
                       <td className="p-4">
                         <span className="font-serif font-bold text-base text-[#1A1816]">
                           {coupon.discountType === "percentage"
@@ -247,15 +235,11 @@ export default function ManageCoupons() {
                             : `$${coupon.discountValue.toFixed(2)} OFF`}
                         </span>
                       </td>
-
-                      {/* Min Spend */}
                       <td className="p-4">
                         <span className="text-[#6A645D] font-medium">
                           {coupon.minOrderAmount > 0 ? `$${coupon.minOrderAmount.toFixed(2)}` : "No Min."}
                         </span>
                       </td>
-
-                      {/* Usage Limits */}
                       <td className="p-4">
                         <div className="flex items-center gap-2">
                           <span className="font-bold text-[#1A1816]">{coupon.usedCount}</span>
@@ -270,8 +254,6 @@ export default function ManageCoupons() {
                           </span>
                         )}
                       </td>
-
-                      {/* Limit Per User */}
                       <td className="p-4">
                         <span className="text-[#6A645D]">
                           {coupon.limitPerUser !== null
@@ -279,8 +261,6 @@ export default function ManageCoupons() {
                             : "Unlimited"}
                         </span>
                       </td>
-
-                      {/* Expiry */}
                       <td className="p-4">
                         {coupon.expiryDate ? (
                           <span className={isExpired ? "text-[#78281F] font-bold" : "text-[#6A645D]"}>
@@ -291,8 +271,6 @@ export default function ManageCoupons() {
                           <span className="text-[#8E877E]">Perpetual</span>
                         )}
                       </td>
-
-                      {/* Status */}
                       <td className="p-4">
                         <button
                           onClick={() => handleToggleActive(coupon)}
@@ -305,8 +283,6 @@ export default function ManageCoupons() {
                           {coupon.isActive && !isExpired && !isMaxedOut ? "Active" : "Disabled"}
                         </button>
                       </td>
-
-                      {/* Delete Action */}
                       <td className="p-4 text-center">
                         <button
                           onClick={() => handleDeleteCoupon(coupon._id, coupon.code)}
@@ -324,8 +300,6 @@ export default function ManageCoupons() {
           </div>
         )}
       </div>
-
-      {/* Create Coupon Modal */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
           <div className="bg-white border border-[#E5DFD5] max-w-xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl space-y-6">
@@ -353,7 +327,6 @@ export default function ManageCoupons() {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4 text-xs font-bold uppercase tracking-wider">
-              {/* Code */}
               <div className="space-y-1.5">
                 <label className="text-[#8E877E]">Promotional Code *</label>
                 <input
@@ -365,8 +338,6 @@ export default function ManageCoupons() {
                   className="w-full bg-[#FAF8F5] border border-[#E5DFD5] p-3 font-mono text-sm tracking-wider focus:outline-none focus:border-[#1A1816] text-[#1A1816]"
                 />
               </div>
-
-              {/* Description */}
               <div className="space-y-1.5">
                 <label className="text-[#8E877E]">Description (Optional)</label>
                 <input
@@ -377,8 +348,6 @@ export default function ManageCoupons() {
                   className="w-full bg-[#FAF8F5] border border-[#E5DFD5] p-3 text-xs font-normal focus:outline-none focus:border-[#1A1816] text-[#1A1816]"
                 />
               </div>
-
-              {/* Type & Value */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-[#8E877E]">Discount Type</label>
@@ -407,8 +376,6 @@ export default function ManageCoupons() {
                   />
                 </div>
               </div>
-
-              {/* Min Spend */}
               <div className="space-y-1.5">
                 <label className="text-[#8E877E]">Minimum Order Qualifying Subtotal ($)</label>
                 <input
@@ -420,8 +387,6 @@ export default function ManageCoupons() {
                   className="w-full bg-[#FAF8F5] border border-[#E5DFD5] p-3 font-mono text-xs focus:outline-none focus:border-[#1A1816] text-[#1A1816]"
                 />
               </div>
-
-              {/* Usage Limits */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-[#8E877E]">Global Total Uses Limit</label>
@@ -453,8 +418,6 @@ export default function ManageCoupons() {
                   </p>
                 </div>
               </div>
-
-              {/* Expiry Date */}
               <div className="space-y-1.5">
                 <label className="text-[#8E877E]">Expiration Date (Optional)</label>
                 <input
@@ -464,8 +427,6 @@ export default function ManageCoupons() {
                   className="w-full bg-[#FAF8F5] border border-[#E5DFD5] p-3 text-xs focus:outline-none focus:border-[#1A1816] text-[#1A1816]"
                 />
               </div>
-
-              {/* Submit Buttons */}
               <div className="border-t border-[#E5DFD5] pt-4 flex justify-end gap-3">
                 <button
                   type="button"

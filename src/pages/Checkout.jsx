@@ -52,7 +52,7 @@ export default function Checkout() {
         }
       }
     } catch (e) {
-      // Ignore
+
     }
     return {
       name: localStorage.getItem("name") || "",
@@ -74,9 +74,8 @@ export default function Checkout() {
       }
     } catch (e) {}
     return "card"
-  }) // 'card' or 'cod'
+  })
 
-  // Persist guest form progress in sessionStorage
   useEffect(() => {
     try {
       sessionStorage.setItem(
@@ -95,7 +94,6 @@ export default function Checkout() {
   const [cardBrand, setCardBrand] = useState("Card")
   const [cardErrors, setCardErrors] = useState({})
 
-  // Coupon State
   const [couponCodeInput, setCouponCodeInput] = useState("")
   const [appliedCoupon, setAppliedCoupon] = useState(null)
   const [couponError, setCouponError] = useState("")
@@ -326,7 +324,6 @@ export default function Checkout() {
 
       const order = res.data
 
-      // Clear cart upon successful order
       localStorage.removeItem("cart")
       try {
         sessionStorage.removeItem("pending_checkout_draft")
@@ -354,9 +351,6 @@ export default function Checkout() {
     window.print()
   }
 
-  // ==========================================
-  // INVOICE & ORDER RECEIPT VIEW
-  // ==========================================
   if (completedOrder) {
     const formattedDate = new Date(completedOrder.createdAt || Date.now()).toLocaleDateString(
       "en-US",
@@ -378,7 +372,6 @@ export default function Checkout() {
 
     return (
       <div className="min-h-screen bg-[#FAF8F5] text-[#1A1816] py-12 px-4 sm:px-6 lg:px-8 font-sans">
-        {/* Screen Controls */}
         <div className="max-w-4xl mx-auto mb-6 flex flex-wrap items-center justify-between gap-4 no-print">
           <Link
             to="/shop"
@@ -402,10 +395,7 @@ export default function Checkout() {
             </button>
           </div>
         </div>
-
-        {/* Printable Official Invoice Card */}
         <div className="max-w-4xl mx-auto bg-white border border-[#E5DFD5] shadow-lg p-8 sm:p-12 printable-invoice">
-          {/* Invoice Header */}
           <div className="border-b-2 border-[#1A1816] pb-8 mb-8">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
@@ -449,8 +439,6 @@ export default function Checkout() {
               </div>
             </div>
           </div>
-
-          {/* Reference Bar: Order # & Tracking # */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-[#F2EFE9] border border-[#E5DFD5] p-5 mb-8">
             <div>
               <span className="text-[10px] font-bold uppercase tracking-wider text-[#8E877E] block">
@@ -476,8 +464,6 @@ export default function Checkout() {
               </p>
             </div>
           </div>
-
-          {/* Delivery Timeline Indicator */}
           <div className="mb-8 border border-[#E5DFD5] p-4 bg-[#FAF8F5]">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center text-xs gap-2 mb-3">
               <span className="font-bold uppercase tracking-wider text-[#1A1816] flex items-center gap-1.5">
@@ -497,8 +483,6 @@ export default function Checkout() {
               <span>Delivered</span>
             </div>
           </div>
-
-          {/* Customer & Payment Info */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 text-xs">
             <div>
               <h5 className="font-serif font-bold uppercase tracking-wider text-xs border-b border-[#E5DFD5] pb-1.5 mb-2 text-[#1A1816]">
@@ -549,8 +533,6 @@ export default function Checkout() {
               )}
             </div>
           </div>
-
-          {/* Itemized Table */}
           <div className="mb-8">
             <h5 className="font-serif font-bold uppercase tracking-wider text-xs mb-3 text-[#1A1816]">
               Order Items
@@ -602,8 +584,6 @@ export default function Checkout() {
               </table>
             </div>
           </div>
-
-          {/* Totals Breakdown */}
           <div className="flex flex-col sm:flex-row justify-between items-start gap-8 border-t border-[#E5DFD5] pt-6 mb-8">
             <div className="max-w-xs text-xs text-[#8E877E] space-y-2">
               <p className="font-serif font-bold uppercase tracking-wider text-[#1A1816]">
@@ -644,8 +624,6 @@ export default function Checkout() {
               </div>
             </div>
           </div>
-
-          {/* Official Sign-Off */}
           <div className="border-t border-[#E5DFD5] pt-6 flex flex-col sm:flex-row justify-between items-center text-center sm:text-left gap-4 text-[10px] uppercase tracking-wider text-[#8E877E]">
             <div>
               <p>© {new Date().getFullYear()} Ecomstore. All rights reserved.</p>
@@ -659,13 +637,9 @@ export default function Checkout() {
     )
   }
 
-  // ==========================================
-  // CHECKOUT FORM VIEW
-  // ==========================================
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-[#1A1816] py-14 font-sans">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header Breadcrumb */}
         <div className="mb-10 flex flex-wrap items-center justify-between border-b border-[#E5DFD5] pb-6 gap-4">
           <div>
             <span className="text-[10px] font-bold uppercase tracking-wider text-[#8E877E] block mb-1">
@@ -701,16 +675,12 @@ export default function Checkout() {
         ) : (
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-              {/* Left Column: Customer & Delivery Details */}
               <div className="lg:col-span-7 space-y-8">
-                {/* Error Banner */}
                 {errorMessage && (
                   <div className="p-4 bg-[#78281F]/10 border border-[#78281F] text-[#78281F] text-xs font-medium">
                     {errorMessage}
                   </div>
                 )}
-
-                {/* 1. Customer Information */}
                 <div className="bg-white border border-[#E5DFD5] p-6 sm:p-8">
                   <div className="flex items-center justify-between mb-5 pb-3 border-b border-[#E5DFD5]">
                     <h3 className="font-serif text-lg font-bold uppercase tracking-wider text-[#1A1816]">
@@ -763,8 +733,6 @@ export default function Checkout() {
                     </div>
                   </div>
                 </div>
-
-                {/* 2. Shipping Address */}
                 <div className="bg-white border border-[#E5DFD5] p-6 sm:p-8">
                   <h3 className="font-serif text-lg font-bold uppercase tracking-wider mb-5 pb-3 border-b border-[#E5DFD5] text-[#1A1816]">
                     2. Shipping Address
@@ -819,16 +787,11 @@ export default function Checkout() {
                     </div>
                   </div>
                 </div>
-
-                {/* 3. Payment Method */}
                 <div className="bg-white border border-[#E5DFD5] p-6 sm:p-8">
                   <h3 className="font-serif text-lg font-bold uppercase tracking-wider mb-5 pb-3 border-b border-[#E5DFD5] text-[#1A1816]">
                     3. Payment Method
                   </h3>
-
-                  {/* Payment Method Selector Cards */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                    {/* Option 1: Credit / Debit Card */}
                     <button
                       type="button"
                       onClick={() => setPaymentMethod("card")}
@@ -864,8 +827,6 @@ export default function Checkout() {
                         </span>
                       </div>
                     </button>
-
-                    {/* Option 2: Cash on Delivery (COD) */}
                     <button
                       type="button"
                       onClick={() => setPaymentMethod("cod")}
@@ -902,8 +863,6 @@ export default function Checkout() {
                       </div>
                     </button>
                   </div>
-
-                  {/* Cash on Delivery Notice */}
                   {paymentMethod === "cod" ? (
                     <div className="p-4 bg-[#F2EFE9] border border-[#E5DFD5] text-xs text-[#6A645D] leading-relaxed">
                       <p className="font-serif font-bold uppercase tracking-wider text-[#1A1816] mb-1">
@@ -914,7 +873,7 @@ export default function Checkout() {
                       </p>
                     </div>
                   ) : (
-                    /* Card Input Fields */
+
                     <div className="space-y-4 pt-2">
                       <div className="space-y-1.5 text-xs font-bold uppercase tracking-wider">
                         <div className="flex justify-between items-center">
@@ -994,14 +953,10 @@ export default function Checkout() {
                   )}
                 </div>
               </div>
-
-              {/* Right Column: Order Summary & Checkout */}
               <div className="lg:col-span-5 bg-white border border-[#E5DFD5] p-6 sm:p-8 space-y-6 sticky top-24">
                 <h3 className="font-serif text-lg font-bold uppercase tracking-wider border-b border-[#E5DFD5] pb-3 text-[#1A1816]">
                   Order Summary
                 </h3>
-
-                {/* Items Mini List */}
                 <div className="divide-y divide-[#E5DFD5] max-h-64 overflow-y-auto pr-1">
                   {cart.map((item, idx) => (
                     <div key={idx} className="py-3 flex items-center gap-3">
@@ -1031,8 +986,6 @@ export default function Checkout() {
                     </div>
                   ))}
                 </div>
-
-                {/* Promotional Coupon Application */}
                 <div className="border-t border-[#E5DFD5] pt-4">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-[#8E877E] block mb-2">
                     Promo Code
@@ -1086,8 +1039,6 @@ export default function Checkout() {
                     </div>
                   )}
                 </div>
-
-                {/* Cost Breakdown */}
                 <div className="border-t border-[#E5DFD5] pt-4 space-y-2 text-xs">
                   <div className="flex justify-between text-[#6A645D]">
                     <span>Subtotal</span>
@@ -1118,8 +1069,6 @@ export default function Checkout() {
                     <span className="text-xl">${total.toFixed(2)}</span>
                   </div>
                 </div>
-
-                {/* Submit Action */}
                 {!token ? (
                   <button
                     type="button"

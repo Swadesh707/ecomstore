@@ -20,7 +20,7 @@ export default function ManageInStoreSales() {
       setLoading(true)
       const res = await GetRequest("orders/all")
       const allOrders = res.data || []
-      // Filter for in-store sales bills
+
       const inStoreOnly = allOrders.filter(
         (o) =>
           o.orderNumber?.startsWith("BILL-") ||
@@ -39,7 +39,6 @@ export default function ManageInStoreSales() {
     loadBills()
   }, [])
 
-  // Filtered by search query (without customer name)
   const filteredBills = useMemo(() => {
     if (!searchQuery.trim()) return orders
     const q = searchQuery.toLowerCase()
@@ -60,7 +59,6 @@ export default function ManageInStoreSales() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto font-sans">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-[#E6E2DE]">
         <div>
           <div className="flex items-center gap-3">
@@ -85,8 +83,6 @@ export default function ManageInStoreSales() {
           <RefreshCw size={15} className={loading ? "animate-spin" : ""} />
         </button>
       </div>
-
-      {/* Search Bar */}
       <div className="relative max-w-sm">
         <Search
           size={15}
@@ -100,8 +96,6 @@ export default function ManageInStoreSales() {
           className="w-full pl-9 pr-3 py-2 text-xs border border-[#D5D0C9] bg-white rounded focus:border-[#C5A059] focus:outline-none"
         />
       </div>
-
-      {/* Sales Registry Table */}
       <div className="bg-white border border-[#E6E2DE] shadow-xs overflow-hidden">
         {loading ? (
           <div className="py-16 text-center text-xs text-[#6A645D]">
@@ -142,7 +136,6 @@ export default function ManageInStoreSales() {
                       key={bill._id}
                       className="hover:bg-[#FAF8F5] transition-colors"
                     >
-                      {/* Bill # and Date */}
                       <td className="py-3.5 px-4 font-mono font-bold text-[#1A1816]">
                         {bill.orderNumber}
                         <span className="block font-sans font-normal text-[10px] text-[#9C948A] mt-0.5">
@@ -160,13 +153,9 @@ export default function ManageInStoreSales() {
                             : "—"}
                         </span>
                       </td>
-
-                      {/* Sold By (Salesperson) */}
                       <td className="py-3.5 px-4 font-semibold text-[#1A1816]">
                         {authorizingSalesperson}
                       </td>
-
-                      {/* Items Sold */}
                       <td className="py-3.5 px-4">
                         <div className="space-y-1 max-w-sm">
                           {bill.items?.map((item, idx) => (
@@ -184,8 +173,6 @@ export default function ManageInStoreSales() {
                           ))}
                         </div>
                       </td>
-
-                      {/* Discount */}
                       <td className="py-3.5 px-4 text-center">
                         {discountVal > 0 ? (
                           <span className="text-[#78281F] font-mono font-semibold">
@@ -195,13 +182,9 @@ export default function ManageInStoreSales() {
                           <span className="text-[#9C948A]">—</span>
                         )}
                       </td>
-
-                      {/* Total */}
                       <td className="py-3.5 px-4 text-right font-serif font-bold text-sm text-[#1A1816]">
                         ${Number(bill.totalAmount || 0).toFixed(2)}
                       </td>
-
-                      {/* Action */}
                       <td className="py-3.5 px-4 text-center">
                         <button
                           onClick={() => setSelectedBill(bill)}
@@ -219,8 +202,6 @@ export default function ManageInStoreSales() {
           </div>
         )}
       </div>
-
-      {/* Modal: View Printable Bill (Without Customer Name) */}
       {selectedBill && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
           <div className="bg-white border border-[#E5DFD5] max-w-2xl w-full max-h-[92vh] overflow-y-auto p-6 sm:p-10 shadow-2xl relative font-sans">
@@ -230,8 +211,6 @@ export default function ManageInStoreSales() {
             >
               <X size={20} />
             </button>
-
-            {/* Header */}
             <div className="border-b border-[#E5DFD5] pb-6 mb-6">
               <div className="flex justify-between items-start">
                 <div>
@@ -254,8 +233,6 @@ export default function ManageInStoreSales() {
                 </div>
               </div>
             </div>
-
-            {/* Sales Authorization Box */}
             <div className="bg-[#FAF8F5] border border-[#E5DFD5] p-4 mb-6 flex items-center justify-between">
               <div>
                 <span className="text-[10px] uppercase font-bold text-[#C5A059] block mb-0.5">
@@ -274,8 +251,6 @@ export default function ManageInStoreSales() {
                 </span>
               </div>
             </div>
-
-            {/* Items Table */}
             <div className="border border-[#E5DFD5] mb-6">
               <table className="w-full text-xs text-left">
                 <thead className="bg-[#FAF8F5] border-b border-[#E5DFD5] text-[10px] uppercase font-bold text-[#8E877E]">
@@ -306,8 +281,6 @@ export default function ManageInStoreSales() {
                 </tbody>
               </table>
             </div>
-
-            {/* Calculations Box */}
             <div className="space-y-1.5 text-xs max-w-xs ml-auto border-t border-[#E5DFD5] pt-4">
               <div className="flex justify-between text-[#8E877E]">
                 <span>Subtotal:</span>
@@ -334,8 +307,6 @@ export default function ManageInStoreSales() {
                 </span>
               </div>
             </div>
-
-            {/* Modal Actions */}
             <div className="mt-8 pt-4 border-t border-[#E5DFD5] flex justify-end gap-3 print:hidden">
               <button
                 onClick={() => setSelectedBill(null)}

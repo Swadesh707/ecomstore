@@ -35,13 +35,13 @@ export function formatCardNumber(value) {
   const digits = String(value || "").replace(/\D/g, "").slice(0, 19)
   const isAmex = /^3[47]/.test(digits)
   if (isAmex) {
-    // 4-6-5 grouping for Amex
+
     const p1 = digits.slice(0, 4)
     const p2 = digits.slice(4, 10)
     const p3 = digits.slice(10, 15)
     return [p1, p2, p3].filter(Boolean).join(" ")
   }
-  // Standard 4-4-4-4 grouping
+
   const chunks = digits.match(/.{1,4}/g)
   return chunks ? chunks.join(" ") : ""
 }

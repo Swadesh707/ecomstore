@@ -66,7 +66,6 @@ export const toggleWishlist = async (product) => {
   localStorage.setItem("wishlist", JSON.stringify(updated))
   window.dispatchEvent(new Event("wishlist-updated"))
 
-  // If authenticated patron, persist directly to MongoDB user document
   const token = localStorage.getItem("token")
   if (token && product._id) {
     try {

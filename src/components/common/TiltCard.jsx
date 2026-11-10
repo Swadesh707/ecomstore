@@ -14,7 +14,7 @@ export default function TiltCard({ children, className = "", maxRotate = 7, glar
     const centerY = box.height / 2
     const rotateX = ((y - centerY) / centerY) * -maxRotate
     const rotateY = ((x - centerX) / centerX) * maxRotate
-    
+
     setRotate({ x: rotateX, y: rotateY })
     setGlarePos({
       x: (x / box.width) * 100,

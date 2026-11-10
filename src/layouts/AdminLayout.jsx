@@ -20,9 +20,7 @@ export default function AdminLayout() {
 
   return (
     <div className="min-h-screen bg-[#FAF8F5] flex flex-col md:flex-row text-[#1A1816] font-sans">
-      {/* Sleek Admin Sidebar */}
       <aside className="w-full md:w-64 bg-[#1A1816] text-[#FAF8F5] border-r border-[#2C2825] flex flex-col shrink-0">
-        {/* Header with Brand & Return to Store Shortcut */}
         <div className="p-6 border-b border-[#2C2825] flex items-center justify-between">
           <Link
             to="/"
@@ -53,8 +51,6 @@ export default function AdminLayout() {
             <span>ECOMSTORE</span>
           </Link>
         </div>
-
-        {/* Prominent Return to Store Action Button */}
         <div className="p-3 border-b border-[#2C2825]">
           <Link
             to="/"
@@ -64,10 +60,7 @@ export default function AdminLayout() {
             <Store size={14} /> Return to Store
           </Link>
         </div>
-
-        {/* Navigation Section */}
         <nav className="p-3 space-y-1 flex-1 text-xs font-semibold uppercase tracking-wider overflow-y-auto">
-          {/* 1. Analytics */}
           <NavLink
             to="/admin/analytics"
             className={({ isActive }) =>
@@ -81,8 +74,6 @@ export default function AdminLayout() {
             <BarChart3 size={16} />
             <span className="font-bold">Analytics</span>
           </NavLink>
-
-          {/* 2. Orders */}
           <NavLink
             to="/admin/orders"
             className={({ isActive }) =>
@@ -96,8 +87,6 @@ export default function AdminLayout() {
             <Truck size={16} />
             <span className="font-bold">Orders</span>
           </NavLink>
-
-          {/* In-Store Sales */}
           <NavLink
             to="/admin/in-store-sales"
             className={({ isActive }) =>
@@ -111,8 +100,6 @@ export default function AdminLayout() {
             <Receipt size={16} />
             <span className="font-bold">In-Store Sales</span>
           </NavLink>
-
-          {/* 3. Products */}
           <NavLink
             to="/admin/products"
             className={({ isActive }) =>
@@ -126,8 +113,6 @@ export default function AdminLayout() {
             <Layers size={16} />
             <span className="font-bold">Products</span>
           </NavLink>
-
-          {/* 4. Categories */}
           <NavLink
             to="/admin/categories"
             className={({ isActive }) =>
@@ -141,8 +126,6 @@ export default function AdminLayout() {
             <FolderKanban size={16} />
             <span className="font-bold">Categories</span>
           </NavLink>
-
-          {/* 5. Coupons */}
           <NavLink
             to="/admin/coupons"
             className={({ isActive }) =>
@@ -156,8 +139,6 @@ export default function AdminLayout() {
             <Tag size={16} />
             <span className="font-bold">Coupons</span>
           </NavLink>
-
-          {/* 6. Team */}
           <NavLink
             to="/admin/team"
             className={({ isActive }) =>
@@ -171,8 +152,6 @@ export default function AdminLayout() {
             <Users size={16} />
             <span className="font-bold">Team</span>
           </NavLink>
-
-          {/* 7. Collected Emails */}
           <NavLink
             to="/admin/collected-mails"
             className={({ isActive }) =>
@@ -188,8 +167,6 @@ export default function AdminLayout() {
           </NavLink>
         </nav>
       </aside>
-
-      {/* Main Content Area */}
       <main className="flex-1 overflow-y-auto p-6 md:p-10 bg-[#FAF8F5]">
         <Outlet />
       </main>

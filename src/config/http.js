@@ -37,7 +37,6 @@ const getAuthHeaders = () => {
   return headers
 }
 
-// In-memory response cache & in-flight request deduping (5 minute TTL)
 const requestCache = new Map()
 const inFlightRequests = new Map()
 const CACHE_TTL_MS = 5 * 60 * 1000

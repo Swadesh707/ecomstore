@@ -53,7 +53,6 @@ export default function AdminAnalytics() {
     )
   }
 
-  // Pre-calculate Donut Pie Chart Slices
   const pieColors = ["#1A1816", "#C5A059", "#78281F", "#1C352D", "#6A645D", "#8E877E"]
   const categories = data.categoryBreakdown || []
   const totalCatRevenue = categories.reduce((sum, c) => sum + c.revenue, 0) || 1
@@ -77,7 +76,6 @@ export default function AdminAnalytics() {
     { currentAngle: 0, slices: [] }
   ).slices
 
-  // Helper to draw SVG Donut path
   const createDonutSlice = (slice, radius = 80, innerRadius = 50, cx = 100, cy = 100) => {
     const startRad = (slice.startAngle - 90) * (Math.PI / 180)
     const endRad = (slice.startAngle + slice.angle - 90) * (Math.PI / 180)
@@ -97,22 +95,17 @@ export default function AdminAnalytics() {
     return `M ${x1} ${y1} A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2} L ${x3} ${y3} A ${innerRadius} ${innerRadius} 0 ${largeArc} 0 ${x4} ${y4} Z`
   }
 
-  // Bar Graph Max Scale
   const monthlyTrend = data.monthlyTrend || []
   const maxRevenueInTrend = Math.max(...monthlyTrend.map((t) => t.revenue), 500)
 
   return (
     <div className="space-y-8 font-sans">
-      {/* Header */}
       <div className="border-b border-[#E5DFD5] pb-4 flex justify-between items-center">
         <h1 className="font-serif text-2xl font-bold uppercase tracking-tight text-[#1A1816]">
           Analytics
         </h1>
       </div>
-
-      {/* Financial Overview Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {/* Card 1: Revenue */}
         <div className="bg-white border border-[#E5DFD5] p-5 shadow-xs">
           <div className="flex items-center justify-between mb-3 text-[#8E877E]">
             <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Gross Revenue</span>
@@ -125,8 +118,6 @@ export default function AdminAnalytics() {
           </p>
 
         </div>
-
-        {/* Card 2: Net Profit & Margin */}
         <div className="bg-white border border-[#E5DFD5] p-5 shadow-xs">
           <div className="flex items-center justify-between mb-3 text-[#8E877E]">
             <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Net Profit</span>
@@ -139,8 +130,6 @@ export default function AdminAnalytics() {
           </p>
 
         </div>
-
-        {/* Card 3: Logistics & Courier Costs */}
         <div className="bg-white border border-[#E5DFD5] p-5 shadow-xs">
           <div className="flex items-center justify-between mb-3 text-[#8E877E]">
             <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Logistics & Courier</span>
@@ -153,8 +142,6 @@ export default function AdminAnalytics() {
           </p>
 
         </div>
-
-        {/* Card 4: Product Manufacturing (COGS) */}
         <div className="bg-white border border-[#E5DFD5] p-5 shadow-xs">
           <div className="flex items-center justify-between mb-3 text-[#8E877E]">
             <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Product Cost</span>
@@ -168,10 +155,7 @@ export default function AdminAnalytics() {
 
         </div>
       </div>
-
-      {/* Visual Charts Row: Revenue Bar/Line Graph & Category Pie Chart */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left: Interactive Revenue Performance Graph */}
         <div className="lg:col-span-7 bg-white border border-[#E5DFD5] p-6 sm:p-8">
           <div className="flex items-center justify-between mb-6 pb-4 border-b border-[#E5DFD5]">
             <div>
@@ -181,8 +165,6 @@ export default function AdminAnalytics() {
             </div>
             <BarChart3 size={18} className="text-[#C5A059]" />
           </div>
-
-          {/* SVG Bar / Trend Chart */}
           <div className="h-64 w-full flex items-end gap-3 sm:gap-6 pt-6 pb-2 px-2 border-b border-l border-[#E5DFD5]">
             {monthlyTrend.map((entry, idx) => {
               const heightPercent = Math.max(
@@ -197,22 +179,17 @@ export default function AdminAnalytics() {
                   onMouseEnter={() => setHoveredBar(idx)}
                   onMouseLeave={() => setHoveredBar(null)}
                 >
-                  {/* Tooltip */}
                   {isHovered && (
                     <div className="absolute -top-12 z-20 bg-[#1A1816] text-[#FAF8F5] text-[10px] py-1 px-2.5 rounded shadow-lg whitespace-nowrap">
                       <span className="font-bold">${entry.revenue.toFixed(2)}</span> ({entry.orders} orders)
                     </div>
                   )}
-
-                  {/* Bar */}
                   <div
                     style={{ height: `${heightPercent}%` }}
                     className={`w-full max-w-[42px] transition-all duration-300 ${
                       isHovered ? "bg-[#C5A059]" : "bg-[#1A1816]"
                     }`}
                   ></div>
-
-                  {/* Label */}
                   <span className="text-[9px] uppercase tracking-wider font-semibold text-[#8E877E] mt-2 block">
                     {entry.date}
                   </span>
@@ -221,10 +198,7 @@ export default function AdminAnalytics() {
             })}
           </div>
 
-
         </div>
-
-        {/* Right: Category Sales Distribution (Donut / Pie Chart) */}
         <div className="lg:col-span-5 bg-white border border-[#E5DFD5] p-6 sm:p-8 flex flex-col">
           <div className="flex items-center justify-between mb-4 pb-4 border-b border-[#E5DFD5]">
             <div>
@@ -234,8 +208,6 @@ export default function AdminAnalytics() {
             </div>
             <PieIcon size={18} className="text-[#C5A059]" />
           </div>
-
-          {/* Donut SVG Chart */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 my-auto py-2">
             <div className="relative w-44 h-44 shrink-0">
               <svg viewBox="0 0 200 200" className="w-full h-full transform -rotate-90">
@@ -262,8 +234,6 @@ export default function AdminAnalytics() {
                 </span>
               </div>
             </div>
-
-            {/* Legend */}
             <div className="space-y-2 text-xs flex-1">
               {pieSlices.map((slice, idx) => (
                 <div
@@ -285,10 +255,7 @@ export default function AdminAnalytics() {
           </div>
         </div>
       </div>
-
-      {/* Demand & Popularity Leaderboards */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Top Ordered Garments (What People Have Ordered) */}
         <div className="lg:col-span-6 bg-white border border-[#E5DFD5] p-6 sm:p-8">
           <div className="flex items-center justify-between mb-5 pb-3 border-b border-[#E5DFD5]">
             <div>
@@ -330,8 +297,6 @@ export default function AdminAnalytics() {
             )}
           </div>
         </div>
-
-        {/* Wishlist Demand (What is in User Wishlists) */}
         <div className="lg:col-span-6 bg-white border border-[#E5DFD5] p-6 sm:p-8">
           <div className="flex items-center justify-between mb-5 pb-3 border-b border-[#E5DFD5]">
             <div>

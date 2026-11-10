@@ -15,7 +15,5 @@ createRoot(document.getElementById('root')).render(
    </MantineProvider>
    </BrowserRouter>
 
-    
-  
   </StrictMode>,
 )

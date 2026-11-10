@@ -35,7 +35,6 @@ export default function App() {
     <>
       <ScrollToTop />
       <Routes>
-        {/* Public Store Layout */}
         <Route path="/" element={<AppLayout />}>
           <Route index element={<HomePage />} />
           <Route path="shop" element={<ProductPage />} />
@@ -50,12 +49,8 @@ export default function App() {
           <Route path="orders" element={<UserAccount />} />
           <Route path="track" element={<UserAccount />} />
         </Route>
-
-        {/* Authentication */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup initialMode="signup" />} />
-
-        {/* Protected Dashboard with Role-Based Access */}
         <Route
           path="/admin"
           element={
@@ -76,8 +71,6 @@ export default function App() {
           <Route path="collected-mails" element={<ManageCollectedMails />} />
           <Route path="subscribers" element={<ManageCollectedMails />} />
         </Route>
-
-        {/* Dedicated Salesperson Invoicing & Billing Portal */}
         <Route
           path="/salesperson"
           element={
@@ -86,8 +79,6 @@ export default function App() {
             </SalespersonRoute>
           }
         />
-
-        {/* Dedicated Logistics & Courier Dispatch Portal */}
         <Route
           path="/logistics"
           element={
@@ -96,8 +87,6 @@ export default function App() {
             </LogisticsRoute>
           }
         />
-
-        {/* Catch-all redirect */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>

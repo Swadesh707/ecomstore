@@ -43,7 +43,6 @@ export default function ProductCard({ item, isSale, enableTilt = true }) {
       onMouseEnter={handleMouseEnter}
       className="bg-white border border-[#E5DFD5] rounded-none overflow-hidden flex flex-col group hover:shadow-xl hover:border-[#1A1816] transition-all duration-300 h-full"
     >
-      {/* Product Image Frame */}
       <Link to={`/products/${item._id}`} className="relative aspect-[3/4] bg-[#F2EFE9] overflow-hidden block">
         <img
           src={displayImage}
@@ -54,15 +53,11 @@ export default function ProductCard({ item, isSale, enableTilt = true }) {
             e.currentTarget.src = "/logo.png"
           }}
         />
-
-        {/* Sale Badge */}
         {isItemOnSale && (
           <span className="absolute top-2.5 left-2.5 bg-[#78281F] text-[#FAF8F5] text-[9px] font-bold uppercase tracking-wider px-2 py-0.5">
             Archive Privilege
           </span>
         )}
-
-        {/* Wishlist Button in Top-Right Corner */}
         <button
           onClick={handleToggleWishlist}
           className="absolute top-2.5 right-2.5 p-2 bg-white/90 hover:bg-white text-[#1A1816] rounded-full shadow-xs transition-colors cursor-pointer"
@@ -74,8 +69,6 @@ export default function ProductCard({ item, isSale, enableTilt = true }) {
           />
         </button>
       </Link>
-
-      {/* Product Info */}
       <div className="p-4 flex flex-col flex-1">
         <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#8E877E] mb-1">
           {item.category || "Tailoring"}
@@ -87,8 +80,6 @@ export default function ProductCard({ item, isSale, enableTilt = true }) {
         >
           {item.title}
         </Link>
-
-        {/* Price & Add to Cart Action */}
         <div className="mt-auto pt-3 border-t border-[#E5DFD5] flex items-center justify-between">
           <div className="flex items-baseline gap-2">
             <span className={`font-serif font-bold text-base ${isItemOnSale ? "text-[#78281F]" : "text-[#1A1816]"}`}>

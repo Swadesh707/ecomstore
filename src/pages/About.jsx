@@ -4,7 +4,6 @@ import { ArrowRight, CheckCircle2, Shield, HeartHandshake, Sparkles, RefreshCw, 
 export default function About() {
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-[#1A1816] font-sans">
-      {/* Hero Section */}
       <section className="py-20 sm:py-24 border-b border-[#E5DFD5] bg-[#FAF8F5]">
         <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 text-center">
           <span className="text-xs font-bold uppercase tracking-wider text-[#C5A059] block mb-3">
@@ -27,12 +26,9 @@ export default function About() {
           </div>
         </div>
       </section>
-
-      {/* Story & Philosophy Section */}
       <section className="py-20 border-b border-[#E5DFD5] bg-white">
         <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-            {/* Visual Mosaic */}
             <div className="lg:col-span-6 grid grid-cols-2 gap-5">
               <div className="space-y-4">
                 <div className="aspect-[4/5] bg-[#F2EFE9] rounded-lg overflow-hidden border border-[#E5DFD5]">
@@ -62,8 +58,6 @@ export default function About() {
                 </div>
               </div>
             </div>
-
-            {/* Narrative */}
             <div className="lg:col-span-6 space-y-6">
               <span className="text-xs font-bold uppercase tracking-wider text-[#C5A059] block">
                 How We Started
@@ -99,8 +93,6 @@ export default function About() {
           </div>
         </div>
       </section>
-
-      {/* Core Values / What Sets Us Apart */}
       <section className="py-20 bg-[#FAF8F5] border-b border-[#E5DFD5]">
         <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12">
           <div className="text-center max-w-2xl mx-auto mb-14">
@@ -160,8 +152,6 @@ export default function About() {
           </div>
         </div>
       </section>
-
-      {/* Behind the Craft: 3 Real Steps */}
       <section className="py-20 bg-white border-b border-[#E5DFD5]">
         <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12">
           <div className="max-w-2xl mb-12">
@@ -224,8 +214,6 @@ export default function About() {
           </div>
         </div>
       </section>
-
-      {/* Customer Guarantees */}
       <section className="py-14 bg-[#FAF8F5] border-b border-[#E5DFD5]">
         <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center sm:text-left">
@@ -256,7 +244,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* Call to Action */}
       <section className="py-20 bg-[#1A1816] text-[#FAF8F5]">
         <div className="max-w-5xl mx-auto px-6 sm:px-10 lg:px-12 text-center">
           <h2 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight mb-4 text-white">

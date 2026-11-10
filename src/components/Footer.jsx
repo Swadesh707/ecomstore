@@ -41,7 +41,6 @@ export default function Footer() {
     <footer className="bg-[#141312] text-[#FAF8F5] pt-16 pb-12 border-t border-[#262422] mt-auto font-sans">
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-12 pb-14 border-b border-[#262422]">
-          {/* Brand Info */}
           <div className="md:col-span-4 space-y-4">
             <Link
               to="/"
@@ -78,8 +77,6 @@ export default function Footer() {
               Questions? Email us at <span className="text-[#C5A059]">support@ecomstore.com</span>
             </p>
           </div>
-
-          {/* Shop Column */}
           <div className="md:col-span-2 sm:col-span-6">
             <h5 className="text-xs font-bold uppercase tracking-wider text-[#FAF8F5] mb-4">
               Shop
@@ -112,8 +109,6 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-
-          {/* About & Support Column */}
           <div className="md:col-span-2 sm:col-span-6">
             <h5 className="text-xs font-bold uppercase tracking-wider text-[#FAF8F5] mb-4">
               Company
@@ -141,8 +136,6 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-
-          {/* Newsletter Column */}
           <div className="md:col-span-4">
             <h5 className="text-xs font-bold uppercase tracking-wider text-[#FAF8F5] mb-4">
               Stay in Touch
@@ -190,8 +183,6 @@ export default function Footer() {
             )}
           </div>
         </div>
-
-        {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row justify-between items-center text-xs text-[#6A645D] gap-4">
           <p>© {new Date().getFullYear()} Ecomstore. All rights reserved.</p>
           <div className="flex gap-6 text-xs">

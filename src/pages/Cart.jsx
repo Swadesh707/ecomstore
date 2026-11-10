@@ -72,7 +72,6 @@ export default function Cart() {
           </div>
         ) : (
           <div className="grid lg:grid-cols-3 gap-12">
-            {/* Cart Items List */}
             <div className="lg:col-span-2 space-y-6">
               {cart.map((item, idx) => (
                 <div
@@ -142,8 +141,6 @@ export default function Cart() {
                 </div>
               ))}
             </div>
-
-            {/* Order Summary */}
             <div className="lg:col-span-1">
               <div className="bg-[#1A1816] text-[#FAF8F5] p-8 sticky top-24 border border-[#C5A059]/40 shadow-2xl">
                 <h2 className="font-serif text-2xl font-bold tracking-tight mb-6 text-[#FAF8F5]">

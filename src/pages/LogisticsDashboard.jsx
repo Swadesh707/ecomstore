@@ -24,12 +24,11 @@ export default function LogisticsDashboard() {
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
-  const [statusFilter, setStatusFilter] = useState("all") // all, Processing, Dispatched, In Transit, Delivered, Returns
+  const [statusFilter, setStatusFilter] = useState("all")
   const [selectedOrder, setSelectedOrder] = useState(null)
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
   const [feedback, setFeedback] = useState({ type: "", message: "" })
 
-  // Update Consignment Form State
   const [updateForm, setUpdateForm] = useState({
     orderStatus: "Processing",
     trackingNumber: "",
@@ -112,9 +111,8 @@ export default function LogisticsDashboard() {
     }
   }
 
-  // Filtered consignments
   const filteredOrders = orders.filter((order) => {
-    // Search query matches
+
     const q = searchQuery.toLowerCase()
     const matchesSearch =
       !q ||
@@ -125,7 +123,6 @@ export default function LogisticsDashboard() {
       order.customer?.zip?.toLowerCase().includes(q) ||
       order.customer?.address?.toLowerCase().includes(q)
 
-    // Status tab filter
     let matchesStatus = true
     if (statusFilter === "Returns") {
       matchesStatus = Boolean(order.isReturnRequested)
@@ -140,7 +137,6 @@ export default function LogisticsDashboard() {
 
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-[#1A1816] font-sans antialiased pb-20">
-      {/* Top Bar */}
       <header className="bg-[#1A1816] text-[#FAF8F5] py-4 px-6 sm:px-10 border-b border-[#2D2A26] sticky top-0 z-30 shadow-md">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -171,10 +167,7 @@ export default function LogisticsDashboard() {
           </button>
         </div>
       </header>
-
-      {/* Main Container */}
       <main className="max-w-7xl mx-auto px-6 sm:px-10 pt-8">
-        {/* Feedback Alert */}
         {feedback.message && (
           <div
             className={`mb-6 p-4 text-xs font-semibold uppercase tracking-wider flex items-center justify-between border ${
@@ -189,17 +182,12 @@ export default function LogisticsDashboard() {
             </button>
           </div>
         )}
-
-        {/* Section Title */}
         <section className="mb-6 border-b border-[#E5DFD5] pb-4">
           <h1 className="font-serif text-2xl font-bold uppercase tracking-tight text-[#1A1816]">
             Consignments
           </h1>
         </section>
-
-        {/* Filters and Search Bar */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-          {/* Status Tabs */}
           <div className="flex flex-wrap gap-1 border-b border-[#E5DFD5] pb-2 md:pb-0 md:border-b-0">
             {[
               { key: "all", label: "All Consignments" },
@@ -222,8 +210,6 @@ export default function LogisticsDashboard() {
               </button>
             ))}
           </div>
-
-          {/* Search Input */}
           <div className="relative w-full md:w-80">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8E877E]" />
             <input
@@ -235,8 +221,6 @@ export default function LogisticsDashboard() {
             />
           </div>
         </div>
-
-        {/* Consignment Table */}
         <div className="bg-[#FAF8F5] border border-[#E5DFD5] overflow-hidden shadow-sm">
           {loading ? (
             <div className="py-20 text-center">
@@ -276,7 +260,6 @@ export default function LogisticsDashboard() {
 
                     return (
                       <tr key={order._id} className="hover:bg-[#F2EFE9]/60 transition-colors">
-                        {/* Order & Date */}
                         <td className="py-3 px-4 align-top">
                           <div className="font-bold font-mono text-[#1A1816]">
                             {order.orderNumber}
@@ -288,8 +271,6 @@ export default function LogisticsDashboard() {
                             {order.items?.length || 0} parcel articles
                           </div>
                         </td>
-
-                        {/* Customer & Destination */}
                         <td className="py-3 px-4 align-top">
                           <div className="font-semibold text-[#1A1816]">
                             {order.customer?.name}
@@ -304,8 +285,6 @@ export default function LogisticsDashboard() {
                             {order.customer?.address}
                           </div>
                         </td>
-
-                        {/* Tracking Code */}
                         <td className="py-3 px-4 align-top">
                           <div className="font-mono text-[11px] font-semibold text-[#1A1816] flex items-center gap-1.5">
                             <span>{tracking}</span>
@@ -314,8 +293,6 @@ export default function LogisticsDashboard() {
                             {carrier}
                           </div>
                         </td>
-
-                        {/* Order Logistics Status */}
                         <td className="py-3 px-4 align-top">
                           <span
                             className={`inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider border ${
@@ -331,8 +308,6 @@ export default function LogisticsDashboard() {
                             {order.orderStatus}
                           </span>
                         </td>
-
-                        {/* Returns column */}
                         <td className="py-3 px-4 align-top">
                           {isReturn ? (
                             <div className="flex flex-col gap-1">
@@ -349,10 +324,7 @@ export default function LogisticsDashboard() {
                             <span className="text-[10px] text-[#8E877E] uppercase">None</span>
                           )}
                         </td>
-
-                        {/* Actions */}
                         <td className="py-3 px-4 align-top text-right space-x-1.5">
-                          {/* Quick transition shortcuts */}
                           {order.orderStatus === "Processing" && (
                             <button
                               onClick={() => handleQuickStatusChange(order._id, "Dispatched")}
@@ -382,8 +354,6 @@ export default function LogisticsDashboard() {
                               Delivered
                             </button>
                           )}
-
-                          {/* Full Consignment Modal button */}
                           <button
                             onClick={() => handleOpenUpdate(order)}
                             className="px-2.5 py-1 border border-[#E5DFD5] hover:border-[#1A1816] bg-[#F2EFE9] text-[#1A1816] text-[10px] font-bold uppercase tracking-wider transition-colors"
@@ -400,12 +370,9 @@ export default function LogisticsDashboard() {
           )}
         </div>
       </main>
-
-      {/* Edit Consignment Modal */}
       {isUpdateModalOpen && selectedOrder && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-[#FAF8F5] border border-[#E5DFD5] shadow-2xl max-w-lg w-full p-6 text-[#1A1816]">
-            {/* Header */}
             <div className="flex items-center justify-between pb-4 border-b border-[#E5DFD5] mb-4">
               <div>
                 <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#C5A059]">
@@ -422,8 +389,6 @@ export default function LogisticsDashboard() {
                 <X size={20} />
               </button>
             </div>
-
-            {/* Recipient summary */}
             <div className="p-3 bg-[#F2EFE9] border border-[#E5DFD5] mb-4 text-xs space-y-1">
               <div className="font-semibold text-[#1A1816]">
                 Client: {selectedOrder.customer?.name}
@@ -436,8 +401,6 @@ export default function LogisticsDashboard() {
                 Articles: {selectedOrder.items?.map((i) => `${i.title} (${i.quantity}x)`).join(", ")}
               </div>
             </div>
-
-            {/* Form */}
             <form onSubmit={handleSubmitUpdate} className="space-y-4 text-xs">
               <div>
                 <label className="block mb-1 font-bold uppercase tracking-wider text-[#1A1816]">
@@ -524,8 +487,6 @@ export default function LogisticsDashboard() {
                   className="w-full bg-[#FAF8F5] border border-[#E5DFD5] p-2.5 text-xs focus:outline-none focus:border-[#1A1816]"
                 />
               </div>
-
-              {/* Action Buttons */}
               <div className="pt-2 flex items-center justify-end gap-3 border-t border-[#E5DFD5]">
                 <button
                   type="button"

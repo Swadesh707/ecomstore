@@ -21,22 +21,19 @@ export default function UserAccount() {
 
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "orders") // "orders", "track", "returns"
-  
-  // Tracking search state
+  const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "orders")
+
   const [trackQuery, setTrackQuery] = useState(searchParams.get("track") || "")
   const [trackedOrder, setTrackedOrder] = useState(null)
   const [trackingLoading, setTrackingLoading] = useState(false)
   const [trackingError, setTrackingError] = useState("")
 
-  // Return Modal State
   const [returnModalOpen, setReturnModalOpen] = useState(false)
   const [selectedOrderForReturn, setSelectedOrderForReturn] = useState(null)
   const [returnReason, setReturnReason] = useState("Size or fit was not suitable")
   const [returnNotes, setReturnNotes] = useState("")
   const [returnSubmitting, setReturnSubmitting] = useState(false)
 
-  // Status feedback toast
   const [feedback, setFeedback] = useState({ type: "", message: "" })
 
   const token = localStorage.getItem("token")
@@ -48,7 +45,6 @@ export default function UserAccount() {
     setTimeout(() => setFeedback({ type: "", message: "" }), 5000)
   }
 
-  // Load user orders
   const loadUserOrders = async () => {
     if (!token) {
       setLoading(false)
@@ -61,7 +57,6 @@ export default function UserAccount() {
       const list = Array.isArray(res.data) ? res.data : []
       setOrders(list)
 
-      // If user had a specific order passed in search param, select it for tracking
       const trackParam = searchParams.get("track")
       if (trackParam && list.length > 0) {
         const found = list.find(
@@ -85,7 +80,6 @@ export default function UserAccount() {
     loadUserOrders()
   }, [token])
 
-  // Track search action
   const handleTrackSearch = async (e) => {
     if (e) e.preventDefault()
     const query = trackQuery.trim()
@@ -96,7 +90,7 @@ export default function UserAccount() {
     setTrackedOrder(null)
 
     try {
-      // First check local orders list if already loaded
+
       const localMatch = orders.find(
         (o) =>
           o.orderNumber?.toLowerCase() === query.toLowerCase() ||
@@ -109,7 +103,6 @@ export default function UserAccount() {
         return
       }
 
-      // Try tracking by trackingNumber endpoint
       try {
         const trackRes = await GetRequest(`orders/track/${encodeURIComponent(query)}`)
         if (trackRes.data) {
@@ -118,7 +111,7 @@ export default function UserAccount() {
           return
         }
       } catch {
-        // Fallback to orderNumber endpoint
+
       }
 
       const orderRes = await GetRequest(`orders/number/${encodeURIComponent(query)}`)
@@ -134,7 +127,6 @@ export default function UserAccount() {
     }
   }
 
-  // Quick track button from orders list
   const startTrackingOrder = (order) => {
     setTrackedOrder(order)
     setTrackQuery(order.trackingNumber || order.orderNumber)
@@ -142,7 +134,6 @@ export default function UserAccount() {
     window.scrollTo({ top: 350, behavior: "smooth" })
   }
 
-  // Cancel Order action
   const handleCancelOrder = async (order) => {
     if (!window.confirm(`Are you certain you wish to cancel Order #${order.orderNumber}?`)) {
       return
@@ -157,7 +148,6 @@ export default function UserAccount() {
     }
   }
 
-  // Open Return Request Modal
   const openReturnModal = (order) => {
     setSelectedOrderForReturn(order)
     setReturnReason("Size or fit was not suitable")
@@ -165,7 +155,6 @@ export default function UserAccount() {
     setReturnModalOpen(true)
   }
 
-  // Submit Return Request
   const handleSubmitReturn = async (e) => {
     e.preventDefault()
     if (!selectedOrderForReturn) return
@@ -192,10 +181,8 @@ export default function UserAccount() {
     }
   }
 
-  // Filter returns
   const returnOrders = orders.filter((o) => o.isReturnRequested)
 
-  // Status badge styling helper
   const renderStatusBadge = (status) => {
     switch (status) {
       case "Delivered":
@@ -213,7 +200,6 @@ export default function UserAccount() {
     }
   }
 
-  // Return status styling helper
   const renderReturnBadge = (returnStatus) => {
     if (returnStatus?.includes("Approved")) {
       return "bg-emerald-50 text-emerald-800 border-emerald-300"
@@ -227,7 +213,6 @@ export default function UserAccount() {
     return "bg-amber-50 text-amber-800 border-amber-300"
   }
 
-  // Stepper Stage Calculation
   const getTimelineSteps = (order) => {
     const status = order?.orderStatus || "Processing"
     const isCancelled = status === "Cancelled"
@@ -252,8 +237,6 @@ export default function UserAccount() {
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-[#1A1816] font-sans pb-24 pt-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Floating feedback alert */}
         {feedback.message && (
           <div
             className={`fixed top-20 right-6 z-50 px-5 py-3 border shadow-xl flex items-center gap-3 text-xs uppercase tracking-wider font-semibold transition-all ${
@@ -272,8 +255,6 @@ export default function UserAccount() {
             </button>
           </div>
         )}
-
-        {/* Hero Banner / Patron Profile */}
         <div className="border border-[#E5DFD5] bg-white p-6 sm:p-10 mb-8 shadow-xs">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-[#E5DFD5]">
             <div>
@@ -322,8 +303,6 @@ export default function UserAccount() {
               )}
             </div>
           </div>
-
-          {/* Quick Metrics & Navigation Tabs */}
           <div className="flex flex-wrap items-center justify-between gap-4 pt-6">
             <div className="flex items-center gap-2">
               <button
@@ -369,10 +348,6 @@ export default function UserAccount() {
             </Link>
           </div>
         </div>
-
-        {/* ========================================================= */}
-        {/* TAB 1: PURCHASES & ORDERS */}
-        {/* ========================================================= */}
         {activeTab === "orders" && (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
@@ -453,7 +428,6 @@ export default function UserAccount() {
                       key={order._id}
                       className="border border-[#E5DFD5] bg-white overflow-hidden shadow-xs hover:border-[#C5A059]/60 transition-colors"
                     >
-                      {/* Order Card Header */}
                       <div className="bg-[#FAF8F5] p-5 sm:px-8 border-b border-[#E5DFD5] flex flex-wrap items-center justify-between gap-4">
                         <div className="flex flex-wrap items-center gap-4 sm:gap-8">
                           <div>
@@ -509,8 +483,6 @@ export default function UserAccount() {
                             </div>
                           )}
                         </div>
-
-                        {/* Order Actions */}
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => startTrackingOrder(order)}
@@ -543,8 +515,6 @@ export default function UserAccount() {
                           )}
                         </div>
                       </div>
-
-                      {/* Items Purchased List */}
                       <div className="p-5 sm:p-8 space-y-4">
                         <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#C5A059]">
                           Purchased Atelier Pieces ({order.items?.length || 0})
@@ -591,8 +561,6 @@ export default function UserAccount() {
                             </div>
                           ))}
                         </div>
-
-                        {/* Order Summary & Destination Details */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2 text-xs">
                           <div className="bg-[#FAF8F5] p-4 border border-[#E5DFD5]">
                             <span className="text-[10px] font-bold uppercase tracking-wider text-[#8E877E] block mb-2">
@@ -655,10 +623,6 @@ export default function UserAccount() {
             )}
           </div>
         )}
-
-        {/* ========================================================= */}
-        {/* TAB 2: CONSIGNMENT TRACKER */}
-        {/* ========================================================= */}
         {activeTab === "track" && (
           <div className="space-y-8">
             <div className="border border-[#E5DFD5] bg-white p-6 sm:p-8">
@@ -699,11 +663,8 @@ export default function UserAccount() {
                   <p className="text-xs text-[#78281F] font-semibold mt-2">{trackingError}</p>
                 )}
               </div>
-
-              {/* Live Tracking Result Card */}
               {trackedOrder ? (
                 <div className="border-t border-[#E5DFD5] pt-8 space-y-8">
-                  {/* Overview details */}
                   <div className="bg-[#FAF8F5] border border-[#E5DFD5] p-5 sm:p-6 flex flex-wrap items-center justify-between gap-6">
                     <div>
                       <span className="text-[10px] font-bold uppercase tracking-wider text-[#8E877E] block">
@@ -748,8 +709,6 @@ export default function UserAccount() {
                       </div>
                     </div>
                   </div>
-
-                  {/* Visual Stepper / Timeline */}
                   <div>
                     <h4 className="font-serif text-sm font-bold uppercase tracking-wider text-[#1A1816] mb-6">
                       Consignment Transit Stages
@@ -771,7 +730,6 @@ export default function UserAccount() {
 
                       return (
                         <div className="relative">
-                          {/* Progress connecting line */}
                           <div className="hidden md:block absolute top-6 left-8 right-8 h-0.5 bg-[#E5DFD5] -z-0">
                             <div
                               className="h-full bg-[#1A1816] transition-all duration-500"
@@ -819,8 +777,6 @@ export default function UserAccount() {
                       )
                     })()}
                   </div>
-
-                  {/* Consignment Items Mini Summary */}
                   <div className="border border-[#E5DFD5] p-5 sm:p-6 bg-[#FAF8F5]">
                     <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#C5A059] block mb-3">
                       Enclosed Garments
@@ -855,10 +811,6 @@ export default function UserAccount() {
             </div>
           </div>
         )}
-
-        {/* ========================================================= */}
-        {/* TAB 3: RETURNS & EXCHANGES */}
-        {/* ========================================================= */}
         {activeTab === "returns" && (
           <div className="space-y-6">
             <div>
@@ -929,8 +881,6 @@ export default function UserAccount() {
                         &ldquo;{order.returnReason || "Standard Atelier Return Initiated"}&rdquo;
                       </p>
                     </div>
-
-                    {/* Return Summary */}
                     <div className="flex flex-wrap items-center justify-between gap-4 pt-2 text-xs bg-[#FAF8F5] border border-[#E5DFD5] p-3">
                       <div>
                         <span className="text-[10px] font-bold uppercase tracking-wider text-[#8E877E] block">
@@ -967,10 +917,6 @@ export default function UserAccount() {
         )}
 
       </div>
-
-      {/* ========================================================= */}
-      {/* RETURN REQUEST MODAL */}
-      {/* ========================================================= */}
       {returnModalOpen && selectedOrderForReturn && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#1A1816]/75 backdrop-blur-xs">
           <div className="bg-white border border-[#1A1816] max-w-lg w-full p-6 sm:p-8 shadow-2xl relative font-sans">

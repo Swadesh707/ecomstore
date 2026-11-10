@@ -147,8 +147,6 @@ export default function UpdateProduct() {
           </div>
         </div>
       )}
-
-      {/* Filter and Search Bar */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <div className="relative flex-1">
           <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
@@ -172,8 +170,6 @@ export default function UpdateProduct() {
           ))}
         </select>
       </div>
-
-      {/* Table */}
       <div className="border-2 border-border overflow-x-auto bg-background">
         <table className="w-full text-left text-xs uppercase tracking-wider">
           <thead className="bg-card border-b-2 border-border text-foreground font-black">
@@ -234,8 +230,6 @@ export default function UpdateProduct() {
           </tbody>
         </table>
       </div>
-
-      {/* Edit Modal */}
       {editingProduct && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
           <div className="bg-card w-full max-w-lg border-2 border-foreground p-8 shadow-2xl">
