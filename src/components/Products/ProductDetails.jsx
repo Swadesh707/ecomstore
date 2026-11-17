@@ -170,7 +170,7 @@ export default function ProductDetails() {
               </h1>
 
               <p className="font-serif text-3xl font-bold text-[#1A1816]">
-                Rs. {Number(product.price).toFixed(2)}
+                Rs. {Number(product.price)}
               </p>
             </div>
             <div className="border-t border-[#E5DFD5] pt-6">

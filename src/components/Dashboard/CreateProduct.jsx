@@ -122,9 +122,9 @@ export default function CreateProduct({ onProductCreated }) {
             <label className="block mb-1.5 text-foreground">Price (Rs.) *</label>
             <input
               type="number"
-              step="0.01"
+              step="any"
               required
-              placeholder="1200.00"
+              placeholder="1200"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
               className="w-full bg-background border-2 border-border px-4 py-3 text-xs font-semibold focus:outline-none focus:border-foreground text-foreground"

@@ -43,11 +43,11 @@ export default function Checkout() {
           return {
             name: parsed.name || localStorage.getItem("name") || "",
             email: parsed.email || localStorage.getItem("email") || "",
-            phone: parsed.phone || "",
+            phone: parsed.phone || "+977",
             address: parsed.address || "",
             city: parsed.city || "",
             zip: parsed.zip || "",
-            country: parsed.country || "United States",
+            country: parsed.country || "Nepal",
           }
         }
       }
@@ -57,11 +57,11 @@ export default function Checkout() {
     return {
       name: localStorage.getItem("name") || "",
       email: localStorage.getItem("email") || "",
-      phone: "",
+      phone: "+977",
       address: "",
       city: "",
       zip: "",
-      country: "United States",
+      country: "Nepal",
     }
   })
 
@@ -574,11 +574,11 @@ export default function Checkout() {
                         <span className="block">Color: {item.color}</span>
                       </td>
                       <td className="p-3 text-right font-serif text-[#1A1816]">
-                        Rs. {Number(item.price).toFixed(2)}
+                        Rs. {Number(item.price)}
                       </td>
                       <td className="p-3 text-center font-bold">{item.quantity}</td>
                       <td className="p-3 text-right font-serif font-bold text-[#1A1816]">
-                        Rs. {(Number(item.price) * Number(item.quantity)).toFixed(2)}
+                        Rs. {Number((Number(item.price) * Number(item.quantity)).toFixed(2))}
                       </td>
                     </tr>
                   ))}
@@ -599,27 +599,27 @@ export default function Checkout() {
             <div className="w-full sm:w-64 space-y-2 text-xs">
               <div className="flex justify-between text-[#6A645D]">
                 <span>Subtotal:</span>
-                <span className="font-serif">Rs. {completedOrder.subtotal.toFixed(2)}</span>
+                <span className="font-serif">Rs. {Number(completedOrder.subtotal.toFixed(2))}</span>
               </div>
               {completedOrder.discountAmount > 0 && (
                 <div className="flex justify-between text-[#78281F] font-semibold">
                   <span>Discount ({completedOrder.couponCode}):</span>
-                  <span className="font-serif">-Rs. {completedOrder.discountAmount.toFixed(2)}</span>
+                  <span className="font-serif">-Rs. {Number(completedOrder.discountAmount.toFixed(2))}</span>
                 </div>
               )}
               <div className="flex justify-between text-[#6A645D]">
                 <span>Shipping:</span>
                 <span className="font-serif">
-                  {completedOrder.shippingFee === 0 ? "Free" : `Rs. ${completedOrder.shippingFee.toFixed(2)}`}
+                  {completedOrder.shippingFee === 0 ? "Free" : `Rs. ${Number(completedOrder.shippingFee.toFixed(2))}`}
                 </span>
               </div>
               <div className="flex justify-between text-[#6A645D]">
                 <span>Estimated Tax:</span>
-                <span className="font-serif">Rs. 0.00</span>
+                <span className="font-serif">Rs. 0</span>
               </div>
               <div className="border-t-2 border-[#1A1816] pt-2 flex justify-between font-serif font-bold text-base text-[#1A1816]">
                 <span>Total:</span>
-                <span className="text-lg">Rs. {completedOrder.totalAmount.toFixed(2)}</span>
+                <span className="text-lg">Rs. {Number(completedOrder.totalAmount.toFixed(2))}</span>
               </div>
               <div className="text-[10px] text-right text-[#8E877E] uppercase tracking-wider">
                 Currency: NPR
@@ -729,7 +729,7 @@ export default function Checkout() {
                         type="tel"
                         value={formData.phone}
                         onChange={(e) => handleInputChange("phone", e.target.value)}
-                        placeholder="+1 (555) 000-0000"
+                        placeholder="+977 98XXXXXXXX"
                         className="w-full bg-[#FAF8F5] border border-[#E5DFD5] p-3 focus:outline-none focus:border-[#1A1816] font-normal text-xs text-[#1A1816]"
                       />
                     </div>
@@ -779,13 +779,18 @@ export default function Checkout() {
 
                     <div className="sm:col-span-2 space-y-1.5">
                       <label className="text-[#8E877E]">Country</label>
-                      <input
-                        type="text"
+                      <select
                         value={formData.country}
                         onChange={(e) => handleInputChange("country", e.target.value)}
-                        placeholder="United States"
                         className="w-full bg-[#FAF8F5] border border-[#E5DFD5] p-3 focus:outline-none focus:border-[#1A1816] font-normal text-xs text-[#1A1816]"
-                      />
+                      >
+                        <option value="Nepal">Nepal</option>
+                        <option value="India">India</option>
+                        <option value="United States">United States</option>
+                        <option value="United Kingdom">United Kingdom</option>
+                        <option value="Australia">Australia</option>
+                        <option value="Canada">Canada</option>
+                      </select>
                     </div>
                   </div>
                 </div>
@@ -979,11 +984,11 @@ export default function Checkout() {
                           Size: {item.size} • {item.color}
                         </span>
                         <span className="text-[10px] text-[#8E877E] block">
-                          Qty: {item.quantity} × Rs. {Number(item.price).toFixed(2)}
+                          Qty: {item.quantity} × Rs. {Number(item.price)}
                         </span>
                       </div>
                       <span className="font-serif font-bold text-xs text-[#1A1816]">
-                        Rs. {(Number(item.price) * (item.quantity || 1)).toFixed(2)}
+                        Rs. {Number((Number(item.price) * (item.quantity || 1)).toFixed(2))}
                       </span>
                     </div>
                   ))}
@@ -1044,31 +1049,31 @@ export default function Checkout() {
                 <div className="border-t border-[#E5DFD5] pt-4 space-y-2 text-xs">
                   <div className="flex justify-between text-[#6A645D]">
                     <span>Subtotal</span>
-                    <span className="font-serif font-medium">Rs. {subtotal.toFixed(2)}</span>
+                    <span className="font-serif font-medium">Rs. {Number(subtotal.toFixed(2))}</span>
                   </div>
 
                   {discountAmount > 0 && (
                     <div className="flex justify-between text-[#78281F] font-semibold">
                       <span>Discount ({appliedCoupon?.code})</span>
-                      <span className="font-serif">-Rs. {discountAmount.toFixed(2)}</span>
+                      <span className="font-serif">-Rs. {Number(discountAmount.toFixed(2))}</span>
                     </div>
                   )}
 
                   <div className="flex justify-between text-[#6A645D]">
                     <span>Shipping</span>
                     <span className="font-serif font-medium">
-                      {shipping === 0 ? "Free" : `Rs. ${shipping.toFixed(2)}`}
+                      {shipping === 0 ? "Free" : `Rs. ${Number(shipping.toFixed(2))}`}
                     </span>
                   </div>
 
                   <div className="flex justify-between text-[#6A645D]">
                     <span>Estimated Tax</span>
-                    <span className="font-serif font-medium">Rs. 0.00</span>
+                    <span className="font-serif font-medium">Rs. 0</span>
                   </div>
 
                   <div className="border-t border-[#E5DFD5] pt-3 flex justify-between font-serif font-bold text-base text-[#1A1816]">
                     <span>Total</span>
-                    <span className="text-xl">Rs. {total.toFixed(2)}</span>
+                    <span className="text-xl">Rs. {Number(total.toFixed(2))}</span>
                   </div>
                 </div>
                 {!token ? (
@@ -1089,7 +1094,7 @@ export default function Checkout() {
                       ? "Processing..."
                       : paymentMethod === "cod"
                       ? "Place Order (Cash on Delivery)"
-                      : `Pay Rs. ${total.toFixed(2)}`}
+                      : `Pay Rs. ${Number(total.toFixed(2))}`}
                   </button>
                 )}
 

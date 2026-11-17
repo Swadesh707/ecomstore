@@ -127,7 +127,7 @@ export default function Cart() {
 
                       <div className="text-right">
                         <p className="font-serif font-bold text-lg text-[#1A1816]">
-                          Rs. {((Number(item.price) || 0) * (item.quantity || 1)).toFixed(2)}
+                          Rs. {Number(((Number(item.price) || 0) * (item.quantity || 1)).toFixed(2))}
                         </p>
                         <button
                           onClick={() => removeItem(item._id, item.size, item.color)}
@@ -149,22 +149,22 @@ export default function Cart() {
                 <div className="space-y-4 mb-6 text-xs uppercase tracking-wider font-semibold">
                   <div className="flex justify-between text-[#FAF8F5]/80">
                     <span>Subtotal</span>
-                    <span className="text-[#FAF8F5] font-serif text-base">Rs. {subtotal.toFixed(2)}</span>
+                    <span className="text-[#FAF8F5] font-serif text-base">Rs. {Number(subtotal.toFixed(2))}</span>
                   </div>
                   <div className="flex justify-between text-[#FAF8F5]/80">
                     <span>Shipping</span>
                     <span className="text-[#FAF8F5]">
-                      {shipping === 0 ? "FREE" : `Rs. ${shipping.toFixed(2)}`}
+                      {shipping === 0 ? "FREE" : `Rs. ${Number(shipping.toFixed(2))}`}
                     </span>
                   </div>
                   {shipping > 0 && (
                     <p className="text-[10px] text-[#C5A059] font-normal tracking-normal capitalize">
-                      Add Rs. {(150 - subtotal).toFixed(2)} more for free shipping.
+                      Add Rs. {Number((150 - subtotal).toFixed(2))} more for free shipping.
                     </p>
                   )}
                   <div className="border-t border-[#FAF8F5]/20 pt-4 flex justify-between text-xl font-serif font-bold text-[#FAF8F5]">
                     <span>TOTAL</span>
-                    <span className="text-[#C5A059]">Rs. {total.toFixed(2)}</span>
+                    <span className="text-[#C5A059]">Rs. {Number(total.toFixed(2))}</span>
                   </div>
                 </div>
 

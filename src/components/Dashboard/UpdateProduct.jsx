@@ -266,7 +266,7 @@ export default function UpdateProduct() {
                   <label className="block mb-1 text-foreground">Price (Rs.) *</label>
                   <input
                     type="number"
-                    step="0.01"
+                    step="any"
                     required
                     value={editPrice}
                     onChange={(e) => setEditPrice(e.target.value)}

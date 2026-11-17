@@ -83,7 +83,7 @@ export default function Wishlist() {
                     {product.title || product.name}
                   </Link>
                   <p className="font-serif font-bold text-base text-[#1A1816] mb-3">
-                    Rs. {Number(product.price).toFixed(2)}
+                    Rs. {Number(product.price)}
                   </p>
 
                   <div className="mt-auto pt-2 flex gap-2">

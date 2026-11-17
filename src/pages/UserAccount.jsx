@@ -451,7 +451,7 @@ export default function UserAccount() {
                               Total Sum
                             </span>
                             <span className="font-mono text-sm font-bold text-[#1A1816]">
-                              Rs. {Number(order.totalAmount || 0).toFixed(2)}
+                              Rs. {Number(order.totalAmount || 0)}
                             </span>
                           </div>
 
@@ -549,14 +549,14 @@ export default function UserAccount() {
                                     )}
                                   </p>
                                   <p className="text-xs text-[#8E877E] mt-0.5 font-mono">
-                                    Rs. {Number(item.price).toFixed(2)} &times; {item.quantity} Qty
+                                    Rs. {Number(item.price)} &times; {item.quantity} Qty
                                   </p>
                                 </div>
                               </div>
 
                               <div className="text-right">
                                 <span className="font-mono text-sm font-bold text-[#1A1816]">
-                                  Rs. {(Number(item.price) * Number(item.quantity)).toFixed(2)}
+                                  Rs. {Number((Number(item.price) * Number(item.quantity)).toFixed(2))}
                                 </span>
                               </div>
                             </div>

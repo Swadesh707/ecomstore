@@ -461,9 +461,9 @@ export default function ManageProducts() {
                   <label className="block mb-1 text-[#1A1816]">Price (Rs.) *</label>
                   <input
                     type="number"
-                    step="0.01"
+                    step="any"
                     required
-                    placeholder="850.00"
+                    placeholder="850"
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
                     className="w-full bg-[#F2EFE9] border border-[#E5DFD5] px-3.5 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#1A1816] text-[#1A1816]"

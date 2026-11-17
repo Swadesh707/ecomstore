@@ -167,7 +167,7 @@ export default function HomePage() {
                       {heroPiece.title}
                     </h3>
                     <p className="text-sm font-serif font-bold text-[#C5A059] mt-1">
-                      Rs. {Number(heroPiece.price).toFixed(2)}
+                      Rs. {Number(heroPiece.price)}
                     </p>
                   </div>
                 </Link>

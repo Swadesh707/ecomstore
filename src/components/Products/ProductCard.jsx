@@ -76,11 +76,11 @@ export default function ProductCard({ item, isSale, enableTilt = true }) {
         <div className="mt-auto pt-3 border-t border-[#E5DFD5] flex items-center justify-between">
           <div className="flex items-baseline gap-2">
             <span className={`font-serif font-bold text-base ${isItemOnSale ? "text-[#78281F]" : "text-[#1A1816]"}`}>
-              Rs. {Number(item.price).toFixed(2)}
+              Rs. {Number(item.price)}
             </span>
             {originalPrice && (
               <span className="text-[11px] text-[#8E877E] line-through font-normal">
-                Rs. {Number(originalPrice).toFixed(2)}
+                Rs. {Number(originalPrice)}
               </span>
             )}
           </div>
