@@ -337,16 +337,23 @@ export default function SalespersonDashboard() {
     }
   }
 
-  const filteredOrders = orders.filter((o) => {
-    if (!searchQuery.trim()) return true
-    const q = searchQuery.toLowerCase()
-    return (
-      o.orderNumber?.toLowerCase().includes(q) ||
-      o.customer?.name?.toLowerCase().includes(q) ||
-      o.customer?.email?.toLowerCase().includes(q) ||
-      (o.soldBy && o.soldBy.toLowerCase().includes(q))
+  const filteredOrders = orders
+    .filter(
+      (o) =>
+        o.orderNumber?.startsWith("BILL-") ||
+        o.orderType === "in-store" ||
+        o.customer?.address === "In-Store Purchase"
     )
-  })
+    .filter((o) => {
+      if (!searchQuery.trim()) return true
+      const q = searchQuery.toLowerCase()
+      return (
+        o.orderNumber?.toLowerCase().includes(q) ||
+        o.customer?.name?.toLowerCase().includes(q) ||
+        o.customer?.email?.toLowerCase().includes(q) ||
+        (o.soldBy && o.soldBy.toLowerCase().includes(q))
+      )
+    })
 
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-[#1A1816] font-sans p-6 sm:p-10">
@@ -453,7 +460,7 @@ export default function SalespersonDashboard() {
                         </td>
 
                         <td className="p-4 text-right font-serif font-bold text-sm text-[#1A1816]">
-                          ${Number(order.totalAmount || 0).toFixed(2)}
+                          Rs. {Number(order.totalAmount || 0).toFixed(2)}
                         </td>
 
                         <td className="p-4 text-center">
@@ -572,9 +579,9 @@ export default function SalespersonDashboard() {
                     <tr key={idx} className="py-2">
                       <td className="py-2.5 font-medium text-[#1A1816]">{item.title || item.name}</td>
                       <td className="py-2.5 text-center text-[#8E877E]">{item.quantity}</td>
-                      <td className="py-2.5 text-right font-mono">${Number(item.price).toFixed(2)}</td>
+                      <td className="py-2.5 text-right font-mono">Rs. {Number(item.price).toFixed(2)}</td>
                       <td className="py-2.5 text-right font-mono font-bold text-[#1A1816]">
-                        ${(Number(item.price) * Number(item.quantity)).toFixed(2)}
+                        Rs. {(Number(item.price) * Number(item.quantity)).toFixed(2)}
                       </td>
                     </tr>
                   ))}
@@ -584,19 +591,19 @@ export default function SalespersonDashboard() {
                 <div className="flex justify-between text-[#8E877E]">
                   <span>Subtotal:</span>
                   <span className="font-mono">
-                    ${(Number(selectedInvoiceOrder.subtotal) || Number(selectedInvoiceOrder.totalAmount)).toFixed(2)}
+                    Rs. {(Number(selectedInvoiceOrder.subtotal) || Number(selectedInvoiceOrder.totalAmount)).toFixed(2)}
                   </span>
                 </div>
                 {selectedInvoiceOrder.discountAmount > 0 && (
                   <div className="flex justify-between text-[#78281F]">
                     <span>Discount:</span>
-                    <span className="font-mono">-${Number(selectedInvoiceOrder.discountAmount).toFixed(2)}</span>
+                    <span className="font-mono">-Rs. {Number(selectedInvoiceOrder.discountAmount).toFixed(2)}</span>
                   </div>
                 )}
                 <div className="flex justify-between text-base font-bold text-[#1A1816] pt-2 border-t border-[#E5DFD5]">
                   <span>Total:</span>
                   <span className="font-mono font-bold">
-                    ${Number(selectedInvoiceOrder.totalAmount || 0).toFixed(2)}
+                    Rs. {Number(selectedInvoiceOrder.totalAmount || 0).toFixed(2)}
                   </span>
                 </div>
                 <div className="text-[11px] text-[#8E877E] pt-1">
@@ -704,7 +711,7 @@ export default function SalespersonDashboard() {
                       <option value="">-- Select an Item --</option>
                       {products.map((p) => (
                         <option key={p._id} value={p._id}>
-                          {p.title} (${Number(p.price || 0).toFixed(2)}) — Stock: {p.stock !== undefined ? p.stock : 10}
+                          {p.title} (Rs. {Number(p.price || 0).toFixed(2)}) — Stock: {p.stock !== undefined ? p.stock : 10}
                         </option>
                       ))}
                     </select>
@@ -722,7 +729,7 @@ export default function SalespersonDashboard() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block mb-1 text-[#8E877E]">Unit Price ($)</label>
+                    <label className="block mb-1 text-[#8E877E]">Unit Price (Rs.)</label>
                     <input
                       type="number"
                       required
@@ -763,7 +770,7 @@ export default function SalespersonDashboard() {
                       <label className="text-[#8E877E]">Discount (%)</label>
                       {Number(customBill.discountPercentage || 0) > 0 && (
                         <span className="text-[10px] text-[#C5A059] font-bold">
-                          -${(
+                          -Rs. {(
                             ((Number(customBill.unitPrice || 0) * Number(customBill.quantity || 1)) *
                               Number(customBill.discountPercentage || 0)) /
                             100
@@ -795,14 +802,14 @@ export default function SalespersonDashboard() {
                   <div className="flex justify-between text-[#8E877E]">
                     <span>Subtotal:</span>
                     <span className="font-mono text-[#1A1816]">
-                      ${(Number(customBill.unitPrice || 0) * Number(customBill.quantity || 1)).toFixed(2)}
+                      Rs. {(Number(customBill.unitPrice || 0) * Number(customBill.quantity || 1)).toFixed(2)}
                     </span>
                   </div>
                   {Number(customBill.discountPercentage || 0) > 0 && (
                     <div className="flex justify-between text-[#C5A059]">
                       <span>Discount ({customBill.discountPercentage}%):</span>
                       <span className="font-mono">
-                        -${(
+                        -Rs. {(
                           ((Number(customBill.unitPrice || 0) * Number(customBill.quantity || 1)) *
                             Number(customBill.discountPercentage || 0)) /
                           100
@@ -813,7 +820,7 @@ export default function SalespersonDashboard() {
                   <div className="flex justify-between font-bold text-[#1A1816] pt-1.5 border-t border-[#E5DFD5]">
                     <span>Total:</span>
                     <span className="font-mono text-sm text-[#1A1816]">
-                      ${Math.max(
+                      Rs. {Math.max(
                         0,
                         (Number(customBill.unitPrice || 0) * Number(customBill.quantity || 1)) -
                           (((Number(customBill.unitPrice || 0) * Number(customBill.quantity || 1)) *
@@ -910,7 +917,7 @@ export default function SalespersonDashboard() {
                       <option value="">-- Select an Item --</option>
                       {products.map((p) => (
                         <option key={p._id} value={p._id}>
-                          {p.title} (${Number(p.price || 0).toFixed(2)}) — Stock: {p.stock !== undefined ? p.stock : 10}
+                          {p.title} (Rs. {Number(p.price || 0).toFixed(2)}) — Stock: {p.stock !== undefined ? p.stock : 10}
                         </option>
                       ))}
                     </select>
@@ -928,7 +935,7 @@ export default function SalespersonDashboard() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block mb-1 text-[#8E877E]">Unit Price ($)</label>
+                    <label className="block mb-1 text-[#8E877E]">Unit Price (Rs.)</label>
                     <input
                       type="number"
                       required
@@ -969,7 +976,7 @@ export default function SalespersonDashboard() {
                       <label className="text-[#8E877E]">Discount (%)</label>
                       {Number(editBillForm.discountPercentage || 0) > 0 && (
                         <span className="text-[10px] text-[#C5A059] font-bold">
-                          -${(
+                          -Rs. {(
                             ((Number(editBillForm.unitPrice || 0) * Number(editBillForm.quantity || 1)) *
                               Number(editBillForm.discountPercentage || 0)) /
                             100
@@ -1001,14 +1008,14 @@ export default function SalespersonDashboard() {
                   <div className="flex justify-between text-[#8E877E]">
                     <span>Subtotal:</span>
                     <span className="font-mono text-[#1A1816]">
-                      ${(Number(editBillForm.unitPrice || 0) * Number(editBillForm.quantity || 1)).toFixed(2)}
+                      Rs. {(Number(editBillForm.unitPrice || 0) * Number(editBillForm.quantity || 1)).toFixed(2)}
                     </span>
                   </div>
                   {Number(editBillForm.discountPercentage || 0) > 0 && (
                     <div className="flex justify-between text-[#C5A059]">
                       <span>Discount ({editBillForm.discountPercentage}%):</span>
                       <span className="font-mono">
-                        -${(
+                        -Rs. {(
                           ((Number(editBillForm.unitPrice || 0) * Number(editBillForm.quantity || 1)) *
                             Number(editBillForm.discountPercentage || 0)) /
                           100
@@ -1019,7 +1026,7 @@ export default function SalespersonDashboard() {
                   <div className="flex justify-between font-bold text-[#1A1816] pt-1.5 border-t border-[#E5DFD5]">
                     <span>Total:</span>
                     <span className="font-mono text-sm text-[#1A1816]">
-                      ${Math.max(
+                      Rs. {Math.max(
                         0,
                         (Number(editBillForm.unitPrice || 0) * Number(editBillForm.quantity || 1)) -
                           (((Number(editBillForm.unitPrice || 0) * Number(editBillForm.quantity || 1)) *

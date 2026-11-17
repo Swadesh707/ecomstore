@@ -119,12 +119,12 @@ export default function CreateProduct({ onProductCreated }) {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block mb-1.5 text-foreground">Price ($) *</label>
+            <label className="block mb-1.5 text-foreground">Price (Rs.) *</label>
             <input
               type="number"
               step="0.01"
               required
-              placeholder="120.00"
+              placeholder="1200.00"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
               className="w-full bg-background border-2 border-border px-4 py-3 text-xs font-semibold focus:outline-none focus:border-foreground text-foreground"

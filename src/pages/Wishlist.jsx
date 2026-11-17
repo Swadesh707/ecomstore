@@ -62,12 +62,12 @@ export default function Wishlist() {
               <div key={product._id} className="bg-white border border-[#E5DFD5] overflow-hidden flex flex-col group hover:shadow-md transition-shadow">
                 <Link to={`/products/${product._id}`} className="relative aspect-[3/4] bg-[#F2EFE9] overflow-hidden block">
                   <img
-                    src={getImageUrl(product.image) || "/logo.png"}
+                    src={getImageUrl(product.image) || "/placeholder.svg"}
                     alt={product.title || product.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     onError={(e) => {
                       e.currentTarget.onerror = null
-                      e.currentTarget.src = "/logo.png"
+                      e.currentTarget.src = "/placeholder.svg"
                     }}
                   />
                 </Link>
@@ -83,7 +83,7 @@ export default function Wishlist() {
                     {product.title || product.name}
                   </Link>
                   <p className="font-serif font-bold text-base text-[#1A1816] mb-3">
-                    ${Number(product.price).toFixed(2)}
+                    Rs. {Number(product.price).toFixed(2)}
                   </p>
 
                   <div className="mt-auto pt-2 flex gap-2">

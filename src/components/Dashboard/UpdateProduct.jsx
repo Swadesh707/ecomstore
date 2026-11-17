@@ -200,15 +200,19 @@ export default function UpdateProduct() {
                   <td className="py-3 px-4 font-bold text-foreground">
                     <div className="flex items-center gap-3">
                       <img
-                        src={p.image || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800"}
+                        src={p.image || "/placeholder.svg"}
                         alt={p.title}
+                        onError={(e) => {
+                          e.currentTarget.onerror = null
+                          e.currentTarget.src = "/placeholder.svg"
+                        }}
                         className="w-9 h-11 object-cover border border-border shrink-0"
                       />
                       <span className="line-clamp-1">{p.title}</span>
                     </div>
                   </td>
                   <td className="py-3 px-4 text-muted-foreground">{p.category || "General"}</td>
-                  <td className="py-3 px-4 font-black">${Number(p.price).toFixed(2)}</td>
+                  <td className="py-3 px-4 font-black">Rs. {Number(p.price).toFixed(2)}</td>
                   <td className="py-3 px-4">{p.stock ?? 10}</td>
                   <td className="py-3 px-4 text-right space-x-2">
                     <button
@@ -259,7 +263,7 @@ export default function UpdateProduct() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block mb-1 text-foreground">Price ($) *</label>
+                  <label className="block mb-1 text-foreground">Price (Rs.) *</label>
                   <input
                     type="number"
                     step="0.01"

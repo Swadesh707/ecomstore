@@ -553,13 +553,15 @@ export default function Checkout() {
                     <tr key={idx} className="hover:bg-[#FAF8F5]/50">
                       <td className="p-3">
                         <div className="flex items-center gap-3">
-                          {item.image && (
-                            <img
-                              src={item.image}
-                              alt={item.title}
-                              className="w-10 h-12 object-cover border border-[#E5DFD5] shrink-0"
-                            />
-                          )}
+                          <img
+                            src={getImageUrl(item.image) || "/placeholder.svg"}
+                            alt={item.title}
+                            className="w-10 h-12 object-cover border border-[#E5DFD5] shrink-0"
+                            onError={(e) => {
+                              e.currentTarget.onerror = null
+                              e.currentTarget.src = "/placeholder.svg"
+                            }}
+                          />
                           <div>
                             <span className="font-serif font-bold text-sm text-[#1A1816] block">
                               {item.title}
@@ -572,11 +574,11 @@ export default function Checkout() {
                         <span className="block">Color: {item.color}</span>
                       </td>
                       <td className="p-3 text-right font-serif text-[#1A1816]">
-                        ${Number(item.price).toFixed(2)}
+                        Rs. {Number(item.price).toFixed(2)}
                       </td>
                       <td className="p-3 text-center font-bold">{item.quantity}</td>
                       <td className="p-3 text-right font-serif font-bold text-[#1A1816]">
-                        ${(Number(item.price) * Number(item.quantity)).toFixed(2)}
+                        Rs. {(Number(item.price) * Number(item.quantity)).toFixed(2)}
                       </td>
                     </tr>
                   ))}
@@ -597,30 +599,30 @@ export default function Checkout() {
             <div className="w-full sm:w-64 space-y-2 text-xs">
               <div className="flex justify-between text-[#6A645D]">
                 <span>Subtotal:</span>
-                <span className="font-serif">${completedOrder.subtotal.toFixed(2)}</span>
+                <span className="font-serif">Rs. {completedOrder.subtotal.toFixed(2)}</span>
               </div>
               {completedOrder.discountAmount > 0 && (
                 <div className="flex justify-between text-[#78281F] font-semibold">
                   <span>Discount ({completedOrder.couponCode}):</span>
-                  <span className="font-serif">-${completedOrder.discountAmount.toFixed(2)}</span>
+                  <span className="font-serif">-Rs. {completedOrder.discountAmount.toFixed(2)}</span>
                 </div>
               )}
               <div className="flex justify-between text-[#6A645D]">
                 <span>Shipping:</span>
                 <span className="font-serif">
-                  {completedOrder.shippingFee === 0 ? "Free" : `$${completedOrder.shippingFee.toFixed(2)}`}
+                  {completedOrder.shippingFee === 0 ? "Free" : `Rs. ${completedOrder.shippingFee.toFixed(2)}`}
                 </span>
               </div>
               <div className="flex justify-between text-[#6A645D]">
                 <span>Estimated Tax:</span>
-                <span className="font-serif">$0.00</span>
+                <span className="font-serif">Rs. 0.00</span>
               </div>
               <div className="border-t-2 border-[#1A1816] pt-2 flex justify-between font-serif font-bold text-base text-[#1A1816]">
                 <span>Total:</span>
-                <span className="text-lg">${completedOrder.totalAmount.toFixed(2)}</span>
+                <span className="text-lg">Rs. {completedOrder.totalAmount.toFixed(2)}</span>
               </div>
               <div className="text-[10px] text-right text-[#8E877E] uppercase tracking-wider">
-                Currency: USD
+                Currency: NPR
               </div>
             </div>
           </div>
@@ -869,7 +871,7 @@ export default function Checkout() {
                         Cash on Delivery
                       </p>
                       <p>
-                        You will pay the total amount of <strong>${total.toFixed(2)}</strong> in cash when your order is delivered to your address.
+                        You will pay the total amount of <strong>Rs. {total.toFixed(2)}</strong> in cash when your order is delivered to your address.
                       </p>
                     </div>
                   ) : (
@@ -961,12 +963,12 @@ export default function Checkout() {
                   {cart.map((item, idx) => (
                     <div key={idx} className="py-3 flex items-center gap-3">
                       <img
-                        src={getImageUrl(item.image) || "/logo.png"}
+                        src={getImageUrl(item.image) || "/placeholder.svg"}
                         alt={item.title}
                         className="w-12 h-14 object-cover border border-[#E5DFD5] shrink-0"
                         onError={(e) => {
                           e.currentTarget.onerror = null
-                          e.currentTarget.src = "/logo.png"
+                          e.currentTarget.src = "/placeholder.svg"
                         }}
                       />
                       <div className="flex-1 overflow-hidden">
@@ -977,11 +979,11 @@ export default function Checkout() {
                           Size: {item.size} • {item.color}
                         </span>
                         <span className="text-[10px] text-[#8E877E] block">
-                          Qty: {item.quantity} × ${Number(item.price).toFixed(2)}
+                          Qty: {item.quantity} × Rs. {Number(item.price).toFixed(2)}
                         </span>
                       </div>
                       <span className="font-serif font-bold text-xs text-[#1A1816]">
-                        ${(Number(item.price) * (item.quantity || 1)).toFixed(2)}
+                        Rs. {(Number(item.price) * (item.quantity || 1)).toFixed(2)}
                       </span>
                     </div>
                   ))}
@@ -1000,7 +1002,7 @@ export default function Checkout() {
                         <span className="text-[10px] text-[#1C352D]">
                           {appliedCoupon.discountType === "percentage"
                             ? `${appliedCoupon.discountValue}% applied`
-                            : `$${appliedCoupon.discountValue} discount applied`}
+                            : `Rs. ${appliedCoupon.discountValue} discount applied`}
                         </span>
                       </div>
                       <button
@@ -1042,31 +1044,31 @@ export default function Checkout() {
                 <div className="border-t border-[#E5DFD5] pt-4 space-y-2 text-xs">
                   <div className="flex justify-between text-[#6A645D]">
                     <span>Subtotal</span>
-                    <span className="font-serif font-medium">${subtotal.toFixed(2)}</span>
+                    <span className="font-serif font-medium">Rs. {subtotal.toFixed(2)}</span>
                   </div>
 
                   {discountAmount > 0 && (
                     <div className="flex justify-between text-[#78281F] font-semibold">
                       <span>Discount ({appliedCoupon?.code})</span>
-                      <span className="font-serif">-${discountAmount.toFixed(2)}</span>
+                      <span className="font-serif">-Rs. {discountAmount.toFixed(2)}</span>
                     </div>
                   )}
 
                   <div className="flex justify-between text-[#6A645D]">
                     <span>Shipping</span>
                     <span className="font-serif font-medium">
-                      {shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}
+                      {shipping === 0 ? "Free" : `Rs. ${shipping.toFixed(2)}`}
                     </span>
                   </div>
 
                   <div className="flex justify-between text-[#6A645D]">
                     <span>Estimated Tax</span>
-                    <span className="font-serif font-medium">$0.00</span>
+                    <span className="font-serif font-medium">Rs. 0.00</span>
                   </div>
 
                   <div className="border-t border-[#E5DFD5] pt-3 flex justify-between font-serif font-bold text-base text-[#1A1816]">
                     <span>Total</span>
-                    <span className="text-xl">${total.toFixed(2)}</span>
+                    <span className="text-xl">Rs. {total.toFixed(2)}</span>
                   </div>
                 </div>
                 {!token ? (
@@ -1087,7 +1089,7 @@ export default function Checkout() {
                       ? "Processing..."
                       : paymentMethod === "cod"
                       ? "Place Order (Cash on Delivery)"
-                      : `Pay $${total.toFixed(2)}`}
+                      : `Pay Rs. ${total.toFixed(2)}`}
                   </button>
                 )}
 

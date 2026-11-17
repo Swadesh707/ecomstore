@@ -451,7 +451,7 @@ export default function UserAccount() {
                               Total Sum
                             </span>
                             <span className="font-mono text-sm font-bold text-[#1A1816]">
-                              ${Number(order.totalAmount || 0).toFixed(2)}
+                              Rs. {Number(order.totalAmount || 0).toFixed(2)}
                             </span>
                           </div>
 
@@ -528,12 +528,13 @@ export default function UserAccount() {
                             >
                               <div className="flex items-center gap-4">
                                 <img
-                                  src={
-                                    item.image ||
-                                    "https://images.unsplash.com/photo-1544441893-675973e31985?w=800"
-                                  }
+                                  src={getImageUrl(item.image) || "/placeholder.svg"}
                                   alt={item.title}
                                   className="w-16 h-20 object-cover border border-[#E5DFD5] bg-[#FAF8F5] shrink-0"
+                                  onError={(e) => {
+                                    e.currentTarget.onerror = null
+                                    e.currentTarget.src = "/placeholder.svg"
+                                  }}
                                 />
                                 <div>
                                   <h4 className="font-serif font-bold text-sm text-[#1A1816]">
@@ -548,14 +549,14 @@ export default function UserAccount() {
                                     )}
                                   </p>
                                   <p className="text-xs text-[#8E877E] mt-0.5 font-mono">
-                                    ${Number(item.price).toFixed(2)} &times; {item.quantity} Qty
+                                    Rs. {Number(item.price).toFixed(2)} &times; {item.quantity} Qty
                                   </p>
                                 </div>
                               </div>
 
                               <div className="text-right">
                                 <span className="font-mono text-sm font-bold text-[#1A1816]">
-                                  ${(Number(item.price) * Number(item.quantity)).toFixed(2)}
+                                  Rs. {(Number(item.price) * Number(item.quantity)).toFixed(2)}
                                 </span>
                               </div>
                             </div>

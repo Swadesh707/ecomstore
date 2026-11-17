@@ -19,7 +19,7 @@ export default function HomePage() {
       id: "look-1",
       title: "Bespoke Double-Breasted Cashmere Overcoat",
       category: "Outerwear",
-      price: "$1,850.00",
+      price: "Rs. 1,850.00",
       description: "100% Mongolian virgin cashmere tailored with handcrafted peak lapels.",
       image: getImageUrl("/uploads/product-1544441893-675973e31985.jpg"),
       searchKey: "cashmere overcoat",
@@ -28,7 +28,7 @@ export default function HomePage() {
       id: "look-2",
       title: "Hand-Tailored Tweed Houndstooth Blazer",
       category: "Tailoring",
-      price: "$1,250.00",
+      price: "Rs. 1,250.00",
       description: "Traditional Scottish wool woven for structured poise and effortless warmth.",
       image: getImageUrl("/uploads/product-1507679799987-c73779587ccf.jpg"),
       searchKey: "houndstooth blazer",
@@ -37,7 +37,7 @@ export default function HomePage() {
       id: "look-3",
       title: "Chunky 6-Ply Pure Merino Cable-Knit Crewneck",
       category: "Knitwear",
-      price: "$420.00",
+      price: "Rs. 420.00",
       description: "Spun from 19.5-micron virgin merino wool for rich texture and softness.",
       image: getImageUrl("/uploads/product-1620799140408-edc6dcb6d633.jpg"),
       searchKey: "cable-knit",
@@ -46,7 +46,7 @@ export default function HomePage() {
       id: "look-4",
       title: "Sea Island Cotton Spread-Collar Dress Shirt",
       category: "Shirting",
-      price: "$280.00",
+      price: "Rs. 280.00",
       description: "Silky 140/2 double-twisted long-staple cotton with mother-of-pearl buttons.",
       image: getImageUrl("/uploads/product-1602810318383-e386cc2a3ccf.jpg"),
       searchKey: "dress shirt",
@@ -167,7 +167,7 @@ export default function HomePage() {
                       {heroPiece.title}
                     </h3>
                     <p className="text-sm font-serif font-bold text-[#C5A059] mt-1">
-                      ${Number(heroPiece.price).toFixed(2)}
+                      Rs. {Number(heroPiece.price).toFixed(2)}
                     </p>
                   </div>
                 </Link>

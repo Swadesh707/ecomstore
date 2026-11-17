@@ -117,11 +117,11 @@ export default function ProductDetails() {
             <TiltCard className="w-full">
               <div className="aspect-[3/4] bg-[#F2EFE9] border border-[#E5DFD5] overflow-hidden relative shadow-lg">
                 <img
-                  src={getImageUrl(selectedImage || product.image) || "/logo.png"}
+                  src={getImageUrl(selectedImage || product.image) || "/placeholder.svg"}
                   alt={product.title}
                   onError={(e) => {
                     e.currentTarget.onerror = null
-                    e.currentTarget.src = "/logo.png"
+                    e.currentTarget.src = "/placeholder.svg"
                   }}
                   className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                 />
@@ -144,12 +144,12 @@ export default function ProductDetails() {
                     }`}
                   >
                     <img
-                      src={getImageUrl(imgUrl) || "/logo.png"}
+                      src={getImageUrl(imgUrl) || "/placeholder.svg"}
                       alt={`View ${idx + 1}`}
                       className="w-full h-full object-cover"
                       onError={(e) => {
                         e.currentTarget.onerror = null
-                        e.currentTarget.src = "/logo.png"
+                        e.currentTarget.src = "/placeholder.svg"
                       }}
                     />
                   </button>
@@ -170,7 +170,7 @@ export default function ProductDetails() {
               </h1>
 
               <p className="font-serif text-3xl font-bold text-[#1A1816]">
-                ${Number(product.price).toFixed(2)}
+                Rs. {Number(product.price).toFixed(2)}
               </p>
             </div>
             <div className="border-t border-[#E5DFD5] pt-6">
@@ -291,7 +291,7 @@ export default function ProductDetails() {
               <div className="flex flex-col items-center">
                 <Truck size={18} className="text-[#8E877E] mb-1.5" />
                 <span className="text-[10px] font-bold uppercase tracking-wider text-[#1A1816]">Free Shipping</span>
-                <span className="text-[9px] text-[#8E877E]">Orders over $150</span>
+                <span className="text-[9px] text-[#8E877E]">Orders over Rs. 150</span>
               </div>
               <div className="flex flex-col items-center">
                 <RefreshCw size={18} className="text-[#8E877E] mb-1.5" />

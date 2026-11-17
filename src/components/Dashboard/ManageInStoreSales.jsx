@@ -24,7 +24,7 @@ export default function ManageInStoreSales() {
       const inStoreOnly = allOrders.filter(
         (o) =>
           o.orderNumber?.startsWith("BILL-") ||
-          (o.soldBy && o.soldBy.trim() !== "") ||
+          o.orderType === "in-store" ||
           o.customer?.address === "In-Store Purchase"
       )
       setOrders(inStoreOnly)
@@ -167,7 +167,7 @@ export default function ManageInStoreSales() {
                                 {item.title || item.name || "Tailored Piece"}
                               </span>
                               <span className="text-[#6A645D] text-[11px] shrink-0 font-mono">
-                                {item.quantity || 1} &times; ${Number(item.price || 0).toFixed(2)}
+                                {item.quantity || 1} &times; Rs. {Number(item.price || 0).toFixed(2)}
                               </span>
                             </div>
                           ))}
@@ -176,14 +176,14 @@ export default function ManageInStoreSales() {
                       <td className="py-3.5 px-4 text-center">
                         {discountVal > 0 ? (
                           <span className="text-[#78281F] font-mono font-semibold">
-                            -${discountVal.toFixed(2)}
+                            -Rs. {discountVal.toFixed(2)}
                           </span>
                         ) : (
                           <span className="text-[#9C948A]">—</span>
                         )}
                       </td>
                       <td className="py-3.5 px-4 text-right font-serif font-bold text-sm text-[#1A1816]">
-                        ${Number(bill.totalAmount || 0).toFixed(2)}
+                        Rs. {Number(bill.totalAmount || 0).toFixed(2)}
                       </td>
                       <td className="py-3.5 px-4 text-center">
                         <button
@@ -269,10 +269,10 @@ export default function ManageInStoreSales() {
                       </td>
                       <td className="p-3 text-center">{item.quantity || 1}</td>
                       <td className="p-3 text-right font-mono">
-                        ${Number(item.price || 0).toFixed(2)}
+                        Rs. {Number(item.price || 0).toFixed(2)}
                       </td>
                       <td className="p-3 text-right font-mono font-bold text-[#1A1816]">
-                        ${(
+                        Rs. {(
                           Number(item.price || 0) * Number(item.quantity || 1)
                         ).toFixed(2)}
                       </td>
@@ -285,8 +285,7 @@ export default function ManageInStoreSales() {
               <div className="flex justify-between text-[#8E877E]">
                 <span>Subtotal:</span>
                 <span className="font-mono">
-                  $
-                  {(
+                  Rs. {(
                     Number(selectedBill.subtotal) ||
                     Number(selectedBill.totalAmount)
                   ).toFixed(2)}
@@ -296,14 +295,14 @@ export default function ManageInStoreSales() {
                 <div className="flex justify-between text-[#78281F]">
                   <span>Discount:</span>
                   <span className="font-mono">
-                    -${Number(selectedBill.discountAmount).toFixed(2)}
+                    -Rs. {Number(selectedBill.discountAmount).toFixed(2)}
                   </span>
                 </div>
               )}
               <div className="flex justify-between text-base font-bold text-[#1A1816] pt-2 border-t border-[#E5DFD5]">
                 <span>Total:</span>
                 <span className="font-mono font-bold">
-                  ${Number(selectedBill.totalAmount || 0).toFixed(2)}
+                  Rs. {Number(selectedBill.totalAmount || 0).toFixed(2)}
                 </span>
               </div>
             </div>

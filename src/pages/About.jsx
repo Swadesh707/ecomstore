@@ -66,7 +66,7 @@ export default function About() {
                 Tired of clothes that fall apart after one season.
               </h2>
               <p className="text-sm sm:text-base text-[#6A645D] leading-relaxed">
-                For years, finding good clothes felt like choosing between two bad options: cheap fast-fashion made from plastic polyester that shrinks after two washes, or luxury labels charging $1,500 just to slap a logo on a plain sweater.
+                For years, finding good clothes felt like choosing between two bad options: cheap fast-fashion made from plastic polyester that shrinks after two washes, or luxury labels charging Rs. 1,500 just to slap a logo on a plain sweater.
               </p>
               <p className="text-sm sm:text-base text-[#6A645D] leading-relaxed">
                 We built Ecomstore to offer a better third option. We work directly with independent workshops to craft timeless wardrobe essentials using pure virgin cashmere, long-staple cotton, and full-grain leather.
@@ -220,7 +220,7 @@ export default function About() {
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3.5">
               <Truck size={24} className="text-[#C5A059] shrink-0" />
               <div>
-                <h4 className="font-serif text-sm font-bold text-[#1A1816]">Free Shipping Over $150</h4>
+                <h4 className="font-serif text-sm font-bold text-[#1A1816]">Free Shipping Over Rs. 150</h4>
                 <p className="text-xs text-[#6A645D] mt-0.5">Reliable express delivery with real-time tracking.</p>
               </div>
             </div>

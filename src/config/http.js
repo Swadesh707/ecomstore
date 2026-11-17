@@ -7,7 +7,7 @@ const cleanUrl = (url) => {
 }
 
 export const getImageUrl = (img) => {
-  if (!img) return ""
+  if (!img) return "/placeholder.svg"
   if (img.startsWith("http://") || img.startsWith("https://") || img.startsWith("data:")) {
     return img
   }

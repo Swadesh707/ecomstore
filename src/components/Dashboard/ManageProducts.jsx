@@ -363,7 +363,7 @@ export default function ManageProducts() {
                           className="w-full h-full object-cover"
                           onError={(e) => {
                             e.currentTarget.onerror = null
-                            e.currentTarget.src = "https://images.unsplash.com/photo-1544441893-675973e31985?w=800"
+                            e.currentTarget.src = "/placeholder.svg"
                           }}
                         />
                       </div>
@@ -383,7 +383,7 @@ export default function ManageProducts() {
                     </span>
                   </td>
                   <td className="py-3.5 px-4 font-serif font-bold text-sm text-[#1A1816]">
-                    ${Number(item.price).toFixed(2)}
+                    Rs. {Number(item.price).toFixed(2)}
                   </td>
                   <td className="py-3.5 px-4">
                     <span
@@ -458,7 +458,7 @@ export default function ManageProducts() {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block mb-1 text-[#1A1816]">Price (USD $) *</label>
+                  <label className="block mb-1 text-[#1A1816]">Price (Rs.) *</label>
                   <input
                     type="number"
                     step="0.01"

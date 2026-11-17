@@ -54,6 +54,10 @@ export default function ManageOrders() {
   }
 
   const filteredOrders = orders.filter((order) => {
+    // Exclude in-store counter bills from online store orders
+    if (order.orderNumber?.startsWith("BILL-") || order.orderType === "in-store" || order.customer?.address === "In-Store Purchase") {
+      return false
+    }
     if (statusFilter === "Returns") {
       if (!order.isReturnRequested) return false
     } else if (statusFilter !== "All" && order.orderStatus !== statusFilter) {
@@ -255,11 +259,11 @@ export default function ManageOrders() {
                       </td>
                       <td className="p-4 text-right">
                         <span className="font-serif font-bold text-base text-[#1A1816] block">
-                          ${order.totalAmount?.toFixed(2)}
+                          Rs. {order.totalAmount?.toFixed(2)}
                         </span>
                         {order.discountAmount > 0 && (
                           <span className="text-[10px] text-[#78281F] font-semibold block">
-                            -${order.discountAmount.toFixed(2)} coupon
+                            -Rs. {order.discountAmount.toFixed(2)} coupon
                           </span>
                         )}
                       </td>

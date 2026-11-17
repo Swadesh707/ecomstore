@@ -454,7 +454,7 @@ export default function LogisticsDashboard() {
 
                 <div>
                   <label className="block mb-1 font-bold uppercase tracking-wider text-[#1A1816]">
-                    Estimated Freight ($)
+                    Estimated Freight (Rs.)
                   </label>
                   <input
                     type="number"

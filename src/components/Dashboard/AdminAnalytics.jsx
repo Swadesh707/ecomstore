@@ -114,7 +114,7 @@ export default function AdminAnalytics() {
             </div>
           </div>
           <p className="font-serif text-3xl font-bold text-[#1A1816]">
-            ${data.totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+            Rs. {data.totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}
           </p>
 
         </div>
@@ -126,7 +126,7 @@ export default function AdminAnalytics() {
             </div>
           </div>
           <p className="font-serif text-3xl font-bold text-[#1A1816]">
-            ${data.netProfit.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+            Rs. {data.netProfit.toLocaleString(undefined, { minimumFractionDigits: 2 })}
           </p>
 
         </div>
@@ -138,7 +138,7 @@ export default function AdminAnalytics() {
             </div>
           </div>
           <p className="font-serif text-3xl font-bold text-[#1A1816]">
-            ${data.totalLogisticsCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+            Rs. {data.totalLogisticsCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}
           </p>
 
         </div>
@@ -150,7 +150,7 @@ export default function AdminAnalytics() {
             </div>
           </div>
           <p className="font-serif text-3xl font-bold text-[#1A1816]">
-            ${data.totalProductCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+            Rs. {data.totalProductCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}
           </p>
 
         </div>
@@ -181,7 +181,7 @@ export default function AdminAnalytics() {
                 >
                   {isHovered && (
                     <div className="absolute -top-12 z-20 bg-[#1A1816] text-[#FAF8F5] text-[10px] py-1 px-2.5 rounded shadow-lg whitespace-nowrap">
-                      <span className="font-bold">${entry.revenue.toFixed(2)}</span> ({entry.orders} orders)
+                      <span className="font-bold">Rs. {entry.revenue.toFixed(2)}</span> ({entry.orders} orders)
                     </div>
                   )}
                   <div
@@ -248,7 +248,7 @@ export default function AdminAnalytics() {
                     <span className="w-2.5 h-2.5 shrink-0" style={{ backgroundColor: slice.color }}></span>
                     <span className="truncate text-[11px] text-[#1A1816]">{slice.category}</span>
                   </div>
-                  <span className="font-serif font-bold text-xs text-[#1A1816]">${slice.revenue.toFixed(0)}</span>
+                  <span className="font-serif font-bold text-xs text-[#1A1816]">Rs. {slice.revenue.toFixed(0)}</span>
                 </div>
               ))}
             </div>
@@ -276,6 +276,10 @@ export default function AdminAnalytics() {
                         src={prod.image}
                         alt={prod.title}
                         className="w-10 h-12 object-cover border border-[#E5DFD5] shrink-0"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null
+                          e.currentTarget.src = "/placeholder.svg"
+                        }}
                       />
                     )}
                     <div className="truncate">
@@ -288,7 +292,7 @@ export default function AdminAnalytics() {
                     </div>
                   </div>
                   <span className="font-serif font-bold text-sm text-[#1A1816] shrink-0">
-                    ${prod.revenue.toFixed(2)}
+                    Rs. {prod.revenue.toFixed(2)}
                   </span>
                 </div>
               ))
@@ -317,6 +321,10 @@ export default function AdminAnalytics() {
                         src={item.image}
                         alt={item.title}
                         className="w-10 h-12 object-cover border border-[#E5DFD5] shrink-0"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null
+                          e.currentTarget.src = "/placeholder.svg"
+                        }}
                       />
                     )}
                     <div className="truncate">
@@ -329,7 +337,7 @@ export default function AdminAnalytics() {
                     </div>
                   </div>
                   <span className="font-serif font-bold text-sm text-[#1A1816] shrink-0">
-                    ${Number(item.price).toFixed(2)}
+                    Rs. {Number(item.price).toFixed(2)}
                   </span>
                 </div>
               ))

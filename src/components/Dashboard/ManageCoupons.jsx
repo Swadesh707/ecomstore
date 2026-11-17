@@ -232,12 +232,12 @@ export default function ManageCoupons() {
                         <span className="font-serif font-bold text-base text-[#1A1816]">
                           {coupon.discountType === "percentage"
                             ? `${coupon.discountValue}% OFF`
-                            : `$${coupon.discountValue.toFixed(2)} OFF`}
+                            : `Rs. ${coupon.discountValue.toFixed(2)} OFF`}
                         </span>
                       </td>
                       <td className="p-4">
                         <span className="text-[#6A645D] font-medium">
-                          {coupon.minOrderAmount > 0 ? `$${coupon.minOrderAmount.toFixed(2)}` : "No Min."}
+                          {coupon.minOrderAmount > 0 ? `Rs. ${coupon.minOrderAmount.toFixed(2)}` : "No Min."}
                         </span>
                       </td>
                       <td className="p-4">
@@ -357,18 +357,18 @@ export default function ManageCoupons() {
                     className="w-full bg-[#FAF8F5] border border-[#E5DFD5] p-3 text-xs focus:outline-none focus:border-[#1A1816] text-[#1A1816] cursor-pointer"
                   >
                     <option value="percentage">Percentage (%) Off</option>
-                    <option value="fixed">Fixed Amount ($) Off</option>
+                    <option value="fixed">Fixed Amount (Rs.) Off</option>
                   </select>
                 </div>
 
                 <div className="space-y-1.5">
                   <label className="text-[#8E877E]">
-                    {discountType === "percentage" ? "Percentage Value (%) *" : "Fixed Dollar Value ($) *"}
+                    {discountType === "percentage" ? "Percentage Value (%) *" : "Fixed Rupee Value (Rs.) *"}
                   </label>
                   <input
                     type="number"
                     min="1"
-                    max={discountType === "percentage" ? 100 : 10000}
+                    max={discountType === "percentage" ? 100 : 1000000}
                     required
                     value={discountValue}
                     onChange={(e) => setDiscountValue(e.target.value)}
@@ -377,7 +377,7 @@ export default function ManageCoupons() {
                 </div>
               </div>
               <div className="space-y-1.5">
-                <label className="text-[#8E877E]">Minimum Order Qualifying Subtotal ($)</label>
+                <label className="text-[#8E877E]">Minimum Order Qualifying Subtotal (Rs.)</label>
                 <input
                   type="number"
                   min="0"
